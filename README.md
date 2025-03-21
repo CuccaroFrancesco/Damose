@@ -3,3 +3,7 @@
 
 
 # Da sviluppare varie classi
+<<<<<<< HEAD
+=======
+Bella raga sono fabri fibra hihihihiih
+
