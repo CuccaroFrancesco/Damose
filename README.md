@@ -34,7 +34,7 @@ L'applicazione è interamente sviluppata in *Java*, sfruttando Eclipse come IDE.
 - posizione;
 - listaLinee;
 
-###Linea
+### Linea
 - nome;
 - numero;
 - listaFermate;
