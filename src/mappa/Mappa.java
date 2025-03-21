@@ -44,12 +44,11 @@ public class Mappa
         mapViewer.addMouseMotionListener(Mouse);
         mapViewer.addMouseWheelListener(Wheel);
 
-
+        
         final JFrame frame = new JFrame("Damose App Trasporti Roma");
         final JLabel label = new JLabel("Fratello cosa");
         frame.setLayout(new BorderLayout());
         frame.add(mapViewer);
-        frame.addImpl(label, mapViewer, 1);
         frame.setSize(800, 600);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
