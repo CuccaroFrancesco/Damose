@@ -21,6 +21,17 @@ import org.jxmapviewer.input.ZoomMouseWheelListenerCursor;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
+import java.awt.Dimension;
+import javax.swing.JButton;
+import java.awt.CardLayout;
+import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import java.awt.FlowLayout;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.Component;
+import java.awt.GridBagLayout;
+import javax.swing.SpringLayout;
 
 
 public class Schermo {
@@ -34,10 +45,10 @@ public class Schermo {
     public static JFrame Schermata() {
     	
         final JFrame frame = new JFrame("Damose App Trasporti");
-        
-        frame.getContentPane().setLayout(new BorderLayout());
         frame.setSize(1080, 720);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        
+        frame.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{frame.getContentPane()}));
         
         return frame;  
     }
