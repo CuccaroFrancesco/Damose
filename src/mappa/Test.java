@@ -16,6 +16,7 @@ public class Test extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JTextField txtCercaLineaO;
 
 	/**
 	 * Launch the application.
@@ -50,18 +51,20 @@ public class Test extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JTextArea txtrCercaLineaO = new JTextArea();
-		txtrCercaLineaO.setBackground(new Color(255, 255, 255));
-		txtrCercaLineaO.setAlignmentY(1.0f);
-		txtrCercaLineaO.setAlignmentX(1.0f);
-		txtrCercaLineaO.setFont(new Font("Arial Nova", Font.PLAIN, 13));
-		txtrCercaLineaO.setText("Cerca linea o fermata..");
-		txtrCercaLineaO.setBounds(335, 51, 145, 20);
-		contentPane.add(txtrCercaLineaO);
+		JPanel panel = new JPanel();
+		panel.setBounds(0, 0, 1064, 38);
+		contentPane.add(panel);
+		panel.setLayout(null);
 		
-		Button button = new Button("Q");
-		button.setFont(new Font("Arial Nova", Font.PLAIN, 12));
-		button.setBounds(297, 51, 32, 20);
-		contentPane.add(button);
+		txtCercaLineaO = new JTextField();
+		txtCercaLineaO.setBounds(442, 6, 302, 22);
+		txtCercaLineaO.setText("Cerca linea o fermata...");
+		panel.add(txtCercaLineaO);
+		txtCercaLineaO.setColumns(10);
+		
+		JButton btnNewButton = new JButton("");
+		btnNewButton.setPreferredSize(new Dimension(25, 25));
+		btnNewButton.setBounds(407, 6, 25, 23);
+		panel.add(btnNewButton);
 	}
 }
