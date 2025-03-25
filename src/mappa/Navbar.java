@@ -15,8 +15,7 @@ public class Navbar extends JPanel {
         this.mapPanel = mapPanel;
 
         setOpaque(false);
-        setBackground(new Color(255, 255, 255, 0)); // Semi-trasparente
-        setBounds(0, 0, 1059, 33);
+        setBackground(new Color(255, 255, 255, 0)); // Trasparente
         setLayout(null);
 
         
@@ -26,9 +25,9 @@ public class Navbar extends JPanel {
         scelta.setOpaque(false);
         scelta.setFont(new Font("Arial Nova", Font.BOLD, 12));
         scelta.setModel(new DefaultComboBoxModel<>(new String[]{"Normale", "Satellitare", "Mista"}));
-        scelta.setBounds(29, 6, 169, 30);
+        scelta.setBounds(30, 5, 170, 30);
         add(scelta);
-        scelta.setBackground(new Color(255, 255, 255, 180));
+        scelta.setBackground(new Color(255, 255, 255, 160));
 
         
         // Listener per cambiare tipo di mappa
@@ -46,10 +45,9 @@ public class Navbar extends JPanel {
         searchBar = new JTextField("  Cerca linea o fermata...");
         
         searchBar.setFont(new Font("Arial Nova", Font.BOLD, 12));
-        searchBar.setBounds(442, 6, 300, 30);
+        searchBar.setBounds(440, 5, 300, 30);
         add(searchBar);
-        searchBar.setColumns(10);
-        searchBar.setBackground(new Color(255, 255, 255, 180));
+        searchBar.setBackground(new Color(255, 255, 255, 160));
 
         
         // Gestione placeholder

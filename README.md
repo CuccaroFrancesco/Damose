@@ -5,6 +5,13 @@ L'applicazione è interamente sviluppata in *Java*, sfruttando Eclipse come IDE.
 
 # Features
 
+# Test possibili
+
+- Verificare se i dati sono nel formato corretto
+- Verificare i collegamenti tra i vari datasets
+- Testare l'efficienza dell'applicazione
+- Altri tipi di test
+
 # Classi da sviluppare
 
 ### Utente:

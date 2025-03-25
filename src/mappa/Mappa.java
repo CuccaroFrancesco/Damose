@@ -24,7 +24,6 @@ public class Mappa extends JComponent {
         
         // Creazione della mappa
         mapViewer = new JXMapViewer();
-        
         mapViewer.setBounds(0, 0, 1080, 720);  // Posizione e dimensione
         mapViewer.setTileFactory(tileFactory);
         
