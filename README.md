@@ -4,6 +4,7 @@
 L'applicazione è interamente sviluppata in *Java*, sfruttando Eclipse come IDE. 
 
 # Features
+IA
 
 # Test possibili
 
