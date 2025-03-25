@@ -39,7 +39,7 @@ public class AppTrasporti extends JFrame {
         // Impostazione della mappa iniziale (Normale)
         info = new OSMTileFactoryInfo("Mappa", "https://a.tile.openstreetmap.fr/hot/");
         tileFactory = new DefaultTileFactory(info);
-
+        
         
         // Inizializzazione della mappa con una cache
         File cacheDir = new File(System.getProperty("user.home") + File.separator + ".jxmapviewer2");
