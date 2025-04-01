@@ -37,21 +37,32 @@ public class Navbar extends JPanel {
         this.add(mappaSatellitare);
         this.add(mappaMista);
         
+        mappaNormale.setEnabled(false);
+        
         mappaNormale.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		TilesetManager.updateMap(mapPanel, 0);
+        		mappaNormale.setEnabled(false);
+        		mappaSatellitare.setEnabled(true);
+        		mappaMista.setEnabled(true);
         	}
         });
         
         mappaSatellitare.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		TilesetManager.updateMap(mapPanel, 1);
+        		mappaNormale.setEnabled(true);
+        		mappaSatellitare.setEnabled(false);
+        		mappaMista.setEnabled(true);
         	}
         });
         
         mappaMista.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		TilesetManager.updateMap(mapPanel, 2);
+        		mappaNormale.setEnabled(true);
+        		mappaSatellitare.setEnabled(true);
+        		mappaMista.setEnabled(false);
         	}
         });
         
