@@ -17,6 +17,7 @@ public class Mappa extends JComponent {
     private JXMapViewer mapViewer;
 
     public Mappa() {
+    	
         // Impostazione iniziale della mappa
         TileFactoryInfo info = new OSMTileFactoryInfo("Mappa", "https://a.tile.openstreetmap.fr/hot/");
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
