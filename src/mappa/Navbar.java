@@ -20,7 +20,7 @@ public class Navbar extends JPanel {
         this.mapPanel = mapPanel;
 
         setOpaque(false);
-        setBackground(new Color(255, 255, 255, 0)); // Trasparente
+        setBackground(new Color(255, 255, 255, 0));   // Trasparente
         setLayout(null);
 
         

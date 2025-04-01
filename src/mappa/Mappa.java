@@ -1,5 +1,6 @@
 package mappa;
 
+import java.awt.*;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.cache.FileBasedLocalCache;
@@ -24,8 +25,10 @@ public class Mappa extends JComponent {
 
         
         // Creazione della mappa
+        Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
+        
         mapViewer = new JXMapViewer();
-        mapViewer.setBounds(0, 0, 1080, 720);  // Posizione e dimensione
+        mapViewer.setBounds(0, 0, screenSize.width, screenSize.height);  // Posizione e dimensione
         mapViewer.setTileFactory(tileFactory);
         
         
