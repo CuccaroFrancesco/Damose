@@ -1,6 +1,7 @@
 package mappa;
 
 import java.awt.*;
+import java.awt.image.*;
 import java.awt.event.*;
 import javax.swing.*;
 import org.jxmapviewer.JXMapViewer;
@@ -136,6 +137,19 @@ public class AppTrasporti extends JFrame {
         
         String placeholder = "  Cerca linea o fermata...";
         searchBar.setText(placeholder);
+        
+        JButton btnLogin = new JButton();
+        btnLogin.setBounds(950, 1, 32, 30);
+        navbar.add(btnLogin);
+        ImageIcon icona = new ImageIcon("C:\\\\Users\\\\franc\\\\Downloads\\\\circle-user-solid.png");
+        Image scaledImage = icona.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+        ImageIcon newIcon = new ImageIcon(scaledImage);
+        btnLogin.setIcon(newIcon);
+        btnLogin.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		// dopo il click
+        	}
+        });
 
         
         // Listener per gestire il placeholder

@@ -39,6 +39,19 @@ public class Navbar extends JPanel {
                 TilesetManager.updateMap(mapPanel, selectedIndex);
             }
         });
+        
+        JButton btnLogin = new JButton();
+        btnLogin.setBounds(950, 1, 32, 30);
+        add(btnLogin);
+        ImageIcon icona = new ImageIcon("C:\\\\Users\\\\franc\\\\Downloads\\\\circle-user-solid.png");
+        Image scaledImage = icona.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+        ImageIcon newIcon = new ImageIcon(scaledImage);
+        btnLogin.setIcon(newIcon);
+        btnLogin.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		// dopo il click
+        	}
+        });
 
         
         // Campo di ricerca
