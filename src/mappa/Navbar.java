@@ -9,7 +9,6 @@ import java.awt.event.*;
 public class Navbar extends JPanel {
 
 	private Mappa mapPanel;
-	private JComboBox<String> scelta;
     public JTextField searchBar;
     public JPanel mapButtonGroup;
     private JButton mappaNormale;
@@ -21,17 +20,14 @@ public class Navbar extends JPanel {
     	
         this.mapPanel = mapPanel;
 
-        setOpaque(false);
-        setBackground(new Color(255, 255, 255, 0));
-        setLayout(null);
+        
+        // Gestione delle caratteristiche della navbar
+        this.setOpaque(false);
+        this.setBackground(new Color(255, 255, 255, 0));
+        this.setLayout(null);
 
         
-        // Gruppo di pulsanti per scelta del tipo di mappa (normale, satellitare, mista)
-        mapButtonGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        
-        mapButtonGroup.setOpaque(false);
-        mapButtonGroup.setBackground(new Color(255, 255, 255, 0));
-        
+        // Pulsanti per scelta del tipo di mappa (normale, satellitare, mista)
         mappaNormale = new JButton();
         mappaSatellitare = new JButton();
         mappaMista = new JButton();
@@ -40,12 +36,6 @@ public class Navbar extends JPanel {
         mappaNormale.setPreferredSize(buttonDimension);
         mappaSatellitare.setPreferredSize(buttonDimension);
         mappaMista.setPreferredSize(buttonDimension);
-        
-        mapButtonGroup.add(mappaNormale);
-        mapButtonGroup.add(mappaSatellitare);
-        mapButtonGroup.add(mappaMista);
-        
-        this.add(mapButtonGroup);
         
         mappaNormale.setEnabled(false);
         
@@ -77,7 +67,20 @@ public class Navbar extends JPanel {
         });
         
         
-        // Barra di ricerca
+        // Raggruppamento dei pulsanti in un unico pannello
+        mapButtonGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        
+        mapButtonGroup.setOpaque(false);
+        mapButtonGroup.setBackground(new Color(255, 255, 255, 0));
+
+        mapButtonGroup.add(mappaNormale);
+        mapButtonGroup.add(mappaSatellitare);
+        mapButtonGroup.add(mappaMista);
+        
+        this.add(mapButtonGroup);
+        
+        
+        // Barra di ricerca, con annessa gestione del testo placeholder
         searchBar = new JTextField("  Cerca linea o fermata...");
         
         searchBar.setBounds(440, 5, 300, 30);
@@ -86,8 +89,6 @@ public class Navbar extends JPanel {
         
         this.add(searchBar);
 
-        
-        // Gestione placeholder della barra di ricerca
         searchBar.addFocusListener(new FocusListener() {
         	
             @Override
@@ -106,13 +107,13 @@ public class Navbar extends JPanel {
         });
         
         
-        // Sezione utente
+        // Pulsante per la sezione utente
         btnLogin = new JButton();
         
-        btnLogin.setBounds(950, 1, 32, 30);
+        btnLogin.setPreferredSize(new Dimension(40, 40));
         
         ImageIcon icon = new ImageIcon("src/resources/circle-user-solid.png");
-        Image scaledImage = icon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+        Image scaledImage = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
         ImageIcon newIcon = new ImageIcon(scaledImage);
         btnLogin.setIcon(newIcon);
         
@@ -120,7 +121,7 @@ public class Navbar extends JPanel {
         
         btnLogin.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		// dopo il click
+        		// TODO: azione da fare quando viene premuto il pulsante
         	}
         });
     }

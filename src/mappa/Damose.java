@@ -8,32 +8,32 @@ public class Damose extends JFrame {
 
     public Damose() {
     	
-    	// Gestione della finestra (JFrame)
+    	// Costruzione e gestione della finestra principale
     	Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
     	
-        setTitle("Damose App Trasporti");
-        setSize(new Dimension(1080, 720));
-        setMinimumSize(new Dimension(720, 480));
-        setMaximumSize(screenSize);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setTitle("Damose App Trasporti");
+        this.setSize(new Dimension(1080, 720));
+        this.setMinimumSize(new Dimension(720, 480));
+        this.setMaximumSize(screenSize);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         
         // Creazione di un JLayeredPane per gestire i livelli
         JLayeredPane layeredPane = new JLayeredPane();
-        setContentPane(layeredPane);
+        this.setContentPane(layeredPane);
 
         
-        // Aggiunta della mappa 
+        // Aggiunta della mappa alla finestra principale
         Mappa mapPanel = new Mappa();
         
-        mapPanel.setBounds(0, 0, screenSize.width, screenSize.height);  // Posizione e dimensione della mappa
-        layeredPane.add(mapPanel, JLayeredPane.DEFAULT_LAYER);  
+        mapPanel.setBounds(0, 0, screenSize.width, screenSize.height);   // Dimensioni pari alle dimensioni dello schermo
+        layeredPane.add(mapPanel, JLayeredPane.DEFAULT_LAYER);
 
         
-        // Aggiunta della navbar (a cui viene passata la mappa)
+        // Aggiunta della navbar alla finestra principale
         Navbar navbar = new Navbar(mapPanel);
         
-        navbar.setBounds(0, 0, screenSize.width, 50);  // Posizione e dimensione della navbar
+        navbar.setBounds(0, 0, screenSize.width, 60);   // Posizione e dimensione della navbar
         layeredPane.add(navbar, JLayeredPane.PALETTE_LAYER);
         
         
@@ -45,11 +45,11 @@ public class Damose extends JFrame {
             	int newWidth = getWidth();
             	int newHeight = getHeight();
             	
-            	navbar.setBounds(0, 0, newWidth, newHeight);
+            	navbar.setBounds(0, 0, newWidth, 60);
             	
             	navbar.mapButtonGroup.setBounds(10, 10, 120, 40);
-            	navbar.searchBar.setBounds((newWidth - navbar.searchBar.getWidth()) / 2, 10, navbar.searchBar.getWidth(), 30);
-            	navbar.btnLogin.setBounds(newWidth - navbar.btnLogin.getWidth() - 20, 10, 30, 30);
+            	navbar.searchBar.setBounds((newWidth - navbar.searchBar.getWidth()) / 2, 15, navbar.searchBar.getWidth(), 30);
+            	navbar.btnLogin.setBounds(newWidth - navbar.btnLogin.getWidth() - 20, 10, 40, 40);
             	
             }
         });
