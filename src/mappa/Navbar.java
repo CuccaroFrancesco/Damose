@@ -32,23 +32,23 @@ public class Navbar extends JPanel {
         mappaSatellitare = new JButton();
         mappaMista = new JButton();
         
-        Dimension buttonDimension = new Dimension(40, 40);
+        Dimension buttonDimension = new Dimension(50, 50);
         mappaNormale.setPreferredSize(buttonDimension);
         mappaSatellitare.setPreferredSize(buttonDimension);
         mappaMista.setPreferredSize(buttonDimension);
         
         ImageIcon mappaNormaleIcon = new ImageIcon("src/resources/mappaNormale.png");
-        Image mappaNormaleScaled = mappaNormaleIcon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+        Image mappaNormaleScaled = mappaNormaleIcon.getImage().getScaledInstance(44, 44, Image.SCALE_SMOOTH);
         ImageIcon mappaNormaleNewIcon = new ImageIcon(mappaNormaleScaled);
         mappaNormale.setIcon(mappaNormaleNewIcon);
         
         ImageIcon mappaSatellitareIcon = new ImageIcon("src/resources/mappaSatellitare.png");
-        Image mappaSatellitareScaled = mappaSatellitareIcon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+        Image mappaSatellitareScaled = mappaSatellitareIcon.getImage().getScaledInstance(44, 44, Image.SCALE_SMOOTH);
         ImageIcon mappaSatellitareNewIcon = new ImageIcon(mappaSatellitareScaled);
         mappaSatellitare.setIcon(mappaSatellitareNewIcon);
         
         ImageIcon mappaMistaIcon = new ImageIcon("src/resources/mappaMista.png");
-        Image mappaMistaScaled = mappaMistaIcon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+        Image mappaMistaScaled = mappaMistaIcon.getImage().getScaledInstance(44, 44, Image.SCALE_SMOOTH);
         ImageIcon mappaMistaNewIcon = new ImageIcon(mappaMistaScaled);
         mappaMista.setIcon(mappaMistaNewIcon);
         
@@ -125,10 +125,10 @@ public class Navbar extends JPanel {
         // Pulsante per la sezione utente
         btnLogin = new JButton();
         
-        btnLogin.setPreferredSize(new Dimension(40, 40));
+        btnLogin.setPreferredSize(new Dimension(50, 50));
         
         ImageIcon icon = new ImageIcon("src/resources/user_placeholder.png");
-        Image scaledImage = icon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+        Image scaledImage = icon.getImage().getScaledInstance(44, 44, Image.SCALE_SMOOTH);
         ImageIcon newIcon = new ImageIcon(scaledImage);
         btnLogin.setIcon(newIcon);
         
