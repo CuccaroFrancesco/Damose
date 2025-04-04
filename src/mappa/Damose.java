@@ -47,7 +47,7 @@ public class Damose extends JFrame {
             	
             	navbar.setBounds(0, 0, newWidth, 60);
             	
-            	navbar.mapButtonGroup.setBounds(10, 10, 120, 40);
+            	navbar.mapButtonGroup.setBounds(10, 10, 150, 50);
             	navbar.searchBar.setBounds((newWidth - navbar.searchBar.getWidth()) / 2, 15, navbar.searchBar.getWidth(), 30);
             	navbar.btnLogin.setBounds(newWidth - navbar.btnLogin.getWidth() - 20, 10, 40, 40);
             	
