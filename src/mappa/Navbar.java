@@ -10,32 +10,42 @@ public class Navbar extends JPanel {
 
 	private Mappa mapPanel;
 	private JComboBox<String> scelta;
-    private JTextField searchBar;
+    public JTextField searchBar;
+    public JPanel mapButtonGroup;
     private JButton mappaNormale;
     private JButton mappaSatellitare;
     private JButton mappaMista;
+    public JButton btnLogin;
 
     public Navbar(Mappa mapPanel) {
     	
         this.mapPanel = mapPanel;
 
         setOpaque(false);
-        setBackground(new Color(255, 255, 255, 0));   // Trasparente
+        setBackground(new Color(255, 255, 255, 0));
         setLayout(null);
 
         
-        // Scelta del tipo di mappa (normale, satellitare, mista)
+        // Gruppo di pulsanti per scelta del tipo di mappa (normale, satellitare, mista)
+        mapButtonGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        
+        mapButtonGroup.setOpaque(false);
+        mapButtonGroup.setBackground(new Color(255, 255, 255, 0));
+        
         mappaNormale = new JButton();
         mappaSatellitare = new JButton();
         mappaMista = new JButton();
         
-        mappaNormale.setBounds(30, 5, 30, 30);
-        mappaSatellitare.setBounds(62, 5, 30, 30);
-        mappaMista.setBounds(94, 5, 30, 30);
+        Dimension buttonDimension = new Dimension(30, 30);
+        mappaNormale.setPreferredSize(buttonDimension);
+        mappaSatellitare.setPreferredSize(buttonDimension);
+        mappaMista.setPreferredSize(buttonDimension);
         
-        this.add(mappaNormale);
-        this.add(mappaSatellitare);
-        this.add(mappaMista);
+        mapButtonGroup.add(mappaNormale);
+        mapButtonGroup.add(mappaSatellitare);
+        mapButtonGroup.add(mappaMista);
+        
+        this.add(mapButtonGroup);
         
         mappaNormale.setEnabled(false);
         
@@ -77,7 +87,7 @@ public class Navbar extends JPanel {
         this.add(searchBar);
 
         
-        // Gestione placeholder
+        // Gestione placeholder della barra di ricerca
         searchBar.addFocusListener(new FocusListener() {
         	
             @Override
@@ -97,7 +107,7 @@ public class Navbar extends JPanel {
         
         
         // Sezione utente
-        JButton btnLogin = new JButton();
+        btnLogin = new JButton();
         
         btnLogin.setBounds(950, 1, 32, 30);
         
