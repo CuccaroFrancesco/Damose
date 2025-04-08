@@ -42,14 +42,14 @@ public class Damose extends JFrame {
         	
             @Override
             public void componentResized(ComponentEvent e) {
+            	
             	int newWidth = getWidth();
             	int newHeight = getHeight();
             	
             	navbar.setBounds(0, 0, newWidth, 70);
             	
-            	navbar.mapButtonGroup.setBounds(10, 10, 180, 50);
-            	navbar.searchBar.setBounds((newWidth - navbar.searchBar.getWidth()) / 2, 20, navbar.searchBar.getWidth(), 30);
-            	navbar.btnLogin.setBounds(newWidth - navbar.btnLogin.getWidth() - 20, 10, 50, 50);
+            	navbar.getSearchBar().setBounds((newWidth - navbar.getSearchBar().getWidth()) / 2, 20, navbar.getSearchBar().getWidth(), 35);
+            	navbar.getBtnLogin().setBounds(newWidth - navbar.getBtnLogin().getWidth() - 40, 10, 50, 50);
             	
             }
         });

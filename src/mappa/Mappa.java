@@ -43,7 +43,7 @@ public class Mappa extends JComponent {
         GeoPosition Roma = new GeoPosition(41.90, 12.49);
         
         mapViewer.setAddressLocation(Roma);
-        mapViewer.setZoom(7);
+        mapViewer.setZoom(4);
 
         
         // Listener per la gestione del mouse sulla mappa

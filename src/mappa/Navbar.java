@@ -9,12 +9,13 @@ import java.awt.event.*;
 public class Navbar extends JPanel {
 
 	private Mappa mapPanel;
-    public JTextField searchBar;
-    public JPanel mapButtonGroup;
+    private JTextField searchBar;
+    private JPanel mapButtonGroup;
     private JButton mappaNormale;
     private JButton mappaSatellitare;
     private JButton mappaMista;
-    public JButton btnLogin;
+    private JButton btnLogin;
+   
 
     public Navbar(Mappa mapPanel) {
     	
@@ -86,6 +87,7 @@ public class Navbar extends JPanel {
         mapButtonGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         
         mapButtonGroup.setOpaque(false);
+        mapButtonGroup.setBounds(30, 20, 180, 50);
         mapButtonGroup.setBackground(new Color(255, 255, 255, 0));
 
         mapButtonGroup.add(mappaNormale);
@@ -98,7 +100,7 @@ public class Navbar extends JPanel {
         // Barra di ricerca, con annessa gestione del testo placeholder
         searchBar = new JTextField("  Cerca linea o fermata...");
         
-        searchBar.setBounds(440, 5, 300, 30);
+        searchBar.setBounds(440, 5, 300, 35);
         searchBar.setBackground(new Color(255, 255, 255, 160));
         searchBar.setFont(new Font("Arial Nova", Font.BOLD, 12));
         
@@ -126,6 +128,7 @@ public class Navbar extends JPanel {
         btnLogin = new JButton();
         
         btnLogin.setPreferredSize(new Dimension(50, 50));
+        btnLogin.setBounds(getWidth() - btnLogin.getWidth() - 40, 10, 50, 50);
         
         ImageIcon icon = new ImageIcon("src/resources/user_placeholder.png");
         Image scaledImage = icon.getImage().getScaledInstance(44, 44, Image.SCALE_SMOOTH);
@@ -139,5 +142,18 @@ public class Navbar extends JPanel {
         		// TODO: azione da fare quando viene premuto il pulsante
         	}
         });
+    }
+    
+    
+    public JTextField getSearchBar() {
+    	return this.searchBar;
+    }
+    
+    public JPanel getMapButtonGroup() {
+    	return this.mapButtonGroup;
+    }
+    
+    public JButton getBtnLogin() {
+    	return this.btnLogin;
     }
 }
