@@ -23,8 +23,8 @@ public class Navbar extends JPanel {
 
         
         // Gestione delle caratteristiche della navbar
-        this.setOpaque(false);
-        this.setBackground(new Color(255, 255, 255, 0));
+        this.setOpaque(true);
+        this.setBackground(new Color(130, 36, 51));
         this.setLayout(null);
 
         
@@ -32,6 +32,10 @@ public class Navbar extends JPanel {
         mappaNormale = new JButton();
         mappaSatellitare = new JButton();
         mappaMista = new JButton();
+        
+        mappaNormale.setBackground(new Color(130, 36, 51));
+        mappaSatellitare.setBackground(new Color(130, 36, 51));
+        mappaMista.setBackground(new Color(130, 36, 51));
         
         Dimension buttonDimension = new Dimension(50, 50);
         mappaNormale.setPreferredSize(buttonDimension);
@@ -86,9 +90,8 @@ public class Navbar extends JPanel {
         // Raggruppamento dei pulsanti in un unico pannello
         mapButtonGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         
-        mapButtonGroup.setOpaque(false);
-        mapButtonGroup.setBounds(30, 20, 180, 50);
-        mapButtonGroup.setBackground(new Color(255, 255, 255, 0));
+        mapButtonGroup.setBounds(30, 10, 180, 50);
+        mapButtonGroup.setBackground(new Color(130, 36, 51));
 
         mapButtonGroup.add(mappaNormale);
         mapButtonGroup.add(mappaSatellitare);
@@ -100,9 +103,10 @@ public class Navbar extends JPanel {
         // Barra di ricerca, con annessa gestione del testo placeholder
         searchBar = new JTextField("  Cerca linea o fermata...");
         
-        searchBar.setBounds(440, 5, 300, 35);
-        searchBar.setBackground(new Color(255, 255, 255, 160));
+        searchBar.setBounds(getWidth() - searchBar.getWidth() / 2, 15, 500, 40);
+        searchBar.setBackground(new Color(202, 202, 202));
         searchBar.setFont(new Font("Arial Nova", Font.BOLD, 12));
+        searchBar.setForeground(new Color(0,0,0));
         
         this.add(searchBar);
 
@@ -126,6 +130,7 @@ public class Navbar extends JPanel {
         
         // Pulsante per la sezione utente
         btnLogin = new JButton();
+        btnLogin.setBackground(new Color(130, 36, 51));
         
         btnLogin.setPreferredSize(new Dimension(50, 50));
         btnLogin.setBounds(getWidth() - btnLogin.getWidth() - 40, 10, 50, 50);
