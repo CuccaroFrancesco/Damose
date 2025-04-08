@@ -30,8 +30,17 @@ public class Navbar extends JPanel {
         
         // Pulsanti per scelta del tipo di mappa (normale, satellitare, mista)
         mappaNormale = new JButton();
+        mappaNormale.setFocusPainted(false);
+        mappaNormale.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        mappaNormale.setBorderPainted(false);
         mappaSatellitare = new JButton();
+        mappaSatellitare.setFocusPainted(false);
+        mappaSatellitare.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        mappaSatellitare.setBorderPainted(false);
         mappaMista = new JButton();
+        mappaMista.setFocusPainted(false);
+        mappaMista.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        mappaMista.setBorderPainted(false);
         
         mappaNormale.setBackground(new Color(130, 36, 51));
         mappaSatellitare.setBackground(new Color(130, 36, 51));
@@ -133,6 +142,10 @@ public class Navbar extends JPanel {
         
         // Pulsante per la sezione utente e il login
         btnLogin = new JButton();
+        btnLogin.setContentAreaFilled(false);
+        btnLogin.setFocusPainted(false);
+        btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnLogin.setBorderPainted(false);
         btnLogin.setBackground(new Color(130, 36, 51));
         
         btnLogin.setPreferredSize(new Dimension(50, 50));
