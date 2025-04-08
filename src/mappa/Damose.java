@@ -20,42 +20,54 @@ public class Damose extends JFrame {
         
         // Creazione di un JLayeredPane per gestire i livelli
         JLayeredPane layeredPane = new JLayeredPane();
+        
         this.setContentPane(layeredPane);
 
         
         // Aggiunta della mappa alla finestra principale
         Mappa mapPanel = new Mappa();
+        
         mapPanel.setBounds(0, 60, screenSize.width, screenSize.height - 60);   // Dimensioni pari alle dimensioni dello schermo - altezza navbar
         layeredPane.add(mapPanel, JLayeredPane.DEFAULT_LAYER);
 
         
         // Aggiunta della navbar alla finestra principale
         Navbar navbar = new Navbar(mapPanel);
+        
         navbar.setBounds(0, 0, screenSize.width, 60);   // Posizione e dimensione della navbar
         layeredPane.add(navbar, JLayeredPane.PALETTE_LAYER);
         
-        // Aggiunta del pannello utente invisibile
+        
+        // Aggiunta del pannello utente (inizialmente invisibile)
         UserPanel userPanel = new UserPanel();
+        
         userPanel.setBounds(screenSize.width - 400, 70, 400, screenSize.height - 60);
         userPanel.setVisible(false);
         layeredPane.add(userPanel, Integer.valueOf(101));
         
-        // Adattamento dinamico delle dimensioni della navbar
+        
+        // Adattamento dinamico delle dimensioni della navbar e delle sue componenti
         this.addComponentListener(new ComponentAdapter() {
+        	
         	@Override
             public void componentResized(ComponentEvent e) {
-            	int newWidth = getWidth();
-            	int newHeight = getHeight();
+        		
+            	int newWidth = getWidth();     // Nuova larghezza della finestra
+            	int newHeight = getHeight();     // Nuova altezza della finestra
             	
             	navbar.setBounds(0, 0, newWidth, 70);
             	
-            	if ((newWidth / 2) - 250 <= 230) {
-            		if (newWidth - 340 >= 500) {
+            	if ((newWidth / 2) - 250 <= 230) {     // Se l'ascissa prevista per l'inizio della searchBar sarebbe minore di 230...
+            		
+            		if (newWidth - 340 >= 500) {     // ...e la larghezza della searchBar è minore o uguale allo spazio ad essa allocato...
             			navbar.getSearchBar().setBounds(230, 15, 500, 40);
-            		} else {
+            		}
+            		else {     // ...e la larghezza della searchBar è maggiore dello spazio ad essa allocato...
             			navbar.getSearchBar().setBounds(230, 15, newWidth - 340, 40);
             		}	
-            	} else {
+            		
+            	}
+            	else {
             		navbar.getSearchBar().setBounds((newWidth / 2) - 250, 15, 500, 40);
             	}
             	
@@ -64,15 +76,21 @@ public class Damose extends JFrame {
             }
         });
 
-        // Gestione del click sul bottone di login per mostrare/nascondere il pannello utente
+        
+        // Gestione del click sul pulsante di login per mostrare/nascondere il pannello utente
         navbar.getBtnLogin().addActionListener(new ActionListener() {
+        	
         	public void actionPerformed(ActionEvent e) {
+        		
         		if (userPanel.isVisible()) {
+        			
         			// Pannello invisibile e mappa scoperta
         			userPanel.setVisible(false);
                     mapPanel.setBounds(0, 60, screenSize.width, screenSize.height - 60);
+                    
         		} else {
-        			// Pannello mostrato e mappa coperta
+        			
+        			// Pannello visibile e mappa coperta
         			userPanel.setVisible(true);
                     mapPanel.setBounds(0, 60, screenSize.width - 400, screenSize.height - 60);
         		}
@@ -80,9 +98,12 @@ public class Damose extends JFrame {
         });
     }
 
+    
     public static void main(String[] args) {
+    	
         EventQueue.invokeLater(new Runnable() {
         	public void run() {
+        		
                 try {
                     Damose frame = new Damose();
                     frame.setVisible(true);

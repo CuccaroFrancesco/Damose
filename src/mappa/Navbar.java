@@ -118,20 +118,20 @@ public class Navbar extends JPanel {
             @Override
             public void focusGained(FocusEvent e) {
                 if (searchBar.getText().equals("  Cerca linea o fermata...")) {
-                    searchBar.setText("");   // Cancella il testo attuale
+                    searchBar.setText("");     // Cancella il testo attuale
                 }
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 if (searchBar.getText().isEmpty()) {
-                    searchBar.setText("  Cerca linea o fermata...");   // Reinserisce il testo predefinito
+                    searchBar.setText("  Cerca linea o fermata...");     // Reinserisce il testo predefinito
                 }
             }
         });
         
         
-        // Pulsante per la sezione utente
+        // Pulsante per la sezione utente e il login
         btnLogin = new JButton();
         btnLogin.setBackground(new Color(130, 36, 51));
         
@@ -152,9 +152,11 @@ public class Navbar extends JPanel {
     	return this.searchBar;
     }
     
+    
     public JPanel getMapButtonGroup() {
     	return this.mapButtonGroup;
     }
+    
     
     public JButton getBtnLogin() {
     	return this.btnLogin;
