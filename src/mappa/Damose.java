@@ -48,8 +48,21 @@ public class Damose extends JFrame {
             	
             	navbar.setBounds(0, 0, newWidth, 70);
             	
-            	navbar.getSearchBar().setBounds((newWidth - navbar.getSearchBar().getWidth()) / 2, 20, navbar.getSearchBar().getWidth(), 35);
-            	navbar.getBtnLogin().setBounds(newWidth - navbar.getBtnLogin().getWidth() - 40, 10, 50, 50);
+            	if ((newWidth / 2) - 250 <= 230) {
+            		
+            		if (newWidth - 340 >= 500) {
+            			navbar.getSearchBar().setBounds(230, 15, 500, 40);
+            		}
+            		else {
+            			navbar.getSearchBar().setBounds(230, 15, newWidth - 340, 40);
+            		}	
+            	}
+            	
+            	else {
+            		navbar.getSearchBar().setBounds((newWidth / 2) - 250, 15, 500, 40);
+            	}
+            	
+            	navbar.getBtnLogin().setBounds(newWidth - navbar.getBtnLogin().getWidth() - 30, 10, 50, 50);
             	
             }
         });

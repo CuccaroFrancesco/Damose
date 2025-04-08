@@ -90,7 +90,7 @@ public class Navbar extends JPanel {
         // Raggruppamento dei pulsanti in un unico pannello
         mapButtonGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         
-        mapButtonGroup.setBounds(30, 10, 180, 50);
+        mapButtonGroup.setBounds(30, 10, 170, 50);
         mapButtonGroup.setBackground(new Color(130, 36, 51));
 
         mapButtonGroup.add(mappaNormale);
@@ -103,10 +103,13 @@ public class Navbar extends JPanel {
         // Barra di ricerca, con annessa gestione del testo placeholder
         searchBar = new JTextField("  Cerca linea o fermata...");
         
-        searchBar.setBounds(getWidth() - searchBar.getWidth() / 2, 15, 500, 40);
+        searchBar.setBounds(290, 15, 500, 40);
+        searchBar.setMinimumSize(new Dimension(370, 40));
+        searchBar.setMaximumSize(new Dimension(500, 40));
+        
         searchBar.setBackground(new Color(202, 202, 202));
         searchBar.setFont(new Font("Arial Nova", Font.BOLD, 12));
-        searchBar.setForeground(new Color(0,0,0));
+        searchBar.setForeground(new Color(0, 0, 0));
         
         this.add(searchBar);
 
