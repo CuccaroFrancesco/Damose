@@ -145,11 +145,6 @@ public class Navbar extends JPanel {
         
         this.add(btnLogin);
         
-        btnLogin.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		// TODO: azione da fare quando viene premuto il pulsante
-        	}
-        });
     }
     
     

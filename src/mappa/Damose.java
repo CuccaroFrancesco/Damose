@@ -25,59 +25,67 @@ public class Damose extends JFrame {
         
         // Aggiunta della mappa alla finestra principale
         Mappa mapPanel = new Mappa();
-        
-        mapPanel.setBounds(0, 0, screenSize.width, screenSize.height);   // Dimensioni pari alle dimensioni dello schermo
+        mapPanel.setBounds(0, 60, screenSize.width, screenSize.height - 60);   // Dimensioni pari alle dimensioni dello schermo - altezza navbar
         layeredPane.add(mapPanel, JLayeredPane.DEFAULT_LAYER);
 
         
         // Aggiunta della navbar alla finestra principale
         Navbar navbar = new Navbar(mapPanel);
-        
         navbar.setBounds(0, 0, screenSize.width, 60);   // Posizione e dimensione della navbar
         layeredPane.add(navbar, JLayeredPane.PALETTE_LAYER);
         
+        // Aggiunta del pannello utente invisibile
+        UserPanel userPanel = new UserPanel();
+        userPanel.setBounds(screenSize.width - 400, 70, 400, screenSize.height - 60);
+        userPanel.setVisible(false);
+        layeredPane.add(userPanel, Integer.valueOf(101));
         
         // Adattamento dinamico delle dimensioni della navbar
         this.addComponentListener(new ComponentAdapter() {
-        	
-            @Override
+        	@Override
             public void componentResized(ComponentEvent e) {
-            	
             	int newWidth = getWidth();
             	int newHeight = getHeight();
             	
             	navbar.setBounds(0, 0, newWidth, 70);
             	
             	if ((newWidth / 2) - 250 <= 230) {
-            		
             		if (newWidth - 340 >= 500) {
             			navbar.getSearchBar().setBounds(230, 15, 500, 40);
-            		}
-            		else {
+            		} else {
             			navbar.getSearchBar().setBounds(230, 15, newWidth - 340, 40);
             		}	
-            	}
-            	
-            	else {
+            	} else {
             		navbar.getSearchBar().setBounds((newWidth / 2) - 250, 15, 500, 40);
             	}
             	
             	navbar.getBtnLogin().setBounds(newWidth - navbar.getBtnLogin().getWidth() - 30, 10, 50, 50);
-            	
+            	userPanel.setBounds(newWidth - 400, 70, 400, newHeight);
             }
+        });
+
+        // Gestione del click sul bottone di login per mostrare/nascondere il pannello utente
+        navbar.getBtnLogin().addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		if (userPanel.isVisible()) {
+        			// Pannello invisibile e mappa scoperta
+        			userPanel.setVisible(false);
+                    mapPanel.setBounds(0, 60, getWidth(), getHeight() - 60);
+        		} else {
+        			// Pannello mostrato e mappa coperta
+        			userPanel.setVisible(true);
+                    mapPanel.setBounds(0, 60, getWidth() - 400, getHeight() - 60);
+        		}
+        	}
         });
     }
 
     public static void main(String[] args) {
-    	
         EventQueue.invokeLater(new Runnable() {
-        	
-            public void run() {
-            	
+        	public void run() {
                 try {
                     Damose frame = new Damose();
                     frame.setVisible(true);
-                    
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
