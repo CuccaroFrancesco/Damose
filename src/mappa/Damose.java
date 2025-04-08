@@ -70,11 +70,11 @@ public class Damose extends JFrame {
         		if (userPanel.isVisible()) {
         			// Pannello invisibile e mappa scoperta
         			userPanel.setVisible(false);
-                    mapPanel.setBounds(0, 60, getWidth(), getHeight() - 60);
+                    mapPanel.setBounds(0, 60, screenSize.width, screenSize.height - 60);
         		} else {
         			// Pannello mostrato e mappa coperta
         			userPanel.setVisible(true);
-                    mapPanel.setBounds(0, 60, getWidth() - 400, getHeight() - 60);
+                    mapPanel.setBounds(0, 60, screenSize.width - 400, screenSize.height - 60);
         		}
         	}
         });
