@@ -64,7 +64,7 @@ public class Mappa extends JComponent {
     public void updateMap(DefaultTileFactory tileFactory) {
     	
         mapViewer.setTileFactory(tileFactory);
-        mapViewer.setZoom(7);
+        mapViewer.setZoom(4);
         mapViewer.repaint();
     }
 }
