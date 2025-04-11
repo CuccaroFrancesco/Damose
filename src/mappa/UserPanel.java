@@ -1,129 +1,158 @@
 package mappa;
 
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.Color;
-import java.awt.Dimension;
-import javax.swing.JTextPane;
-import java.awt.Component;
-import java.awt.Cursor;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.border.EtchedBorder;
-
-import com.jgoodies.forms.factories.Borders;
-import javax.swing.JTextField;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JPasswordField;
 
 public class UserPanel extends JPanel {
 	
+	// Costruzione del pannello utente (login, registrazione e profilo)
 	public UserPanel() {
 		
-		setBackground(new Color(130, 36, 51));
-		setLayout(null);
+		this.setBackground(new Color(130, 36, 51));
+		this.setLayout(null);
 		
+		
+		// Pulsante per l'accesso (con account già esistente)
 		JButton btnAccedi = new JButton("Accedi");
+		
 		btnAccedi.setBounds(75, 320, 250, 45);
 		btnAccedi.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		add(btnAccedi);
 		
+		this.add(btnAccedi);
+		
+		
+		// Pulsante per la registrazione (creazione di un nuovo account)
 		JButton btnRegistrati = new JButton("Registrati");
+		
 		btnRegistrati.setBounds(75, 400, 250, 45);
 		btnRegistrati.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-		add(btnRegistrati);
+		this.add(btnRegistrati);
 		
-		// Scritta Ospite
 		
+		// Scritta "Ospite"
 		JLabel nomeUtente = new JLabel("Ospite");
 		
 		nomeUtente.setForeground(new Color(255, 255, 255));
 		nomeUtente.setFont(new Font("Arial Nova", Font.BOLD, 24));
+		nomeUtente.setFocusable(false);
 		
 		nomeUtente.setHorizontalAlignment(SwingConstants.CENTER);
-		nomeUtente.setFocusable(false);
 		nomeUtente.setBounds(0, 200, 400, 50);
 		
-		add(nomeUtente);
+		this.add(nomeUtente);
 		
-		JTextField txtUsername = new JTextField();
-		txtUsername.setBounds(75, 320, 250, 35);
-		txtUsername.setVisible(false);
-		add(txtUsername);
 		
-		JPasswordField txtPassword = new JPasswordField();
-		txtPassword.setBounds(75, 400, 250, 35);
-		txtPassword.setVisible(false);
-		add(txtPassword);
+		// Casella di testo per inserire lo username dell'account a cui si vuole accedere
+		JTextField inputUsername = new JTextField();
 		
+		inputUsername.setBounds(75, 320, 250, 35);
+		inputUsername.setVisible(false);
+		
+		this.add(inputUsername);
+		
+		
+		// Casella di testo per inserire la password dell'account a cui si vuole accedere
+		JPasswordField inputPassword = new JPasswordField();
+		
+		inputPassword.setBounds(75, 400, 250, 35);
+		inputPassword.setVisible(false);
+		
+		this.add(inputPassword);
+		
+		
+		// Pulsante per confermare le credenziali di login
 		JButton btnConferma = new JButton("Login");
-		btnConferma.setBounds(100, 480, 200, 45);
-		btnConferma.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnConferma.setVisible(false);
-		add(btnConferma);
 		
+		btnConferma.setBounds(100, 480, 200, 45);
+		btnConferma.setVisible(false);
+		btnConferma.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
+		this.add(btnConferma);
+		
+		
+		// Pulsante per tornare indietro
 		JButton btnBack = new JButton("Torna indietro");
-		btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnBack.setBorderPainted(false);
-		btnBack.setFocusPainted(false);
-		btnBack.setFont(new Font("Arial Nova", Font.BOLD, 14));
-		btnBack.setForeground(new Color(255, 255, 255));
-		btnBack.setContentAreaFilled(false);
+		
 		btnBack.setBounds(10, 11, 185, 23);
 		btnBack.setVisible(false);
-		add(btnBack);
+		btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
+		btnBack.setFont(new Font("Arial Nova", Font.BOLD, 14));
+		btnBack.setForeground(new Color(255, 255, 255));
+		
+		btnBack.setBorderPainted(false);
+		btnBack.setFocusPainted(false);
+		btnBack.setContentAreaFilled(false);
+	
+		this.add(btnBack);
+		
+		
+		// Label per la casella di testo inputUsername
 		JLabel lblUsername = new JLabel("Username");
+		
+		lblUsername.setBounds(75, 276, 95, 35);
+		lblUsername.setVisible(false);
+		
 		lblUsername.setForeground(Color.WHITE);
 		lblUsername.setFont(new Font("Arial Nova", Font.BOLD, 18));
 		lblUsername.setFocusable(false);
-		lblUsername.setVisible(false);
-		lblUsername.setBounds(75, 276, 95, 35);
-		add(lblUsername);
 		
+		this.add(lblUsername);
+		
+		
+		// Label per la casella di testo inputPassword
 		JLabel lblPassword = new JLabel("Password");
+		
+		lblPassword.setBounds(75, 364, 95, 35);
+		lblPassword.setVisible(false);
+		
 		lblPassword.setForeground(Color.WHITE);
 		lblPassword.setFont(new Font("Arial Nova", Font.BOLD, 18));
 		lblPassword.setFocusable(false);
-		lblPassword.setVisible(false);
-		lblPassword.setBounds(75, 364, 95, 35);
-		add(lblPassword);
 		
+		this.add(lblPassword);
+		
+		
+		// Funzionalità per il pulsante btnAccedi, rende visibile la schermata di login
 		btnAccedi.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
+				
 				btnBack.setVisible(true);
+				
 				btnAccedi.setVisible(false);
 				btnRegistrati.setVisible(false);
-				txtUsername.setVisible(true);
-				txtPassword.setVisible(true);
-				btnConferma.setVisible(true);
+				
+				inputUsername.setVisible(true);
+				inputPassword.setVisible(true);
 				lblUsername.setVisible(true);
 				lblPassword.setVisible(true);
+				
+				btnConferma.setVisible(true);
 			}
 		});
 		
 		
+		// Funzionalità per il pulsante btnBack, rende visibile la schermata di accesso/registrazione
 		btnBack.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
+				
 				btnBack.setVisible(false);
-				txtUsername.setVisible(false);
-				txtPassword.setVisible(false);
-				btnConferma.setVisible(false);
-				lblUsername.setVisible(false);
-				lblPassword.setVisible(false);
+				
 				btnAccedi.setVisible(true);
 				btnRegistrati.setVisible(true);
+				
+				inputUsername.setVisible(false);
+				inputPassword.setVisible(false);
+				lblUsername.setVisible(false);
+				lblPassword.setVisible(false);
+				
+				btnConferma.setVisible(false);
 			}
 		});
-
 	}
 }
