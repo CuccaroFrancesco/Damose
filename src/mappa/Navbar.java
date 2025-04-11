@@ -37,9 +37,6 @@ public class Navbar extends JPanel {
         mappaSatellitare.setFocusPainted(false);
         mappaMista.setFocusPainted(false);
         
-        mappaNormale.setBorderPainted(false);
-        mappaSatellitare.setBorderPainted(false);
-        mappaMista.setBorderPainted(false);
         
         mappaNormale.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         mappaSatellitare.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

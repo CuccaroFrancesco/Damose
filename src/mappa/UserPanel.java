@@ -11,6 +11,7 @@ import java.awt.Dimension;
 public class UserPanel extends JPanel {
 	
 	public UserPanel() {
+		
 		setBackground(new Color(130, 36, 51));
 		
 		// Ignora momentaneamente, stavo provando il gridBagLayout che forse non è male

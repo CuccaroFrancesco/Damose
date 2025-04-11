@@ -52,27 +52,8 @@ public class Damose extends JFrame {
         	@Override
             public void componentResized(ComponentEvent e) {
         		
-            	int newWidth = getWidth();     // Nuova larghezza della finestra
-            	int newHeight = getHeight();     // Nuova altezza della finestra
+        		calibra(navbar, userPanel);
             	
-            	navbar.setBounds(0, 0, newWidth, 70);
-            	
-            	if ((newWidth / 2) - 250 <= 230) {     // Se l'ascissa prevista per l'inizio della searchBar sarebbe minore di 230...
-            		
-            		if (newWidth - 340 >= 500) {     // ...e la larghezza della searchBar è minore o uguale allo spazio ad essa allocato...
-            			navbar.getSearchBar().setBounds(230, 15, 500, 40);
-            		}
-            		else {     // ...e la larghezza della searchBar è maggiore dello spazio ad essa allocato...
-            			navbar.getSearchBar().setBounds(230, 15, newWidth - 340, 40);
-            		}	
-            		
-            	}
-            	else {
-            		navbar.getSearchBar().setBounds((newWidth / 2) - 250, 15, 500, 40);
-            	}
-            	
-            	navbar.getBtnLogin().setBounds(newWidth - navbar.getBtnLogin().getWidth() - 30, 10, 50, 50);
-            	userPanel.setBounds(newWidth - 400, 70, 400, newHeight);
             }
         });
 
@@ -87,17 +68,70 @@ public class Damose extends JFrame {
         			// Pannello invisibile e mappa scoperta
         			userPanel.setVisible(false);
                     mapPanel.setBounds(0, 60, screenSize.width, screenSize.height - 60);
+                    calibra(navbar, userPanel);
                     
         		} else {
         			
         			// Pannello visibile e mappa coperta
         			userPanel.setVisible(true);
-                    mapPanel.setBounds(0, 60, screenSize.width - 400, screenSize.height - 60);
+                    mapPanel.setBounds(0, 60, screenSize.width - 400, screenSize.height);
+                    calibra(navbar, userPanel);
         		}
         	}
         });
     }
 
+    
+    public void calibra(Navbar navbar, UserPanel userPanel) {
+    	
+    	int newWidth = getWidth();              // Nuova larghezza della finestra
+    	int newHeight = getHeight();            // Nuova altezza della finestra
+    	
+    	userPanel.setBounds(newWidth - 400, 0, 400, newHeight);
+    	
+    	if(userPanel.isVisible()) {                                                          // Se il pannello utente è visibile...
+    		
+    		navbar.setBounds(0, 0, getWidth() - userPanel.getWidth(), 70);
+    		navbar.getBtnLogin().setBounds(navbar.getWidth() - navbar.getBtnLogin().getWidth() - 30, 10, 50, 50);
+    		this.setMinimumSize(new Dimension(1080, 720));
+    		
+    		
+    		if ((navbar.getWidth() / 2) - 250 <= 230) {                                      // ...e l'ascissa prevista per l'inizio della searchBar sarebbe minore di 230...
+        		
+        		if (navbar.getWidth() - 340 <= 500) {                                        // ...e la larghezza della searchBar è maggiore o uguale allo spazio ad essa allocato...
+        			navbar.getSearchBar().setBounds(230, 15, navbar.getWidth() - 340, 40);
+        		} 
+        		
+        		else {                                                                       // ...e la larghezza della searchBar è minore dello spazio ad essa allocato...
+        			navbar.getSearchBar().setBounds(230, 15, 500, 40);
+        		}	
+        	}
+        	
+        	else {
+        		navbar.getSearchBar().setBounds((navbar.getWidth() / 2) - 250, 15, 500, 40);
+        	}
+    		
+    	} else {                                                                             // Se il pannello utente non è visibile...
+    		
+    		navbar.setBounds(0, 0, newWidth, 70);
+    		navbar.getBtnLogin().setBounds(newWidth - navbar.getBtnLogin().getWidth() - 30, 10, 50, 50);
+    		
+    		if ((newWidth / 2) - 250 <= 230) {                                               // ...e l'ascissa prevista per l'inizio della searchBar sarebbe minore di 230...
+        		
+        		if (newWidth - 340 <= 500) {                                                 // ...e la larghezza della searchBar è maggiore o uguale allo spazio ad essa allocato...
+        			navbar.getSearchBar().setBounds(230, 15, newWidth - 340, 40);
+        		} 
+        		
+        		else {                                                                       // ...e la larghezza della searchBar è minore dello spazio ad essa allocato...
+        			navbar.getSearchBar().setBounds(230, 15, 500, 40);
+        		}	
+        	}
+        	
+        	else {
+        		navbar.getSearchBar().setBounds((navbar.getWidth() / 2) - 250, 15, 500, 40);
+        	}
+    	}
+    }
     
     public static void main(String[] args) {
     	
