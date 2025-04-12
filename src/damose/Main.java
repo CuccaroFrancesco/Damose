@@ -1,13 +1,15 @@
-package mappa;
+package damose;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 
-public class Damose extends JFrame {
+public class Main extends JFrame {
 
-    public Damose() {
+    public Main() {
     	
+        
     	// Costruzione e gestione della finestra principale
     	Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
     	
@@ -52,7 +54,7 @@ public class Damose extends JFrame {
         	@Override
             public void componentResized(ComponentEvent e) {
         		
-        		calibra(navbar, userPanel);
+        		calibra(navbar, userPanel, mapPanel);
             	
             }
         });
@@ -68,21 +70,21 @@ public class Damose extends JFrame {
         			// Pannello invisibile e mappa scoperta
         			userPanel.setVisible(false);
                     mapPanel.setBounds(0, 60, screenSize.width, screenSize.height - 60);
-                    calibra(navbar, userPanel);
+                    calibra(navbar, userPanel, mapPanel);
                     
         		} else {
         			
         			// Pannello visibile e mappa coperta
         			userPanel.setVisible(true);
-                    mapPanel.setBounds(0, 60, screenSize.width - 400, screenSize.height);
-                    calibra(navbar, userPanel);
+        			mapPanel.setBounds(0, 60, screenSize.width - 400, screenSize.height);
+        			calibra(navbar, userPanel, mapPanel);
         		}
         	}
         });
     }
 
     
-    public void calibra(Navbar navbar, UserPanel userPanel) {
+    public void calibra(Navbar navbar, UserPanel userPanel, Mappa mapPanel) {
     	
     	int newWidth = getWidth();              // Nuova larghezza della finestra
     	int newHeight = getHeight();            // Nuova altezza della finestra
@@ -91,6 +93,7 @@ public class Damose extends JFrame {
     	
     	if(userPanel.isVisible()) {                                                          // Se il pannello utente è visibile...
     		
+    		mapPanel.setBounds(0, 60, getWidth() - 400, getHeight());
     		navbar.setBounds(0, 0, getWidth() - userPanel.getWidth(), 70);
     		navbar.getBtnLogin().setBounds(navbar.getWidth() - navbar.getBtnLogin().getWidth() - 30, 10, 50, 50);
     		this.setMinimumSize(new Dimension(1080, 720));
@@ -139,7 +142,8 @@ public class Damose extends JFrame {
         	public void run() {
         		
                 try {
-                    Damose frame = new Damose();
+                	System.out.println(new File("files/utenti.txt").getAbsolutePath());
+                    Main frame = new Main();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();

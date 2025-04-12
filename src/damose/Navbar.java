@@ -1,4 +1,4 @@
-package mappa;
+package damose;
 
 import javax.swing.*;
 import java.awt.*;

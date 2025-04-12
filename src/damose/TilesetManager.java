@@ -1,4 +1,4 @@
-package mappa;
+package damose;
 
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.VirtualEarthTileFactoryInfo;

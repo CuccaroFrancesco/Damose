@@ -1,4 +1,4 @@
-package mappa;
+package damose;
 
 import java.awt.*;
 import org.jxmapviewer.JXMapViewer;
