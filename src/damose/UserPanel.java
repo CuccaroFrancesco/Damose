@@ -3,6 +3,7 @@ package damose;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 
 public class UserPanel extends JPanel {
@@ -135,6 +136,18 @@ public class UserPanel extends JPanel {
 			this.add(inputNome);
 		
 // ---------------------------------------------------------------------------------------------
+			
+			JTextPane resoconto = new JTextPane();
+			resoconto.setMargin(new Insets(3, 5, 3, 5));
+			resoconto.setFont(new Font("Arial Nova", Font.BOLD, 12));
+			resoconto.setFocusable(false);
+			resoconto.setVisible(false);
+			resoconto.setEditable(false);
+			resoconto.setText("Errore");
+			resoconto.setBounds(75, 100, 250, 35);
+			add(resoconto);
+			
+// ---------------------------------------------------------------------------------------------
 		
 		// Pulsante per confermare le credenziali di login
 			JButton btnConfermaLogin = new JButton("Conferma");
@@ -242,20 +255,25 @@ public class UserPanel extends JPanel {
 						titolo.setText("Ospite");
 						titolo.setBounds(0, 200, 400, 50);
 						btnBack.setVisible(false);
+						resoconto.setVisible(false);
 						
 						btnAccedi.setVisible(true);
 						btnRegistrati.setVisible(true);
 						
 						lblNome.setVisible(false);
+						inputNome.setText("");
 						inputNome.setVisible(false);
 						
 						lblUsername.setVisible(false);
+						inputUsername.setText("");
 						inputUsername.setVisible(false);
 						
 						lblPassword.setVisible(false);
+						inputPassword.setText("");
 						inputPassword.setVisible(false);
 						
 						lblConfirmPassword.setVisible(false);
+						inputConfirmPassword.setText("");
 						inputConfirmPassword.setVisible(false);
 						
 						btnConfermaRegistr.setVisible(false);
@@ -270,6 +288,28 @@ public class UserPanel extends JPanel {
 		// Funzionalità per il pulsante Conferma Registrazione
 			btnConfermaRegistr.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					String newUsername = inputUsername.getText().trim();
+					String newNome = inputNome.getText().trim();
+					String newPassword = inputPassword.getText().trim();
+					String newConfirmPass = inputConfirmPassword.getText().trim();
+					Registrazione registrazione = new Registrazione();
+					try {
+						String result = registrazione.addUser(newNome, newUsername, newPassword, newConfirmPass);
+						resoconto.setText(result);
+						if(result.endsWith("!"))
+						{
+							resoconto.setVisible(true);
+							resoconto.setForeground(new Color(0, 255, 0));
+						}
+						else
+						{
+							resoconto.setVisible(true);
+							resoconto.setForeground(new Color(255, 0, 0));
+						}
+							
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 					
 				}
 			});

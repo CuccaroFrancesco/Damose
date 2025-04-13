@@ -3,42 +3,42 @@ package damose;
 import java.io.*;
 public class Registrazione {
 	
-	private String nome;
-	private String username;
-	private String password;
-	
-	public Boolean setNome(String newName) {
+	public String setNome(String newName) {
 		// Controllo che il nome sia stato inserito correttamente
-		if(!newName.trim().isEmpty()) {
-			this.setNome(newName);
-			return true;
+		if(!newName.isBlank()) {
+			return "Verificata";
 		} else {
-			return false;
+			return "Nome non inserito.";
 		}
 	}
 	
-	public Boolean setUsername(String newUsername) throws IOException {
+	public String setUsername(String newUsername) throws IOException {
 		
 		// Creo il reader per il file di testo "utenti.txt"
 		BufferedReader reader = new BufferedReader(new FileReader("files/utenti.txt"));
         String riga;
         
+        // Controllo che lo username sia stato inserito correttamente
+        if (newUsername.isBlank()) {        	
+        	reader.close();
+        	return "Username non inserito.";
+        }
+        
         // Controllo se l'utente esiste già
 		while ((riga = reader.readLine()) != null) {
             String[] dati = riga.split(",");
-            if (dati.length > 0 && dati[0]==newUsername) {
+            if (dati.length > 0 && dati[0].trim().equals(newUsername.trim())) {
                 reader.close();
-                return false;
+                return "Username già in uso.";
             }
         }
 
 		// Restituisco true se l'operazione è andata a buon fine, se no false
         reader.close();
-        this.username = newUsername;
-        return true;
+        return "Verificata";
 	}
 	
-	public String setPassword(String newPass) {
+	public String setPassword(String newPass, String confirmPass) {
 		
 	    // Variabili di verifica
 	    boolean haMaiuscola = false;
@@ -48,10 +48,14 @@ public class Registrazione {
 	    
 	    String simboli = "/*-+!£$%&=?€";
 	    
+	    // Controllo che la password sia stata inserita correttamente
+	    if (newPass.isBlank()) 
+        	return "Password non inserita.";
+	    
 	    // Controllo se la lunghezza è minima
-	    if (newPass.length() < 8) {
+	    if (newPass.length() < 8) 
 	        return "La password deve essere lunga almeno 8 caratteri.";
-	    }
+	    
 	    
 	    // Controllo ogni singolo carattere
 	    for (char c : newPass.toCharArray()) {
@@ -72,37 +76,44 @@ public class Registrazione {
 	        return "La password deve contenere almeno un numero.";
 	    
 	    if (!haSimbolo) 
-	        return "La password deve contenere almeno un simbolo speciale (es. !£$%&=?€).";
+	        return "La password deve contenere almeno un simbolo speciale (/*-+!£$%&=?€).";
+	    
+	    // Controllo che la password sia stata confermata 
+	    if (confirmPass.isBlank()) 
+        	return "Conferma la password.";
+        
+	    
+	    // Controllo che le due password siano uguali
+	    if (!newPass.equals(confirmPass))
+	    	return "Le due password non corrispondono.";
 	    
 	    
-	    // Se non ci sono errori, la password è valida
-	    this.password = newPass;
 	    return "Verificata";
 	}
 
 	
-	public String Registrazione(String nome, String username, String password) throws IOException
+	public String addUser(String nome, String username, String password, String confirmPass) throws IOException
 	{
 		// Verifico che tutto abbia superato i controlli
 		
-		if(!setNome(nome))
-			return "Nome non inserito";
+		if(!setNome(nome).equals("Verificata"))
+			return setNome(nome);
 		
-		if (!setUsername(username))
-			return "Username già in uso";
+		if (!setUsername(username).equals("Verificata"))
+			return setUsername(username);
 		
-		if (setPassword(password) != "Verificata") 
-            return setPassword(password);
+		if (!setPassword(password, confirmPass).equals("Verificata")) 
+            return setPassword(password, confirmPass);
 		
 		
 		// Inserisco l'utente all'interno del file di testo
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter("files/utenti.txt", true));
-		writer.write(nome + "," + username + "," + password + "\n");
+		writer.write(username + "," + nome + "," + password + "\n");
 		writer.flush();
 		writer.close();
 		
-		return "Utente registrato correttamente";
+		return "Utente registrato correttamente!";
 	}	
 	
 }
