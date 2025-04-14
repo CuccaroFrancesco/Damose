@@ -16,6 +16,7 @@ import java.io.File;
 public class Mappa extends JComponent {
 
     private JXMapViewer mapViewer;
+    private FileBasedLocalCache localCache;
 
     public Mappa() {
     	
@@ -36,7 +37,8 @@ public class Mappa extends JComponent {
         tileFactory.setThreadPoolSize(8);
         
         File cacheDir = new File(System.getProperty("user.home") + File.separator + ".jxmapviewer2");
-        tileFactory.setLocalCache(new FileBasedLocalCache(cacheDir, false));
+        localCache = new FileBasedLocalCache(cacheDir, true);
+        tileFactory.setLocalCache(localCache);
 
         
         // Impostazione della posizione e dello zoom iniziale
@@ -60,6 +62,9 @@ public class Mappa extends JComponent {
         this.add(mapViewer);
     }
 
+    public FileBasedLocalCache getLocalCache() {
+        return localCache;
+    }
     
     public void updateMap(DefaultTileFactory tileFactory) {
     	
