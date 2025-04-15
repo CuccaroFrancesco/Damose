@@ -10,9 +10,11 @@ import java.io.IOException;
 
 public class UserPanel extends JPanel {
 	
+	private Utente utente;
+	
 	// Costruzione del pannello utente (login, registrazione e profilo)
-	public UserPanel() {
-		
+	public UserPanel(Utente utente) {
+		this.utente = utente;
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);
 		
@@ -433,7 +435,51 @@ public class UserPanel extends JPanel {
 		// Funzionalità per il pulsante "Conferma Login"
 		btnConfermaLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO: 
+				String username = inputUsername.getText().trim();
+				String password = inputPassword.getText().trim();
+				try {
+					String resoconto = utente.accedi(username, password);
+					if(resoconto.equals("Verificata."))
+					{
+						titolo.setText(utente.getUsername());
+						btnBack.setVisible(false);
+						
+						lblUsername.setVisible(false);
+						inputUsername.setText("");
+						inputUsername.setVisible(false);
+								
+						lblPassword.setVisible(false);
+						inputPassword.setText("");
+						inputPassword.setVisible(false);
+						
+						btnConfermaLogin.setVisible(false);
+						
+						erroreUsername.setVisible(false);
+						errorePassword.setVisible(false);
+					}
+					else {
+						errorePassword.setVisible(true);
+						inputPassword.setBorder(new LineBorder(Color.RED, 1));
+						if(password.isBlank()) {
+							errorePassword.setText("Password non inserita.");
+						} else {
+							if(resoconto.equals("Password errata.") ) {							
+								errorePassword.setText(resoconto);
+							}
+						}
+						if(resoconto.equals("Utente non esistente.") || resoconto.equals("Username non inserito.")){
+							erroreUsername.setText(resoconto);
+							erroreUsername.setVisible(true);
+							inputUsername.setBorder(new LineBorder(Color.RED, 1));
+						} else {
+							erroreUsername.setVisible(false);
+							inputUsername.setBorder(new LineBorder(Color.GREEN, 1));
+						}
+						
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 	}

@@ -8,7 +8,8 @@ import java.io.File;
 public class Main extends JFrame {
 
     public Main() {
-    	
+    	// Instanza dell'utente
+    	Utente utente = new Utente();
         
     	// Costruzione e gestione della finestra principale
     	Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
@@ -41,7 +42,7 @@ public class Main extends JFrame {
         
         
         // Aggiunta del pannello utente (inizialmente invisibile)
-        UserPanel userPanel = new UserPanel();
+        UserPanel userPanel = new UserPanel(utente);
         
         userPanel.setBounds(screenSize.width - 400, 70, 400, screenSize.height - 60);
         userPanel.setVisible(false);
@@ -55,7 +56,6 @@ public class Main extends JFrame {
             public void componentResized(ComponentEvent e) {
         		
         		calibra(navbar, userPanel, mapPanel);
-            	
             }
         });
 
