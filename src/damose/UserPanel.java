@@ -1,6 +1,8 @@
 package damose;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -193,10 +195,13 @@ public class UserPanel extends JPanel {
 		
 		// Label che viene visualizzata se la registrazione è stata effettuata correttamente
 		JLabel registrazioneEffettuata = new JLabel();
-		
-		registrazioneEffettuata.setFont(new Font("Arial Nova", Font.BOLD, 12));
-		registrazioneEffettuata.setForeground(new Color(0, 255, 0));
 		registrazioneEffettuata.setVisible(false);
+		registrazioneEffettuata.setHorizontalAlignment(SwingConstants.CENTER);
+		registrazioneEffettuata.setHorizontalTextPosition(SwingConstants.CENTER);
+		
+		registrazioneEffettuata.setFont(new Font("Arial Nova", Font.BOLD, 20));
+		registrazioneEffettuata.setForeground(new Color(0, 255, 0));
+		registrazioneEffettuata.setBounds(0, 220 , 400, 50);
 		
 		this.add(registrazioneEffettuata);
 		
@@ -261,6 +266,7 @@ public class UserPanel extends JPanel {
 				lblPassword.setVisible(true);
 					
 				btnConfermaLogin.setVisible(true);
+				registrazioneEffettuata.setVisible(false);
 			}
 		});
 		
@@ -271,7 +277,7 @@ public class UserPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 					
 				titolo.setText("Registrazione");
-				titolo.setBounds(0, 140, 400, 50);
+				titolo.setBounds(0, 120, 400, 50);
 				btnBack.setVisible(true);
 					
 				btnAccedi.setVisible(false);
@@ -355,33 +361,66 @@ public class UserPanel extends JPanel {
 					if (!resultNome.equals("Verificata.")) {
 						erroreNome.setText(resultNome);
 						erroreNome.setVisible(true);
+						inputNome.setBorder(new LineBorder(Color.RED, 1));
 					} else {
 						erroreNome.setVisible(false);
+						inputNome.setBorder(new LineBorder(Color.GREEN, 1));
 					}
 					
 					if (!resultUsername.equals("Verificata.")) {
 						erroreUsername.setText(resultUsername);
 						erroreUsername.setVisible(true);
+						inputUsername.setBorder(new LineBorder(Color.RED, 1));
 					} else {
 						erroreUsername.setVisible(false);
+						inputUsername.setBorder(new LineBorder(Color.GREEN, 1));
 					}
 					
 					if (!resultPassword.equals("Verificata.")) {
 						errorePassword.setText(resultPassword);
 						errorePassword.setVisible(true);
+						inputPassword.setBorder(new LineBorder(Color.RED, 1));
 					} else {
 						errorePassword.setVisible(false);
+						inputPassword.setBorder(new LineBorder(Color.GREEN, 1));
 					}
 					
 					if (!resultConfermaPassword.equals("Verificata.")) {
 						erroreConfermaPassword.setText(resultConfermaPassword);
 						erroreConfermaPassword.setVisible(true);
+						inputConfermaPassword.setBorder(new LineBorder(Color.RED, 1));
 					} else {
 						erroreConfermaPassword.setVisible(false);
+						inputConfermaPassword.setBorder(new LineBorder(Color.GREEN, 1));
 					}
 					
 					if (resultNome.equals("Verificata.") && resultUsername.equals("Verificata.") && resultPassword.equals("Verificata.") && resultConfermaPassword.equals("Verificata.")) {
+						
+						titolo.setText("");
+						btnBack.setVisible(false);
+						
 						registrazioneEffettuata.setText(Registrazione.addUser(newNome, newUsername, newPassword, newConfermaPassword));
+						registrazioneEffettuata.setVisible(true);
+								
+						btnAccedi.setVisible(true);
+								
+						lblNome.setVisible(false);
+						inputNome.setText("");
+						inputNome.setVisible(false);
+								
+						lblUsername.setVisible(false);
+						inputUsername.setText("");
+						inputUsername.setVisible(false);
+								
+						lblPassword.setVisible(false);
+						inputPassword.setText("");
+						inputPassword.setVisible(false);
+								
+						lblConfermaPassword.setVisible(false);
+						inputConfermaPassword.setText("");
+						inputConfermaPassword.setVisible(false);
+								
+						btnConfermaRegistr.setVisible(false);
 					}
 							
 				} catch (IOException e1) {

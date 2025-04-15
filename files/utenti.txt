@@ -1,4 +1,2 @@
-Nova,Francesco,Banana08$
+Nova,Francesco,Banana04$
 rauliscu,Raul,MiPiaceJava$01
-DaniCal05,Daniele,FrancescoRaul%5
-DajeRoma07,Lorenzo,Diocane99$
