@@ -5,7 +5,7 @@ import java.io.*;
 public class Registrazione {
 	
 	// Metodo che controlla la validità del nome inserito
-	public String checkNome(String newName) {
+	public static String checkNome(String newName) {
 		
 		if (!newName.isBlank()) {
 			return "Verificata.";
@@ -16,7 +16,7 @@ public class Registrazione {
 	
 	
 	// Metodo che controlla la validità dello username inserito
-	public String checkUsername(String newUsername) throws IOException {
+	public static String checkUsername(String newUsername) throws IOException {
 		
 		BufferedReader reader = new BufferedReader(new FileReader("files/utenti.txt"));
         String riga;
@@ -42,7 +42,7 @@ public class Registrazione {
 	
 	
 	// Metodo che controlla la validità della password inserita (lunghezza minima, maiuscole e minuscole, simboli, conferma password)
-	public String checkPassword(String newPass, String confirmPass) {
+	public static String checkPassword(String newPass) {
 		
 	    boolean haMaiuscola = false;
 	    boolean haMinuscola = false;
@@ -55,7 +55,7 @@ public class Registrazione {
 	    }
 	    
 	    if (newPass.length() < 8) {
-	        return "La password deve essere lunga almeno 8 caratteri.";
+	        return "Lunghezza minima: 8 caratteri.";
 	    }
 	    
 	    for (char c : newPass.toCharArray()) {
@@ -72,27 +72,34 @@ public class Registrazione {
 	    }
 	    
 	    if (!haMaiuscola) {
-	        return "La password deve contenere almeno una lettera maiuscola.";
+	        return "Inserire almeno una lettera maiuscola.";
 	    }
 	    
 	    if (!haMinuscola) {
-	        return "La password deve contenere almeno una lettera minuscola.";
+	        return "Inserire almeno una lettera minuscola.";
 	    }
 	    
 	    if (!haNumero) {
-	        return "La password deve contenere almeno un numero.";
+	        return "Inserire almeno un numero.";
 	    }
 	    
 	    if (!haSimbolo) {
-	        return "La password deve contenere almeno un simbolo speciale tra i seguenti: /*-+!£$%&=?€";
+	        return "Inserire almeno un simbolo: /*-+!£$%&=?€";
 	    }
-	     
-	    if (confirmPass.isBlank()) {
-        	return "Conferma la password.";
+	    
+	    return "Verificata.";
+	}
+	
+	
+	// Metodo che controlla la validità della conferma della password
+	public static String checkConfermaPassword(String newPass, String confirmPass) {
+		
+		if (confirmPass.isBlank()) {
+        	return "Confermare la password.";
 	    }
 	    
 	    if (!newPass.equals(confirmPass)) {
-	    	return "Le due password non corrispondono.";
+	    	return "Password non corrispondenti.";
 	    }
 	    
 	    return "Verificata.";
@@ -100,22 +107,8 @@ public class Registrazione {
 
 	
 	// Metodo che gestisce l'aggiunta di nuovi user al file di testo che svolge il ruolo di "database"
-	public String addUser(String nome, String username, String password, String confirmPass) throws IOException {
+	public static String addUser(String nome, String username, String password, String confirmPass) throws IOException {
 		
-		// Verifica del superamento dei controlli per le credenziali dell'account
-		if (!checkNome(nome).equals("Verificata.")) {
-			return checkNome(nome);
-		}
-		
-		if (!checkUsername(username).equals("Verificata.")) {
-			return checkUsername(username);
-		}
-		
-		if (!checkPassword(password, confirmPass).equals("Verificata.")) {
-            return checkPassword(password, confirmPass);
-		}
-		
-		// Inserimento dell'utente nel file di testo
 		BufferedWriter writer = new BufferedWriter(new FileWriter("files/utenti.txt", true));
 		writer.write(username + "," + nome + "," + password + "\n");
 		writer.flush();
