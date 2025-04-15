@@ -5,7 +5,7 @@ import java.io.*;
 public class Registrazione {
 	
 	// Metodo che controlla la validità del nome inserito
-	public String setNome(String newName) {
+	public String checkNome(String newName) {
 		
 		if (!newName.isBlank()) {
 			return "Verificata.";
@@ -16,7 +16,7 @@ public class Registrazione {
 	
 	
 	// Metodo che controlla la validità dello username inserito
-	public String setUsername(String newUsername) throws IOException {
+	public String checkUsername(String newUsername) throws IOException {
 		
 		BufferedReader reader = new BufferedReader(new FileReader("files/utenti.txt"));
         String riga;
@@ -37,12 +37,12 @@ public class Registrazione {
 
 		reader.close();
 		
-        return "Verificata";
+        return "Verificata.";
 	}
 	
 	
 	// Metodo che controlla la validità della password inserita (lunghezza minima, maiuscole e minuscole, simboli, conferma password)
-	public String setPassword(String newPass, String confirmPass) {
+	public String checkPassword(String newPass, String confirmPass) {
 		
 	    boolean haMaiuscola = false;
 	    boolean haMinuscola = false;
@@ -95,7 +95,7 @@ public class Registrazione {
 	    	return "Le due password non corrispondono.";
 	    }
 	    
-	    return "Verificata";
+	    return "Verificata.";
 	}
 
 	
@@ -103,16 +103,16 @@ public class Registrazione {
 	public String addUser(String nome, String username, String password, String confirmPass) throws IOException {
 		
 		// Verifica del superamento dei controlli per le credenziali dell'account
-		if (!setNome(nome).equals("Verificata")) {
-			return setNome(nome);
+		if (!checkNome(nome).equals("Verificata.")) {
+			return checkNome(nome);
 		}
 		
-		if (!setUsername(username).equals("Verificata")) {
-			return setUsername(username);
+		if (!checkUsername(username).equals("Verificata.")) {
+			return checkUsername(username);
 		}
 		
-		if (!setPassword(password, confirmPass).equals("Verificata")) {
-            return setPassword(password, confirmPass);
+		if (!checkPassword(password, confirmPass).equals("Verificata.")) {
+            return checkPassword(password, confirmPass);
 		}
 		
 		// Inserimento dell'utente nel file di testo

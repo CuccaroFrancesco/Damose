@@ -139,18 +139,24 @@ public class UserPanel extends JPanel {
 		
 // ---------------------------------------------------------------------------------------------
 			
-		JTextPane resoconto = new JTextPane();
+//		JTextPane resoconto = new JTextPane();
+//		
+//		resoconto.setMargin(new Insets(3, 5, 3, 5));
+//		resoconto.setBounds(75, 100, 250, 35);
+//		resoconto.setVisible(false);
+//		
+//		resoconto.setText("Errore");
+//		resoconto.setFont(new Font("Arial Nova", Font.BOLD, 12));
+//		resoconto.setFocusable(false);
+//		resoconto.setEditable(false);
+//		
+//		this.add(resoconto);
 		
-		resoconto.setMargin(new Insets(3, 5, 3, 5));
-		resoconto.setBounds(75, 100, 250, 35);
-		resoconto.setVisible(false);
-		
-		resoconto.setText("Errore");
+		JLabel resoconto = new JLabel("Test errore random");
 		resoconto.setFont(new Font("Arial Nova", Font.BOLD, 12));
-		resoconto.setFocusable(false);
-		resoconto.setEditable(false);
-		
-		this.add(resoconto);
+		resoconto.setForeground(new Color(255, 94, 94));
+		resoconto.setVisible(false);
+		add(resoconto);
 			
 // ---------------------------------------------------------------------------------------------
 		
@@ -191,6 +197,7 @@ public class UserPanel extends JPanel {
 		btnBack.setContentAreaFilled(false);
 		
 		this.add(btnBack);
+		
 		
 		
 // ---------------------------------------------------------------------------------------------
@@ -309,7 +316,7 @@ public class UserPanel extends JPanel {
 						
 					else {
 						resoconto.setVisible(true);
-						resoconto.setForeground(new Color(255, 0, 0));
+						resoconto.setForeground(new Color(255, 94, 94));
 					}
 							
 				} catch (IOException e1) {
