@@ -28,9 +28,9 @@
     </dependency>
     
 	<dependency>
-	    <groupId>com.opencsv</groupId>
-	    <artifactId>opencsv</artifactId>
-	    <version>5.7.1</version>
+  		<groupId>org.onebusaway</groupId>
+  		<artifactId>onebusaway-gtfs</artifactId>
+  		<version>1.3.3</version>
 	</dependency>
   </dependencies>
 
