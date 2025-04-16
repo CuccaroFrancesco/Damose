@@ -31,7 +31,6 @@ public class TilesetManager {
 
         DefaultTileFactory newTileFactory = new DefaultTileFactory(newInfo);
         
-        // Mantengo la stessa cache utilizzata già attualmente
         newTileFactory.setLocalCache(mapPanel.getLocalCache());
         newTileFactory.setThreadPoolSize(8);
 
