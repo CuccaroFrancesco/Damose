@@ -8,8 +8,10 @@ import java.io.File;
 public class Main extends JFrame {
 
     public Main() {
+    	
     	// Instanza dell'utente
     	Utente utente = new Utente();
+    	
         
     	// Costruzione e gestione della finestra principale
     	Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
@@ -83,7 +85,7 @@ public class Main extends JFrame {
         });
     }
 
-    
+    // Adattamento dinamico delle dimensioni della navbar e delle sue componenti, anche in funzione della presenza dello userPanel
     public void calibra(Navbar navbar, UserPanel userPanel, Mappa mapPanel) {
     	
     	int newWidth = getWidth();              // Nuova larghezza della finestra
@@ -142,10 +144,12 @@ public class Main extends JFrame {
         	public void run() {
         		
                 try {
-                	System.out.println(new File("files/utenti.txt").getAbsolutePath());
-                    Main frame = new Main();
+                	
+                	Main frame = new Main();
                     frame.setVisible(true);
+                    
                 } catch (Exception e) {
+                	
                     e.printStackTrace();
                 }
             }
