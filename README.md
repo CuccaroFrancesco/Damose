@@ -3,8 +3,30 @@
 
 L'applicazione è interamente sviluppata in *Java*, sfruttando Eclipse come IDE. 
 
-# Features
-IA
+___
+
+# Cose da fare:
+
+### Sezione utente:
+- Inserimento del cognome
+- Icona del profilo
+- Inserimento e visualizzazione di fermate e linee preferite
+- Pulsante di logout
+
+### Dati real-time:
+- Inserire dinamicamente i dati real-time
+
+### Dati statici:
+- Inserire i dati statici
+
+### Mappa:
+- Visualizzare le fermate
+- Visualizzare le linee
+- Visualizzare i mezzi
+
+### Estetica:
+- Inserire animazioni per il pannello utente
+___
 
 # Test possibili
 
@@ -12,6 +34,8 @@ IA
 - Verificare i collegamenti tra i vari datasets
 - Testare l'efficienza dell'applicazione
 - Altri tipi di test
+
+___
 
 # Classi da sviluppare
 
