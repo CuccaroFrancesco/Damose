@@ -8,7 +8,6 @@ ___
 # Cose da fare:
 
 ### Sezione utente:
-- Inserimento del cognome
 - Icona del profilo
 - Inserimento e visualizzazione di fermate e linee preferite
 - Pulsante di logout

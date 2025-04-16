@@ -11,16 +11,21 @@ import java.io.IOException;
 public class UserPanel extends JPanel {
 	
 	private Utente utente;
+	private JButton btnAccedi, btnRegistrati, btnConfermaLogin, btnConfermaRegistr, btnBack;
+	private JLabel titolo, lblNome, lblCognome, lblUsername, lblPassword, lblConfermaPassword, erroreNome, erroreCognome, erroreUsername, errorePassword, erroreConfermaPassword, registrazioneEffettuata; 
+	private JTextField inputNome, inputCognome, inputUsername;
+	private JPasswordField inputPassword, inputConfermaPassword;
 	
 	// Costruzione del pannello utente (login, registrazione e profilo)
 	public UserPanel(Utente utente) {
+		
 		this.utente = utente;
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);
 		
 		
 		// Scritta "Ospite"
-		JLabel titolo = new JLabel("Ospite");
+		titolo = new JLabel("Ospite");
 				
 		titolo.setForeground(new Color(255, 255, 255));
 		titolo.setFont(new Font("Arial Nova", Font.BOLD, 24));
@@ -33,7 +38,7 @@ public class UserPanel extends JPanel {
 		
 		
 		// Pulsante per l'accesso (con account già esistente)
-		JButton btnAccedi = new JButton("Accedi");
+		btnAccedi = new JButton("Accedi");
 		
 		btnAccedi.setBounds(75, 300, 250, 45);
 		btnAccedi.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -42,7 +47,7 @@ public class UserPanel extends JPanel {
 		
 		
 		// Pulsante per la registrazione (creazione di un nuovo account)
-		JButton btnRegistrati = new JButton("Registrati");
+		btnRegistrati = new JButton("Registrati");
 		
 		btnRegistrati.setBounds(75, 380, 250, 45);
 		btnRegistrati.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -52,9 +57,9 @@ public class UserPanel extends JPanel {
 // ---------------------------------------------------------------------------------------------
 		
 		// Label per la casella di testo inputNome
-		JLabel lblNome = new JLabel("Nome");
+		lblNome = new JLabel("Nome");
 							
-		lblNome.setBounds(75, 190, 95, 35);
+		lblNome.setBounds(75, 150, 95, 35);
 		lblNome.setVisible(false);
 							
 		lblNome.setForeground(Color.WHITE);
@@ -64,20 +69,43 @@ public class UserPanel extends JPanel {
 		this.add(lblNome);
 				
 				
-		// Casella di testo per inserire il vero nome per la registrazione
-		JTextField inputNome = new JTextField();
+		// Casella di testo per inserire il nome per la registrazione
+		inputNome = new JTextField();
 					
-		inputNome.setBounds(75, 220, 250, 35);
+		inputNome.setBounds(75, 180, 250, 30);
 		inputNome.setVisible(false);
 					
 		this.add(inputNome);
+
+// ---------------------------------------------------------------------------------------------
+		
+		// Label per la casella di testo inputCognome
+		lblCognome = new JLabel("Cognome");
+									
+		lblCognome.setBounds(75, 225, 95, 35);
+		lblCognome.setVisible(false);
+									
+		lblCognome.setForeground(Color.WHITE);
+		lblCognome.setFont(new Font("Arial Nova", Font.BOLD, 18));
+		lblCognome.setFocusable(false);
+									
+		this.add(lblCognome);
+						
+						
+		// Casella di testo per inserire il cognome per la registrazione
+		inputCognome = new JTextField();
+							
+		inputCognome.setBounds(75, 255, 250, 30);
+		inputCognome.setVisible(false);
+							
+		this.add(inputCognome);
 			
 // ---------------------------------------------------------------------------------------------
 		
 		// Label per la casella di testo inputUsername
-		JLabel lblUsername = new JLabel("Username");
+		lblUsername = new JLabel("Username");
 			
-		lblUsername.setBounds(75, 280, 95, 30);
+		lblUsername.setBounds(75, 300, 95, 35);
 		lblUsername.setVisible(false);
 			
 		lblUsername.setForeground(Color.WHITE);
@@ -88,9 +116,9 @@ public class UserPanel extends JPanel {
 		
 		
 		// Casella di testo per inserire lo username dell'account 
-		JTextField inputUsername = new JTextField();
+		inputUsername = new JTextField();
 		
-		inputUsername.setBounds(75, 310, 250, 35);
+		inputUsername.setBounds(75, 330, 250, 30);
 		inputUsername.setVisible(false);
 		
 		this.add(inputUsername);
@@ -98,9 +126,9 @@ public class UserPanel extends JPanel {
 // ---------------------------------------------------------------------------------------------
 			
 		// Label per la casella di testo inputPassword
-		JLabel lblPassword = new JLabel("Password");
+		lblPassword = new JLabel("Password");
 			
-		lblPassword.setBounds(75, 370, 95, 30);
+		lblPassword.setBounds(75, 375, 95, 30);
 		lblPassword.setVisible(false);
 			
 		lblPassword.setForeground(Color.WHITE);
@@ -111,9 +139,9 @@ public class UserPanel extends JPanel {
 		
 		
 		// Casella di testo per inserire la password dell'account 
-		JPasswordField inputPassword = new JPasswordField();
+		inputPassword = new JPasswordField();
 		
-		inputPassword.setBounds(75, 400, 250, 35);
+		inputPassword.setBounds(75, 405, 250, 30);
 		inputPassword.setVisible(false);
 		
 		this.add(inputPassword);
@@ -121,9 +149,9 @@ public class UserPanel extends JPanel {
 // ---------------------------------------------------------------------------------------------
 		
 		// Label per la casella di testo inputConfirmPassword
-		JLabel lblConfermaPassword = new JLabel("Conferma password");
+		lblConfermaPassword = new JLabel("Conferma password");
 									
-		lblConfermaPassword.setBounds(75, 460, 200, 30);
+		lblConfermaPassword.setBounds(75, 450, 200, 30);
 		lblConfermaPassword.setVisible(false);
 									
 		lblConfermaPassword.setForeground(Color.WHITE);
@@ -134,9 +162,9 @@ public class UserPanel extends JPanel {
 		
 		
 		// Casella di testo per confermare la password dell'account da creare
-		JPasswordField inputConfermaPassword = new JPasswordField();
+		inputConfermaPassword = new JPasswordField();
 						
-		inputConfermaPassword.setBounds(75, 490, 250, 35);
+		inputConfermaPassword.setBounds(75, 480, 250, 30);
 		inputConfermaPassword.setVisible(false);
 						
 		this.add(inputConfermaPassword);
@@ -144,37 +172,50 @@ public class UserPanel extends JPanel {
 // ---------------------------------------------------------------------------------------------
 			
 		// Label che visualizza un eventuale errore nell'inserimento del nome
-		JLabel erroreNome = new JLabel();
+		erroreNome = new JLabel();
 		
 		erroreNome.setFont(new Font("Arial Nova", Font.BOLD, 12));
 		erroreNome.setForeground(new Color(255, 94, 94));
 		erroreNome.setVerticalAlignment(SwingConstants.TOP);
 		
 		erroreNome.setVisible(false);
-		erroreNome.setBounds(75, 258, 250, 20);
+		erroreNome.setBounds(75, 210, 250, 20);
 		
 		this.add(erroreNome);
 		
 		
+		// Label che visualizza un eventuale errore nell'inserimento del cognome
+		erroreCognome = new JLabel();
+				
+		erroreCognome.setFont(new Font("Arial Nova", Font.BOLD, 12));
+		erroreCognome.setForeground(new Color(255, 94, 94));
+		erroreCognome.setVerticalAlignment(SwingConstants.TOP);
+				
+		erroreCognome.setVisible(false);
+		erroreCognome.setBounds(75, 285, 250, 20);
+				
+		this.add(erroreCognome);
+		
+		
 		// Label che visualizza un eventuale errore nell'inserimento dello username
-		JLabel erroreUsername = new JLabel();
+		erroreUsername = new JLabel();
 		
 		erroreUsername.setFont(new Font("Arial Nova", Font.BOLD, 12));
 		erroreUsername.setForeground(new Color(255, 94, 94));
-		erroreNome.setVerticalAlignment(SwingConstants.TOP);
+		erroreUsername.setVerticalAlignment(SwingConstants.TOP);
 		
 		erroreUsername.setVisible(false);
-		erroreUsername.setBounds(75, 345, 250, 20);
+		erroreUsername.setBounds(75, 360, 250, 20);
 		
 		this.add(erroreUsername);
 		
 		
 		// Label che visualizza un eventuale errore nell'inserimento della password
-		JLabel errorePassword = new JLabel();
+		errorePassword = new JLabel();
 		
 		errorePassword.setFont(new Font("Arial Nova", Font.BOLD, 12));
 		errorePassword.setForeground(new Color(255, 94, 94));
-		erroreNome.setVerticalAlignment(SwingConstants.TOP);
+		errorePassword.setVerticalAlignment(SwingConstants.TOP);
 		
 		errorePassword.setVisible(false);
 		errorePassword.setBounds(75, 435, 250, 20);
@@ -183,20 +224,20 @@ public class UserPanel extends JPanel {
 		
 		
 		// Label che visualizza un eventuale errore nella conferma della password
-		JLabel erroreConfermaPassword = new JLabel();
+		erroreConfermaPassword = new JLabel();
 			
 		erroreConfermaPassword.setFont(new Font("Arial Nova", Font.BOLD, 12));
 		erroreConfermaPassword.setForeground(new Color(255, 94, 94));
-		erroreNome.setVerticalAlignment(SwingConstants.TOP);
+		erroreConfermaPassword.setVerticalAlignment(SwingConstants.TOP);
 		
 		erroreConfermaPassword.setVisible(false);
-		erroreConfermaPassword.setBounds(75, 525, 250, 20);
+		erroreConfermaPassword.setBounds(75, 510, 250, 20);
 		
 		this.add(erroreConfermaPassword);
 		
 		
 		// Label che viene visualizzata se la registrazione è stata effettuata correttamente
-		JLabel registrazioneEffettuata = new JLabel();
+		registrazioneEffettuata = new JLabel();
 		registrazioneEffettuata.setVisible(false);
 		registrazioneEffettuata.setHorizontalAlignment(SwingConstants.CENTER);
 		registrazioneEffettuata.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -210,7 +251,7 @@ public class UserPanel extends JPanel {
 // ---------------------------------------------------------------------------------------------
 		
 		// Pulsante per confermare le credenziali di login
-		JButton btnConfermaLogin = new JButton("Conferma");
+		btnConfermaLogin = new JButton("Conferma");
 		
 		btnConfermaLogin.setBounds(100, 480, 200, 45);
 		btnConfermaLogin.setVisible(false);
@@ -220,7 +261,7 @@ public class UserPanel extends JPanel {
 		
 		
 		// Pulsante per confermare i dati della registrazione
-		JButton btnConfermaRegistr = new JButton("Conferma");
+		btnConfermaRegistr = new JButton("Conferma");
 			
 		btnConfermaRegistr.setBounds(100, 600, 200, 45);
 		btnConfermaRegistr.setVisible(false);
@@ -231,7 +272,7 @@ public class UserPanel extends JPanel {
 // ---------------------------------------------------------------------------------------------
 		
 		// Pulsante per tornare indietro
-		JButton btnBack = new JButton("Torna indietro");
+		btnBack = new JButton("Torna indietro");
 			
 		btnBack.setBounds(10, 11, 185, 23);
 		btnBack.setVisible(false);
@@ -279,7 +320,7 @@ public class UserPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 					
 				titolo.setText("Registrazione");
-				titolo.setBounds(0, 120, 400, 50);
+				titolo.setBounds(0, 100, 400, 50);
 				btnBack.setVisible(true);
 					
 				btnAccedi.setVisible(false);
@@ -287,6 +328,9 @@ public class UserPanel extends JPanel {
 					
 				lblNome.setVisible(true);
 				inputNome.setVisible(true);
+				
+				lblCognome.setVisible(true);
+				inputCognome.setVisible(true);
 					
 				lblUsername.setVisible(true);
 				inputUsername.setVisible(true);
@@ -309,8 +353,11 @@ public class UserPanel extends JPanel {
 						
 				titolo.setText("Ospite");
 				titolo.setBounds(0, 200, 400, 50);
+				
 				btnBack.setVisible(false);
+				
 				erroreNome.setVisible(false);
+				erroreCognome.setVisible(false);
 				erroreUsername.setVisible(false);
 				errorePassword.setVisible(false);
 				erroreConfermaPassword.setVisible(false);
@@ -321,6 +368,10 @@ public class UserPanel extends JPanel {
 				lblNome.setVisible(false);
 				inputNome.setText("");
 				inputNome.setVisible(false);
+				
+				lblCognome.setVisible(false);
+				inputCognome.setText("");
+				inputCognome.setVisible(false);
 						
 				lblUsername.setVisible(false);
 				inputUsername.setText("");
@@ -349,6 +400,7 @@ public class UserPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 					
 				String newNome = inputNome.getText().trim();
+				String newCognome = inputCognome.getText().trim();
 				String newUsername = inputUsername.getText().trim();
 				String newPassword = inputPassword.getText().trim();
 				String newConfermaPassword = inputConfermaPassword.getText().trim();
@@ -356,6 +408,7 @@ public class UserPanel extends JPanel {
 				try {
 						
 					String resultNome = Registrazione.checkNome(newNome);
+					String resultCognome = Registrazione.checkCognome(newCognome);
 					String resultUsername = Registrazione.checkUsername(newUsername);
 					String resultPassword = Registrazione.checkPassword(newPassword);
 					String resultConfermaPassword = Registrazione.checkConfermaPassword(newPassword, newConfermaPassword);
@@ -369,6 +422,17 @@ public class UserPanel extends JPanel {
 						inputNome.setBorder(new LineBorder(Color.GREEN, 1));
 					}
 					
+					
+					if (!resultCognome.equals("Verificata.")) {
+						erroreCognome.setText(resultCognome);
+						erroreCognome.setVisible(true);
+						inputCognome.setBorder(new LineBorder(Color.RED, 1));
+					} else {
+						erroreCognome.setVisible(false);
+						inputCognome.setBorder(new LineBorder(Color.GREEN, 1));
+					}
+					
+					
 					if (!resultUsername.equals("Verificata.")) {
 						erroreUsername.setText(resultUsername);
 						erroreUsername.setVisible(true);
@@ -378,6 +442,7 @@ public class UserPanel extends JPanel {
 						inputUsername.setBorder(new LineBorder(Color.GREEN, 1));
 					}
 					
+					
 					if (!resultPassword.equals("Verificata.")) {
 						errorePassword.setText(resultPassword);
 						errorePassword.setVisible(true);
@@ -386,6 +451,7 @@ public class UserPanel extends JPanel {
 						errorePassword.setVisible(false);
 						inputPassword.setBorder(new LineBorder(Color.GREEN, 1));
 					}
+					
 					
 					if (!resultConfermaPassword.equals("Verificata.")) {
 						erroreConfermaPassword.setText(resultConfermaPassword);
@@ -401,7 +467,7 @@ public class UserPanel extends JPanel {
 						titolo.setText("");
 						btnBack.setVisible(false);
 						
-						registrazioneEffettuata.setText(Registrazione.addUser(newNome, newUsername, newPassword, newConfermaPassword));
+						registrazioneEffettuata.setText(Registrazione.addUser(newNome, newCognome, newUsername, newPassword, newConfermaPassword));
 						registrazioneEffettuata.setVisible(true);
 								
 						btnAccedi.setVisible(true);
@@ -409,6 +475,10 @@ public class UserPanel extends JPanel {
 						lblNome.setVisible(false);
 						inputNome.setText("");
 						inputNome.setVisible(false);
+						
+						lblCognome.setVisible(false);
+						inputCognome.setText("");
+						inputCognome.setVisible(false);
 								
 						lblUsername.setVisible(false);
 						inputUsername.setText("");
@@ -434,13 +504,18 @@ public class UserPanel extends JPanel {
 				
 		// Funzionalità per il pulsante "Conferma Login"
 		btnConfermaLogin.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
+				
 				String username = inputUsername.getText().trim();
 				String password = inputPassword.getText().trim();
+				
 				try {
+					
 					String resoconto = utente.accedi(username, password);
-					if(resoconto.equals("Verificata."))
-					{
+					
+					if (resoconto.equals("Verificata.")) {
+						
 						titolo.setText(utente.getUsername());
 						btnBack.setVisible(false);
 						
@@ -457,26 +532,34 @@ public class UserPanel extends JPanel {
 						erroreUsername.setVisible(false);
 						errorePassword.setVisible(false);
 					}
+					
 					else {
+						
 						errorePassword.setVisible(true);
 						inputPassword.setBorder(new LineBorder(Color.RED, 1));
-						if(password.isBlank()) {
+						
+						if (password.isBlank()) {
 							errorePassword.setText("Password non inserita.");
 						} else {
-							if(resoconto.equals("Password errata.") ) {							
+							if (resoconto.equals("Password errata.")) {							
 								errorePassword.setText(resoconto);
 							}
 						}
-						if(resoconto.equals("Utente non esistente.") || resoconto.equals("Username non inserito.")){
+						
+						if (resoconto.equals("Utente non esistente.") || resoconto.equals("Username non inserito.")) {
+							
 							erroreUsername.setText(resoconto);
 							erroreUsername.setVisible(true);
 							inputUsername.setBorder(new LineBorder(Color.RED, 1));
+						
 						} else {
+							
 							erroreUsername.setVisible(false);
 							inputUsername.setBorder(new LineBorder(Color.GREEN, 1));
 						}
 						
 					}
+					
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}

@@ -7,6 +7,7 @@ import java.io.IOException;
 public class Utente {
 	
 	private String nome;
+	private String cognome;
 	private String username;
 	private String password;
 	
@@ -17,6 +18,14 @@ public class Utente {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	public String getCognome() {
+		return cognome;
+	}
+	
+	public void setCognome(String cognome) {
+		this.cognome = cognome;
 	}
 
 	public String getUsername() {
@@ -51,10 +60,11 @@ public class Utente {
             
             if (dati.length > 0 && dati[0].trim().equals(username.trim())) {
             	
-            	if(dati[2].trim().equals(password)) {    
+            	if(dati[3].trim().equals(password)) {    
             		
             		this.setUsername(username.trim());
             		this.setNome(dati[1].trim());
+            		this.setCognome(dati[2].trim());
             		this.setPassword(password.trim());
             		return "Verificata.";
             		

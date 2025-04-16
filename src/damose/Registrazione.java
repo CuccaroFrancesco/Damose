@@ -15,6 +15,17 @@ public class Registrazione {
 	}
 	
 	
+	// Metodo che controlla la validità del cognome inserito
+		public static String checkCognome(String newSurname) {
+			
+			if (!newSurname.isBlank()) {
+				return "Verificata.";
+			} else {
+				return "Cognome non inserito.";
+			}
+		}
+	
+	
 	// Metodo che controlla la validità dello username inserito
 	public static String checkUsername(String newUsername) throws IOException {
 		
@@ -107,10 +118,10 @@ public class Registrazione {
 
 	
 	// Metodo che gestisce l'aggiunta di nuovi user al file di testo che svolge il ruolo di "database"
-	public static String addUser(String nome, String username, String password, String confirmPass) throws IOException {
+	public static String addUser(String nome, String cognome, String username, String password, String confirmPass) throws IOException {
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter("files/utenti.txt", true));
-		writer.write(username + "," + nome + "," + password + "\n");
+		writer.write(username + "," + nome + "," + cognome + "," + password + "\n");
 		writer.flush();
 		writer.close();
 		
