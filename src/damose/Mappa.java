@@ -1,31 +1,40 @@
 package damose;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.Rectangle;
+import java.awt.Point;
+import javax.swing.*;
+import java.io.File;
+import java.util.*;
+import java.util.stream.*;
+import java.util.concurrent.*;
+
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.cache.FileBasedLocalCache;
-import org.jxmapviewer.viewer.DefaultTileFactory;
-import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCursor;
-import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.*;
 
-import javax.swing.*;
-import java.io.File;
+import org.onebusaway.gtfs.impl.*;
+import org.onebusaway.gtfs.model.Stop;
+
 
 public class Mappa extends JComponent {
 
     private JXMapViewer mapViewer;
     private FileBasedLocalCache localCache;
+    private GtfsRelationalDaoImpl datiStatici;
 
-    public Mappa() {
+    public Mappa() throws Exception {
     	
         // Impostazione iniziale della mappa
         TileFactoryInfo info = new OSMTileFactoryInfo("Mappa", "https://a.tile.openstreetmap.fr/hot/");
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
 
         
-        // Creazione della mappat                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+        // Creazione della mappa                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
         Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
         
         mapViewer = new JXMapViewer();
@@ -46,6 +55,30 @@ public class Mappa extends JComponent {
         
         mapViewer.setAddressLocation(Roma);
         mapViewer.setZoom(4);
+        
+        
+    	// Caricamento dei dati GTFS statici
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        
+        try {
+        	
+        	GTFSReader readerGTFS = new GTFSReader();
+        	this.datiStatici = readerGTFS.caricaDatiStaticiGTFS("staticGTFS", false);
+        	
+        	Future<?> caricamentoInBackground = executor.submit(() -> {
+        		
+        		try {
+        			this.datiStatici = readerGTFS.caricaDatiStaticiGTFS("staticGTFS", true);
+        		} catch (Exception e) {
+        			e.printStackTrace();
+        		}
+        	});
+        	
+        } catch (Exception e) {
+        	e.printStackTrace();
+        } finally {
+        	executor.shutdown();
+        }
 
         
         // Listener per la gestione del mouse sulla mappa
@@ -56,20 +89,65 @@ public class Mappa extends JComponent {
         mapViewer.addMouseMotionListener(panListener);
         mapViewer.addMouseWheelListener(zoomListener);
         
+        mapViewer.addPropertyChangeListener("zoom", e -> aggiornaFermateVisibili());
+        mapViewer.addPropertyChangeListener("centerPosition", e -> aggiornaFermateVisibili());
+        
         
         // Configurazione del layout della mappa e aggiunta al componente
         this.setLayout(null); 
         this.add(mapViewer);
     }
 
+    
+    // Metodo get per la cache locale dove vengono conservati i tile della mappa in modalità offline
     public FileBasedLocalCache getLocalCache() {
         return localCache;
     }
     
+    
+    // Metodo che permette di aggiornare il tipo di mappa (normale, satellitare, mista)
     public void updateMap(DefaultTileFactory tileFactory) {
     	
         mapViewer.setTileFactory(tileFactory);
         mapViewer.setZoom(4);
+        mapViewer.repaint();
+    }
+    
+    
+    // Metodo che controlla quali sono le fermate visibili sulla mappa e le disegna
+    public void aggiornaFermateVisibili() {
+    	
+    	int zoomAttuale = mapViewer.getZoom();
+    	
+    	if (zoomAttuale > 3) {
+    		mapViewer.setOverlayPainter(null);
+    		mapViewer.repaint();
+    		return;
+    	}
+    	
+    	Rectangle mappaVisibile = mapViewer.getViewportBounds();
+    	TileFactory tileFactory = mapViewer.getTileFactory();
+    	
+    	GeoPosition topLeft = tileFactory.pixelToGeo(new Point(mappaVisibile.x, mappaVisibile.y), zoomAttuale);
+    	GeoPosition bottomRight = tileFactory.pixelToGeo(new Point(mappaVisibile.x + mappaVisibile.width, mappaVisibile.y + mappaVisibile.height), zoomAttuale);
+    	double nord = topLeft.getLatitude();
+    	double ovest = topLeft.getLongitude();
+    	double sud = bottomRight.getLatitude();
+    	double est = bottomRight.getLongitude();
+    	
+    	List<Stop> fermateVisibili = datiStatici.getAllStops().stream()
+    			.filter(stop -> stop.getLat() >= Math.min(nord, sud) && stop.getLat() <= Math.max(nord, sud))
+    	        .filter(stop -> stop.getLon() >= Math.min(ovest, est) && stop.getLon() <= Math.max(ovest, est))
+    	        .collect(Collectors.toList());
+    	
+    	Set<Waypoint> puntatoriFermate = new HashSet<>();
+    	for (Stop fermata : fermateVisibili) {
+    		puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
+    	}
+    	
+    	WaypointPainter<Waypoint> painter = new WaypointPainter<>();
+        painter.setWaypoints(puntatoriFermate);
+        mapViewer.setOverlayPainter(painter);
         mapViewer.repaint();
     }
 }

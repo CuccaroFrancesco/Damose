@@ -3,13 +3,14 @@ package damose;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
+
+
 
 public class Main extends JFrame {
-
-    public Main() {
+	
+	public Main() throws Exception {
     	
-    	// Instanza dell'utente
+    	// Instanza dell'utente e caricamento dei dati GTFS statici
     	Utente utente = new Utente();
     	
         
@@ -34,8 +35,8 @@ public class Main extends JFrame {
         
         mapPanel.setBounds(0, 60, screenSize.width, screenSize.height - 60);   // Dimensioni pari alle dimensioni dello schermo - altezza navbar
         layeredPane.add(mapPanel, JLayeredPane.DEFAULT_LAYER);
-
         
+
         // Aggiunta della navbar alla finestra principale
         Navbar navbar = new Navbar(mapPanel);
         
@@ -137,6 +138,7 @@ public class Main extends JFrame {
         	}
     	}
     }
+    
     
     public static void main(String[] args) {
     	
