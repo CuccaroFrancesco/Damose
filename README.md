@@ -8,9 +8,10 @@ ___
 ## Cose da fare:
 
 #### Dati real-time:
-- Inserire dinamicamente i dati real-time
 - Caricare i dati relativi alla posizione, velocità e direzione dei mezzi (implementare relativi pannelli)
 - Caricare i dati relativi a eventuali ritardi, eccezioni o altre modifiche straordinarie ai servizi
+- Inserire dinamicamente i dati real-time
+- Visualizzare messaggio di avviso se i dati real-time non sono disponibili (errori o mancanza di rete)
 
 #### Dati statici:
 - Caricare i dati relativi agli orari delle corse
@@ -23,6 +24,19 @@ ___
 - Inserire animazioni per il pannello utente
 - Personalizzare l'aspetto dei waypoint (fermate di agenzie diverse, mezzi, ecc. ecc.)
 
+#### Fermate:
+Alla selezione di una determinata fermata, dovrebbero diventare accessibili le seguenti informazioni:
+- informazioni identificative
+	- nome
+	- codice
+	- ID
+	- tipo
+	- indirizzo
+- linee passanti per tale fermata
+- se presente, mezzo in avvicinamento con linea di appartenenza e orario di arrivo
+- ritardo tipico dei mezzi per tale fermata
+- (OPZIONALE) vicinanza a punti di interesse
+
 #### Linee:
 - Implementare una classe per le linee (con relativi pannelli)
 	- Costruttore
@@ -33,27 +47,57 @@ ___
 #### Mappa:
 - Conservare lo zoom e la posizione quando si passa da un tipo di mappa all'altro
 - Implementare metodo che zoomma automaticamente su un punto di interesse selezionato
+- Inserire filtri per cosa visualizzare sulla mappa
+	- fermate
+		- fermate con alto tasso di puntualità
+		- fermate con medio tasso di puntualità
+		- fermate con basso tasso di puntualità
+		- distinzione tra agenzie
+		- distinzione tra tipo di fermata
+	- mezzi
+		- distinzione tra tipo di mezzo
+	- linee
 - Modificare lo zoom-threshold per cui sono visibili le fermate(?)
+
+#### Mezzi:
+- Visualizzazione della posizione stimata sulla mappa (aggiornata ogni 30 secondi)
+- Visualizzazione della direzione di transito
+
+Alla selezione di un determinato mezzo, dovrebbero diventare accessibili le seguenti informazioni:
+- ID del mezzo
+- fermata verso la quale si sta dirigendo
+- linea lungo la quale sta transitando
+- quantità di posti liberi a bordo (SE DISPONIBILE)
+- velocità del mezzo
+- eventuale ritardo del mezzo
 
 #### Navbar:
 - Aggiungere funzionalità per la barra di ricerca
 - Perfezionare il pulsante per la sezione utente
 
+#### Ricerca:
+- Ricerca di una fermata per nome e codice
+- Ricerca di una linea per numero e nome
+- Ricerca di un mezzo per ID o linea di appartenenza
+
 #### Statistiche:
-- Implementare una classe per la gestione delle statistiche
+- Percentuale di corse in ritardo per linea
+- Percentuale di corse puntuali per linea
+- Percentuale di corse cancellate per linea
+- Numero di mezzi attualmente in transito per linea
 
 #### Utente:
 - Icona del profilo
+- Impostazioni di personalizzazione per l'utente
+	- modifica del colore della navbar
+	- modifica del colore del pannello utente
+	- scelta dei dati da visualizzare per linee, fermate e mezzi
 - Inserimento e visualizzazione di fermate e linee preferite
 - Pulsante di logout
 ___
 
-## Test possibili
-- Verificare se i dati sono nel formato corretto
-- Verificare i collegamenti tra i vari datasets
-- Testare l'efficienza dell'applicazione
-- Altri tipi di test
-
+## TESTING UNITARIO
+...
 ___
 
 ## Classi da sviluppare
