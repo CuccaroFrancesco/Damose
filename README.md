@@ -78,7 +78,6 @@ Alla selezione di un determinato mezzo, dovrebbero diventare accessibili le segu
 #### Ricerca:
 - Ricerca di una fermata per nome e codice
 - Ricerca di una linea per numero e nome
-- Ricerca di un mezzo per ID o linea di appartenenza
 
 #### Statistiche:
 - Percentuale di corse in ritardo per linea
