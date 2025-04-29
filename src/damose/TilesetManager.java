@@ -13,7 +13,7 @@ public class TilesetManager {
 
         switch (selectedIndex) {
             case 0:
-                newInfo = new OSMTileFactoryInfo("Mappa", "https://a.tile.openstreetmap.fr/hot/");
+            	newInfo = new VirtualEarthTileFactoryInfo(VirtualEarthTileFactoryInfo.MAP);
                 break;
 
             case 1:
@@ -25,7 +25,7 @@ public class TilesetManager {
                 break;
 
             default:
-                newInfo = new OSMTileFactoryInfo("Mappa", "https://a.tile.openstreetmap.fr/hot/");
+            	newInfo = new VirtualEarthTileFactoryInfo(VirtualEarthTileFactoryInfo.MAP);
                 break;
         }
 

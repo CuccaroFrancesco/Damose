@@ -3,9 +3,16 @@ package damose;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
+import org.onebusaway.gtfs.model.AgencyAndId;
+import org.onebusaway.gtfs.model.Route;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 
 public class UserPanel extends JPanel {
@@ -15,10 +22,37 @@ public class UserPanel extends JPanel {
 	private JLabel titolo, lblNome, lblCognome, lblUsername, lblPassword, lblConfermaPassword, erroreNome, erroreCognome, erroreUsername, errorePassword, erroreConfermaPassword, registrazioneEffettuata; 
 	private JTextField inputNome, inputCognome, inputUsername;
 	private JPasswordField inputPassword, inputConfermaPassword;
+	private DatiGTFS dati;
+
+	// Creo una funzione per nascondere tutto
+	
+	private void nascondiTutto() {
+		// Svuoto gli input
+		inputNome.setText("");
+		inputCognome.setText("");
+		inputUsername.setText("");
+		inputPassword.setText("");
+		inputConfermaPassword.setText("");
+		
+		
+		//Reimposto i bordi normali
+		inputNome.setBorder(UIManager.getBorder("TextField.border"));
+	    inputCognome.setBorder(UIManager.getBorder("TextField.border"));
+	    inputUsername.setBorder(UIManager.getBorder("TextField.border"));
+	    inputPassword.setBorder(UIManager.getBorder("TextField.border"));
+	    inputConfermaPassword.setBorder(UIManager.getBorder("TextField.border"));
+	    
+	    
+	    //Nascondo tutto
+	    for (Component c : this.getComponents()) {
+	        c.setVisible(false);
+	    }
+	}
 	
 	// Costruzione del pannello utente (login, registrazione e profilo)
-	public UserPanel(Utente utente) {
+	public UserPanel(Utente utente, DatiGTFS dati) {
 		
+		this.dati = dati;
 		this.utente = utente;
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);
@@ -295,21 +329,20 @@ public class UserPanel extends JPanel {
 		btnAccedi.addActionListener(new ActionListener() {
 				
 			public void actionPerformed(ActionEvent e) {
-					
+				
+				nascondiTutto();
+				btnBack.setVisible(true);
+				
 				titolo.setText("Login");
 				titolo.setBounds(0, 200, 400, 50);
-				btnBack.setVisible(true);
-					
-				btnAccedi.setVisible(false);
-				btnRegistrati.setVisible(false);
-					
+				titolo.setVisible(true);
+				
 				inputUsername.setVisible(true);
 				inputPassword.setVisible(true);
 				lblUsername.setVisible(true);
 				lblPassword.setVisible(true);
 					
 				btnConfermaLogin.setVisible(true);
-				registrazioneEffettuata.setVisible(false);
 			}
 		});
 		
@@ -319,12 +352,12 @@ public class UserPanel extends JPanel {
 				
 			public void actionPerformed(ActionEvent e) {
 					
+				nascondiTutto();
+				btnBack.setVisible(true);
+				
 				titolo.setText("Registrazione");
 				titolo.setBounds(0, 100, 400, 50);
-				btnBack.setVisible(true);
-					
-				btnAccedi.setVisible(false);
-				btnRegistrati.setVisible(false);
+				titolo.setVisible(true);
 					
 				lblNome.setVisible(true);
 				inputNome.setVisible(true);
@@ -350,43 +383,14 @@ public class UserPanel extends JPanel {
 		btnBack.addActionListener(new ActionListener() {
 					
 			public void actionPerformed(ActionEvent e) {
-						
+				nascondiTutto();	
+				
 				titolo.setText("Ospite");
 				titolo.setBounds(0, 200, 400, 50);
+				titolo.setVisible(true);
 				
-				btnBack.setVisible(false);
-				
-				erroreNome.setVisible(false);
-				erroreCognome.setVisible(false);
-				erroreUsername.setVisible(false);
-				errorePassword.setVisible(false);
-				erroreConfermaPassword.setVisible(false);
-						
 				btnAccedi.setVisible(true);
 				btnRegistrati.setVisible(true);
-						
-				lblNome.setVisible(false);
-				inputNome.setText("");
-				inputNome.setVisible(false);
-				
-				lblCognome.setVisible(false);
-				inputCognome.setText("");
-				inputCognome.setVisible(false);
-						
-				lblUsername.setVisible(false);
-				inputUsername.setText("");
-				inputUsername.setVisible(false);
-						
-				lblPassword.setVisible(false);
-				inputPassword.setText("");
-				inputPassword.setVisible(false);
-						
-				lblConfermaPassword.setVisible(false);
-				inputConfermaPassword.setText("");
-				inputConfermaPassword.setVisible(false);
-						
-				btnConfermaRegistr.setVisible(false);
-				btnConfermaLogin.setVisible(false);
 			}
 		});
 				
@@ -464,35 +468,13 @@ public class UserPanel extends JPanel {
 					
 					if (resultNome.equals("Verificata.") && resultUsername.equals("Verificata.") && resultPassword.equals("Verificata.") && resultConfermaPassword.equals("Verificata.")) {
 						
-						titolo.setText("");
-						btnBack.setVisible(false);
+						nascondiTutto();
 						
 						registrazioneEffettuata.setText(Registrazione.addUser(newNome, newCognome, newUsername, newPassword, newConfermaPassword));
 						registrazioneEffettuata.setVisible(true);
 								
 						btnAccedi.setVisible(true);
-								
-						lblNome.setVisible(false);
-						inputNome.setText("");
-						inputNome.setVisible(false);
 						
-						lblCognome.setVisible(false);
-						inputCognome.setText("");
-						inputCognome.setVisible(false);
-								
-						lblUsername.setVisible(false);
-						inputUsername.setText("");
-						inputUsername.setVisible(false);
-								
-						lblPassword.setVisible(false);
-						inputPassword.setText("");
-						inputPassword.setVisible(false);
-								
-						lblConfermaPassword.setVisible(false);
-						inputConfermaPassword.setText("");
-						inputConfermaPassword.setVisible(false);
-								
-						btnConfermaRegistr.setVisible(false);
 					}
 							
 				} catch (IOException e1) {
@@ -515,22 +497,58 @@ public class UserPanel extends JPanel {
 					String resoconto = utente.accedi(username, password);
 					
 					if (resoconto.equals("Verificata.")) {
-						
-						titolo.setText(utente.getUsername());
-						btnBack.setVisible(false);
-						
-						lblUsername.setVisible(false);
-						inputUsername.setText("");
-						inputUsername.setVisible(false);
-								
-						lblPassword.setVisible(false);
-						inputPassword.setText("");
-						inputPassword.setVisible(false);
-						
-						btnConfermaLogin.setVisible(false);
-						
-						erroreUsername.setVisible(false);
-						errorePassword.setVisible(false);
+
+					    nascondiTutto();
+					    
+					    titolo.setText(utente.getUsername());
+					    titolo.setBounds(0, 120, 400, 50);
+					    titolo.setVisible(true);
+
+					    // Recupera le linee preferite dell'utente 
+					    String[] lineePreferite = utente.getLineePreferite();
+
+					    for (int i = 0; i < lineePreferite.length; i++) {
+					        String routeId = lineePreferite[i]; 
+
+					        // Crea il bottone con il routeId
+					        JButton lineaBtn = new JButton(routeId);
+					        lineaBtn.setFocusable(false);
+					        lineaBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
+					        lineaBtn.setBackground(new Color(255,255,255)); 
+					        lineaBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+					        lineaBtn.setBorder(BorderFactory.createEmptyBorder());
+					        
+					        int y = 300 + i * 60;
+					        
+					        //Controlla se esiste tra le varie linee
+					        Route linea = null;
+						    for (Route route : dati.getLinee()) {
+						        if (route.getId().getId().equals(routeId)) {
+						            linea = route;
+						            break;
+						        }
+						    }
+					        
+					        if(linea!= null)
+					        {					        	
+					        	JLabel nomeLinea = new JLabel(linea.getAgency().getName() + " - " + linea.getShortName()); 
+					        	nomeLinea.setFont(new Font("Arial", Font.PLAIN, 16));
+					        	nomeLinea.setForeground(Color.WHITE);
+					        	nomeLinea.setBounds(110, y + 15, 300, 20); 
+					        	UserPanel.this.add(nomeLinea);
+					        }
+					        else
+					        {
+					        	JLabel nomeLinea = new JLabel("Dati non disponibili"); 
+					        	nomeLinea.setFont(new Font("Arial", Font.PLAIN, 16));
+					        	nomeLinea.setForeground(Color.WHITE);
+					        	nomeLinea.setBounds(110, y + 15, 300, 20);  
+					        	UserPanel.this.add(nomeLinea);
+					        }
+				            
+					        lineaBtn.setBounds(50, y, 50, 50);
+					        UserPanel.this.add(lineaBtn);
+					    }
 					}
 					
 					else {

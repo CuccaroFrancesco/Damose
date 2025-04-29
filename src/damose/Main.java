@@ -72,7 +72,7 @@ public class Main extends JFrame {
         
         
         // Aggiunta del pannello utente (inizialmente invisibile)
-        UserPanel userPanel = new UserPanel(utente);
+        UserPanel userPanel = new UserPanel(utente, dati);
         
         userPanel.setBounds(screenSize.width - 400, 70, 400, screenSize.height - 60);
         userPanel.setVisible(false);

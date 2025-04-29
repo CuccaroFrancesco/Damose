@@ -10,6 +10,8 @@ public class Utente {
 	private String cognome;
 	private String username;
 	private String password;
+	private String[] lineePreferite;
+	private String[] fermatePreferite;
 	
 
 	public String getNome() {
@@ -44,6 +46,22 @@ public class Utente {
 		this.password = password;
 	}
 	
+	public String[] getLineePreferite() {
+		return lineePreferite;
+	}
+
+	public void setLineePreferite(String[] lineePreferite) {
+		this.lineePreferite = lineePreferite;
+	}
+	
+	public String[] getFermatePreferite() {
+		return fermatePreferite;
+	}
+
+	public void setFermatePreferite(String[] fermatePreferite) {
+		this.fermatePreferite = fermatePreferite;
+	}
+	
 	
 	// Metodo che gestisce l'accesso a un utente già esistente
 	public String accedi(String username, String password) throws IOException {
@@ -60,12 +78,14 @@ public class Utente {
             
             if (dati.length > 0 && dati[0].trim().equals(username.trim())) {
             	
-            	if(dati[3].trim().equals(password)) {    
+            	if(dati[3].trim().equals(password)) {  
             		
             		this.setUsername(username.trim());
             		this.setNome(dati[1].trim());
             		this.setCognome(dati[2].trim());
             		this.setPassword(password.trim());
+            		this.setLineePreferite(dati[4].split("-"));
+            		this.setFermatePreferite(dati[5].split("-"));
             		return "Verificata.";
             		
             	} else {
