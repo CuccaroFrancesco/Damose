@@ -3,6 +3,9 @@ package damose;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 
 
@@ -10,8 +13,32 @@ public class Main extends JFrame {
 	
 	public Main() throws Exception {
     	
-    	// Instanza dell'utente e caricamento dei dati GTFS statici
+    	// Instanza dell'utente e dei dati GTFS statici
     	Utente utente = new Utente();
+    	DatiGTFS dati = new DatiGTFS();
+    	
+    	
+    	// Caricamento dei dati GTFS statici
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        
+        try {
+        	
+        	dati.caricaDatiStaticiGTFS("staticGTFS", false);
+        	
+        	Future<?> caricamentoInBackground = executor.submit(() -> {
+        		
+        		try {
+        			dati.caricaDatiStaticiGTFS("staticGTFS", true);
+        		} catch (Exception e) {
+        			e.printStackTrace();
+        		}
+        	});
+        	
+        } catch (Exception e) {
+        	e.printStackTrace();
+        } finally {
+        	executor.shutdown();
+        }
     	
         
     	// Costruzione e gestione della finestra principale
@@ -31,7 +58,7 @@ public class Main extends JFrame {
 
         
         // Aggiunta della mappa alla finestra principale
-        Mappa mapPanel = new Mappa();
+        Mappa mapPanel = new Mappa(dati);
         
         mapPanel.setBounds(0, 60, screenSize.width, screenSize.height - 60);   // Dimensioni pari alle dimensioni dello schermo - altezza navbar
         layeredPane.add(mapPanel, JLayeredPane.DEFAULT_LAYER);
@@ -84,8 +111,9 @@ public class Main extends JFrame {
         		}
         	}
         });
-    }
-
+	}
+	
+	
     // Adattamento dinamico delle dimensioni della navbar e delle sue componenti, anche in funzione della presenza dello userPanel
     public void calibra(Navbar navbar, UserPanel userPanel, Mappa mapPanel) {
     	

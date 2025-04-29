@@ -25,11 +25,14 @@ public class Mappa extends JComponent {
 
     private JXMapViewer mapViewer;
     private FileBasedLocalCache localCache;
-    private GtfsRelationalDaoImpl datiStatici;
+    private DatiGTFS dati;
 
-    public Mappa() throws Exception {
+    public Mappa(DatiGTFS dati) throws Exception {
     	
-        // Impostazione iniziale della mappa
+    	this.dati = dati;
+    	
+    	
+    	// Impostazione iniziale della mappa
         TileFactoryInfo info = new OSMTileFactoryInfo("Mappa", "https://a.tile.openstreetmap.fr/hot/");
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
 
@@ -55,30 +58,6 @@ public class Mappa extends JComponent {
         
         mapViewer.setAddressLocation(Roma);
         mapViewer.setZoom(4);
-        
-        
-    	// Caricamento dei dati GTFS statici
-        ExecutorService executor = Executors.newFixedThreadPool(2);
-        
-        try {
-        	
-        	GTFSReader readerGTFS = new GTFSReader();
-        	this.datiStatici = readerGTFS.caricaDatiStaticiGTFS("staticGTFS", false);
-        	
-        	Future<?> caricamentoInBackground = executor.submit(() -> {
-        		
-        		try {
-        			this.datiStatici = readerGTFS.caricaDatiStaticiGTFS("staticGTFS", true);
-        		} catch (Exception e) {
-        			e.printStackTrace();
-        		}
-        	});
-        	
-        } catch (Exception e) {
-        	e.printStackTrace();
-        } finally {
-        	executor.shutdown();
-        }
 
         
         // Listener per la gestione del mouse sulla mappa
@@ -109,7 +88,7 @@ public class Mappa extends JComponent {
     public void updateMap(DefaultTileFactory tileFactory) {
     	
         mapViewer.setTileFactory(tileFactory);
-        mapViewer.setZoom(4);
+        mapViewer.setZoom(mapViewer.getZoom());
         mapViewer.repaint();
     }
     
@@ -135,7 +114,7 @@ public class Mappa extends JComponent {
     	double sud = bottomRight.getLatitude();
     	double est = bottomRight.getLongitude();
     	
-    	List<Stop> fermateVisibili = datiStatici.getAllStops().stream()
+    	List<Stop> fermateVisibili = dati.getFermate().stream()
     			.filter(stop -> stop.getLat() >= Math.min(nord, sud) && stop.getLat() <= Math.max(nord, sud))
     	        .filter(stop -> stop.getLon() >= Math.min(ovest, est) && stop.getLon() <= Math.max(ovest, est))
     	        .collect(Collectors.toList());
