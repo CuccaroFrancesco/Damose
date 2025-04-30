@@ -10,6 +10,8 @@ METODI:
 - getDatiStatici(), restituisce i dati statici attribuiti all'istanza;
 - getLinee(), restituisce esclusivamente i dati statici relativi alle linee;
 - getFermate(), restituisce esclusivamente i dati statici relativi alle fermate;
+- getShapes(), restituisce esclusivamente i dati statici relativi alle shapes;
+- getViaggi(), restituisce esclusivamente i dati statici relativi ai viaggi;
 
 - getDatiRealTime(), restituisce i dati real-time attribuiti all'istanza.
 
@@ -23,10 +25,7 @@ import java.net.URL;
 import java.util.*;
 
 import org.onebusaway.gtfs.impl.GtfsRelationalDaoImpl;
-import org.onebusaway.gtfs.model.Agency;
-import org.onebusaway.gtfs.model.Route;
-import org.onebusaway.gtfs.model.Stop;
-import org.onebusaway.gtfs.model.Trip;
+import org.onebusaway.gtfs.model.*;
 import org.onebusaway.gtfs.serialization.GtfsReader;
 
 import com.google.transit.realtime.GtfsRealtime.FeedMessage;
@@ -82,6 +81,18 @@ public class DatiGTFS {
 	// Metodo get per i dati statici GTFS dell'istanza relativi alle linee
 	public Collection<Route> getLinee() {
 		return this.datiStatici.getAllRoutes();
+	}
+	
+	
+	// Metodo get per i dati statici GTFS dell'istanza relativi ai viaggi
+	public Collection<Trip> getViaggi() {
+		return this.datiStatici.getAllTrips();
+	}
+	
+	
+	// Metodo get per i dati statici GTFS dell'istanza relativi alle shapes
+	public Collection<AgencyAndId> getShapes() {
+		return this.datiStatici.getAllShapeIds();
 	}
 	
 // ---------------------------------------------------------------------------------------------

@@ -62,7 +62,6 @@ public class Main extends JFrame {
         
         mapPanel.setBounds(0, 60, screenSize.width, screenSize.height - 60);   // Dimensioni pari alle dimensioni dello schermo - altezza navbar
         layeredPane.add(mapPanel, JLayeredPane.DEFAULT_LAYER);
-        
 
         // Aggiunta della navbar alla finestra principale
         Navbar navbar = new Navbar(mapPanel);
