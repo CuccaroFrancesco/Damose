@@ -7,15 +7,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.jxmapviewer.painter.*;
+import org.jxmapviewer.*;
+
 
 
 public class Main extends JFrame {
 	
 	public Main() throws Exception {
     	
-    	// Instanza dell'utente e dei dati GTFS statici
+    	// Instanza dell'utente, dei dati GTFS statici e del CompoundPainter
     	Utente utente = new Utente();
     	DatiGTFS dati = new DatiGTFS();
+    	CompoundPainter<JXMapViewer> painterGroup = new CompoundPainter<JXMapViewer>();
     	
     	
     	// Caricamento dei dati GTFS statici
@@ -58,13 +62,14 @@ public class Main extends JFrame {
 
         
         // Aggiunta della mappa alla finestra principale
-        Mappa mapPanel = new Mappa(dati);
+        Mappa mapPanel = new Mappa(dati, painterGroup);
         
         mapPanel.setBounds(0, 60, screenSize.width, screenSize.height - 60);   // Dimensioni pari alle dimensioni dello schermo - altezza navbar
         layeredPane.add(mapPanel, JLayeredPane.DEFAULT_LAYER);
 
+        
         // Aggiunta della navbar alla finestra principale
-        Navbar navbar = new Navbar(mapPanel);
+        Navbar navbar = new Navbar(mapPanel, dati);
         
         navbar.setBounds(0, 0, screenSize.width, 60);   // Posizione e dimensione della navbar
         layeredPane.add(navbar, JLayeredPane.PALETTE_LAYER);

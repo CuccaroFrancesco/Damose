@@ -19,6 +19,12 @@ package damose;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
+import java.util.ArrayList;
+
+import org.onebusaway.gtfs.model.*;
+
+import org.jxmapviewer.viewer.*;
 
 
 
@@ -28,12 +34,14 @@ public class Navbar extends JPanel {
     private JTextField searchBar;
     private JPanel mapButtonGroup;
     private JButton mappaNormale, mappaSatellitare, mappaMista, btnLogin;
+    private DatiGTFS dati;
 
     
-    public Navbar(Mappa mapPanel) {
+    public Navbar(Mappa mapPanel, DatiGTFS dati) {
     	
     	// Assegnamento della mappa all'istanza
         this.mapPanel = mapPanel;
+        this.dati = dati;
 
         
         // Gestione delle caratteristiche della navbar
@@ -152,6 +160,36 @@ public class Navbar extends JPanel {
                     searchBar.setText("  Cerca linea o fermata...");     // Reinserisce il testo predefinito
                 }
             }
+        });
+        
+        
+        // Funzionalità di ricerca di una linea per la searchBar (PROVVISORIA: TEST PER LINEAPAINTER.JAVA)
+        searchBar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+        		String lineaDaCercare = searchBar.getText();
+        		Route lineaTrovata = null;
+        		List<GeoPosition> puntiDaDisegnare = new ArrayList<>();
+        		
+        		for (Route linea : dati.getLinee()) {
+        			if (linea.getId().getId().equals(lineaDaCercare)) {
+        				lineaTrovata = linea;
+        			}
+        		}
+        		
+        		for (Trip viaggio : dati.getDatiStatici().getTripsForRoute(lineaTrovata)) {
+        			
+        			List<ShapePoint> shapePoints = new ArrayList<>(dati.getDatiStatici().getShapePointsForShapeId(viaggio.getShapeId()));
+        			for (ShapePoint sp : shapePoints) {
+        				puntiDaDisegnare.add(new GeoPosition(sp.getLat(), sp.getLon()));
+        			}
+        			
+        			break;
+        		}
+        		
+        		mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare);
+        		mapPanel.repaint();
+        	}
         });
         
         

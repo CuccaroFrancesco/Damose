@@ -14,13 +14,14 @@ import java.util.ArrayList;
 
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.painter.*;
 
 
 
-public class LineaPainter {
+public class LineaPainter implements Painter<JXMapViewer> {
 	
 	private Color colore;
-	private boolean antiAlias;
+	private boolean antiAlias = true;
 	private List<GeoPosition> linea;
 	
 	
@@ -55,7 +56,8 @@ public class LineaPainter {
 	
 	
 	// Metodo che gestisce i vari passaggi del disegno di una linea sulla mappa
-	public void paint(Graphics2D g, JXMapViewer mappa) {
+	@Override
+	public void paint(Graphics2D g, JXMapViewer mappa, int w, int h) {
 		
         g = (Graphics2D) g.create();
 
@@ -67,15 +69,21 @@ public class LineaPainter {
         }
 
         g.setColor(Color.BLACK);
-        g.setStroke(new BasicStroke(3));
+        g.setStroke(new BasicStroke(5));
 
         this.disegnaLinea(g, mappa);
 
-        g.setColor(colore);
-        g.setStroke(new BasicStroke(2));
+        g.setColor(Color.RED);
+        g.setStroke(new BasicStroke(4));
 
         this.disegnaLinea(g, mappa);
 
         g.dispose();
     }
+	
+	
+	// Metodo set per impostare la linea da disegnare
+	public void setLineaDaDisegnare(List<GeoPosition> linea) {
+		this.linea = linea;
+	}
 }

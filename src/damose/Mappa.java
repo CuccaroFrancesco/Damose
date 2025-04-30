@@ -5,6 +5,8 @@ dell'applicazione.
 
 METODI:
 - getLocalCache(), restituisce la cache locale utilizzata dalla mappa;
+- getPainterGroup(), restituisce il CompoundPainter associato alla mappa;
+
 - updateMap(), gestisce il cambiamento di "tipo" della mappa visualizzata;
 - aggiornaFermateVisibili(), viene invocato dinamicamente ogni volta che l'utente 
   si muove sulla mappa o modifica lo zoom, disegna sulla mappa le fermate visibili
@@ -22,18 +24,17 @@ import javax.swing.*;
 import java.io.File;
 import java.util.*;
 import java.util.stream.*;
-import java.util.concurrent.*;
 
 import org.jxmapviewer.JXMapViewer;
-import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.VirtualEarthTileFactoryInfo;
 import org.jxmapviewer.cache.FileBasedLocalCache;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCursor;
 import org.jxmapviewer.viewer.*;
-
-import org.onebusaway.gtfs.impl.*;
+import org.jxmapviewer.painter.*;
+import org.jxmapviewer.painter.Painter;
 import org.onebusaway.gtfs.model.Stop;
+
 
 
 public class Mappa extends JComponent {
@@ -41,11 +42,15 @@ public class Mappa extends JComponent {
     private JXMapViewer mapViewer;
     private FileBasedLocalCache localCache;
     private DatiGTFS dati;
+    private WaypointPainter<Waypoint> painterFermate;
+    private LineaPainter painterLinea;
+    private CompoundPainter<JXMapViewer> painterGroup;
 
-    public Mappa(DatiGTFS dati) throws Exception {
+    public Mappa(DatiGTFS dati, CompoundPainter<JXMapViewer> painterGroup) throws Exception {
     	
-    	// Assegnamento dei dati GTFS all'istanza
+    	// Assegnamento dei dati GTFS e del CompoundPainter all'istanza
     	this.dati = dati;
+    	this.painterGroup = painterGroup;
     	
     	
     	// Impostazione iniziale della mappa
@@ -60,6 +65,8 @@ public class Mappa extends JComponent {
         mapViewer.setBounds(0, 0, screenSize.width, screenSize.height);  // Posizione e dimensione
         mapViewer.setTileFactory(tileFactory);
         
+        mapViewer.setOverlayPainter(painterGroup);
+        
         
         // Selezione del numero di thread per il rendering, destinazione di una cache
         tileFactory.setThreadPoolSize(8);
@@ -67,6 +74,17 @@ public class Mappa extends JComponent {
         File cacheDir = new File(System.getProperty("user.home") + File.separator + ".jxmapviewer2");
         localCache = new FileBasedLocalCache(cacheDir, true);
         tileFactory.setLocalCache(localCache);
+        
+        
+        // Creazione dei vari painter e aggiunta al painterGroup della mappa
+        painterFermate = new WaypointPainter<Waypoint>();
+        this.painterFermate = painterFermate;
+        
+        painterLinea = new LineaPainter(new ArrayList<>());
+        this.painterLinea = painterLinea;
+        
+        this.painterGroup.addPainter(painterLinea);
+        this.painterGroup.addPainter(painterFermate);
 
         
         // Impostazione della posizione e dello zoom iniziale
@@ -96,7 +114,25 @@ public class Mappa extends JComponent {
     
     // Metodo get per la cache locale, dove vengono conservati i tile della mappa in modalità offline
     public FileBasedLocalCache getLocalCache() {
-        return localCache;
+        return this.localCache;
+    }
+    
+    
+    // Metodo get per il painterGroup, ossia il gruppo ordinato di painter che disegna sulla mappa
+    public CompoundPainter<JXMapViewer> getPainterGroup() {
+    	return this.painterGroup;
+    }
+    
+    
+    // Metodo get per il painterGroup, ossia il gruppo ordinato di painter che disegna sulla mappa
+    public WaypointPainter<Waypoint> getPainterFermate() {
+    	return this.painterFermate;
+    }
+    
+    
+    // Metodo get per il painterGroup, ossia il gruppo ordinato di painter che disegna sulla mappa
+    public LineaPainter getPainterLinea() {
+    	return this.painterLinea;
     }
     
     
@@ -114,7 +150,7 @@ public class Mappa extends JComponent {
     	int zoomAttuale = mapViewer.getZoom();
     	
     	if (zoomAttuale > 3) {
-    		mapViewer.setOverlayPainter(null);
+    		painterFermate.setWaypoints(Collections.emptySet());
     		mapViewer.repaint();
     		return;
     	}
@@ -139,9 +175,7 @@ public class Mappa extends JComponent {
     		puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
     	}
     	
-    	WaypointPainter<Waypoint> painter = new WaypointPainter<>();
-        painter.setWaypoints(puntatoriFermate);
-        mapViewer.setOverlayPainter(painter);
+    	painterFermate.setWaypoints(puntatoriFermate);
         mapViewer.repaint();
     }
 }
