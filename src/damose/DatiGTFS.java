@@ -1,3 +1,20 @@
+/**********************************************************************************
+
+Classe "DatiGTFS" per oggetti destinati a conservare dati GTFS (statici e real-time)
+come attributi. 
+
+METODI:
+- caricaDatiStaticiGTFS(), carica i dati statici e li assegna come attributo all'istanza;
+- caricaDatiRealTimeGTFS(), carica i dati real-time e li assegna come attributo all'istanza;
+ 
+- getDatiStatici(), restituisce i dati statici attribuiti all'istanza;
+- getLinee(), restituisce esclusivamente i dati statici relativi alle linee;
+- getFermate(), restituisce esclusivamente i dati statici relativi alle fermate;
+
+- getDatiRealTime(), restituisce i dati real-time attribuiti all'istanza.
+
+**********************************************************************************/
+
 package damose;
 
 import java.awt.Shape;
@@ -14,11 +31,12 @@ import org.onebusaway.gtfs.serialization.GtfsReader;
 
 import com.google.transit.realtime.GtfsRealtime.FeedMessage;
 
+
+
 public class DatiGTFS {
 	
 	private GtfsRelationalDaoImpl datiStatici;
 	private FeedMessage datiRealTime;
-	
 	
 	// Metodo che permette di caricare dei dati GTFS statici da file di testo contenuti in una cartella
 	public void caricaDatiStaticiGTFS(String path, boolean caricaStopTimes) throws Exception {

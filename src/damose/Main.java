@@ -114,7 +114,7 @@ public class Main extends JFrame {
 	}
 	
 	
-    // Adattamento dinamico delle dimensioni della navbar e delle sue componenti, anche in funzione della presenza dello userPanel
+    // Metodo che gestisce l'adattamento dinamico delle dimensioni della navbar e delle sue componenti
     public void calibra(Navbar navbar, UserPanel userPanel, Mappa mapPanel) {
     	
     	int newWidth = getWidth();              // Nuova larghezza della finestra

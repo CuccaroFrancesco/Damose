@@ -1,3 +1,19 @@
+/**********************************************************************************
+
+Classe "Navbar" per l'oggetto destinato a contenere la navbar visualizzata nella
+parte superiore dell'applicazione, all'interno della quale si troveranno i pulsanti
+per il cambio del "tipo" della mappa visualizzata (mapButtonGroup), la barra di
+ricerca (searchBar) e il pulsante per la sezione utente (btnLogin).
+
+METODI:
+- getSearchBar(), restituisce la barra di ricerca contenuta nella navbar;
+- getMapButtonGroup(), restituisce il gruppo di pulsanti per il cambio della mappa
+  contenuto nella navbar;
+- getBtnLogin(), restituisce il pulsante per la sezione utente contenuto nella
+  navbar.
+
+**********************************************************************************/
+
 package damose;
 
 import javax.swing.*;
@@ -11,14 +27,12 @@ public class Navbar extends JPanel {
 	private Mappa mapPanel;
     private JTextField searchBar;
     private JPanel mapButtonGroup;
-    private JButton mappaNormale;
-    private JButton mappaSatellitare;
-    private JButton mappaMista;
-    private JButton btnLogin;
-   
+    private JButton mappaNormale, mappaSatellitare, mappaMista, btnLogin;
 
+    
     public Navbar(Mappa mapPanel) {
     	
+    	// Assegnamento della mappa all'istanza
         this.mapPanel = mapPanel;
 
         
@@ -36,7 +50,6 @@ public class Navbar extends JPanel {
         mappaNormale.setFocusPainted(false);
         mappaSatellitare.setFocusPainted(false);
         mappaMista.setFocusPainted(false);
-        
         
         mappaNormale.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         mappaSatellitare.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -68,6 +81,8 @@ public class Navbar extends JPanel {
         
         mappaNormale.setEnabled(false);
         
+        
+        // Funzionalità per i pulsanti mappaNormale, mappaSatellitare e mappaMista
         mappaNormale.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		TilesetManager.updateMap(mapPanel, 0);
@@ -162,16 +177,19 @@ public class Navbar extends JPanel {
     }
     
     
+    // Metodo get per la barra di ricerca
     public JTextField getSearchBar() {
     	return this.searchBar;
     }
     
     
+    // Metodo get per l'insieme dei pulsanti per il cambio di mappa
     public JPanel getMapButtonGroup() {
     	return this.mapButtonGroup;
     }
     
     
+    // Metodo get per il pulsante della sezione utente
     public JButton getBtnLogin() {
     	return this.btnLogin;
     }

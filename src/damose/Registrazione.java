@@ -1,6 +1,25 @@
+/**********************************************************************************
+
+Classe "Registrazione" che contiene i metodi statici necessari al controllo della
+validità dei dati inseriti da un utente al momento della registrazione, nonché del
+metodo statico destinato a memorizzare tale utente registrato.
+
+METODI:
+- checkNome(), controlla la validità del nome inserito dall'utente;
+- checkCognome(), controlla la validità del cognome inserito dall'utente;
+- checkUsername(), controlla la validità dello username inserito dall'utente;
+- checkPassword(), controlla la validità della password inserita dall'utente;
+- checkConfermaPassword(), controlla la validità della conferma della password;
+
+- addUser(), gestisce l'aggiunta dell'utente registrato al database.
+
+**********************************************************************************/
+
 package damose;
 
 import java.io.*;
+
+
 
 public class Registrazione {
 	
@@ -16,14 +35,14 @@ public class Registrazione {
 	
 	
 	// Metodo che controlla la validità del cognome inserito
-		public static String checkCognome(String newSurname) {
+	public static String checkCognome(String newSurname) {
 			
-			if (!newSurname.isBlank()) {
-				return "Verificata.";
-			} else {
-				return "Cognome non inserito.";
-			}
+		if (!newSurname.isBlank()) {
+			return "Verificata.";
+		} else {
+			return "Cognome non inserito.";
 		}
+	}
 	
 	
 	// Metodo che controlla la validità dello username inserito
@@ -47,7 +66,6 @@ public class Registrazione {
         }
 
 		reader.close();
-		
         return "Verificata.";
 	}
 	

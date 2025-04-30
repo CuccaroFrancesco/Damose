@@ -1,19 +1,42 @@
+/**********************************************************************************
+
+Classe "Utente" per l'oggetto destinato a contenere l'utente eventualmente loggato
+nell'applicazione durante il suo utilizzo.
+
+METODI:
+- getNome(), restituisce il nome associato all'utente;
+- getCognome(), restituisce il cognome associato all'utente;
+- getUsername(), restituisce lo username associato all'utente;
+- getPassword(), restituisce la password associata all'utente;
+- getLineePreferite(), restituisce le linee preferite dell'utente;
+- getFermatePreferite(), restituisce le fermate preferite dell'utente;
+
+- setNome(), setta il nome associato all'utente;
+- setCognome(), setta il cognome associato all'utente;
+- setUsername(), setta lo username associato all'utente;
+- setPassword(), setta la password associata all'utente;
+- setLineePreferite(), setta le linee preferite dell'utente;
+- setFermatePreferite(), setta le fermate preferite dell'utente;
+
+- accedi(), gestisce i vari controlli necessari a confermare l'accesso a un utente.
+
+**********************************************************************************/
+
 package damose;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+
+
 public class Utente {
 	
-	private String nome;
-	private String cognome;
-	private String username;
-	private String password;
-	private String[] lineePreferite;
-	private String[] fermatePreferite;
+	private String nome, cognome, username, password;
+	private String[] lineePreferite, fermatePreferite;
 	
-
+	
+	// Metodi get e set per il nome associato all'utente
 	public String getNome() {
 		return nome;
 	}
@@ -22,6 +45,8 @@ public class Utente {
 		this.nome = nome;
 	}
 	
+	
+	// Metodi get e set per il cognome associato all'utente
 	public String getCognome() {
 		return cognome;
 	}
@@ -30,6 +55,8 @@ public class Utente {
 		this.cognome = cognome;
 	}
 
+	
+	// Metodi get e set per lo username associato all'utente
 	public String getUsername() {
 		return this.username;
 	}
@@ -38,6 +65,8 @@ public class Utente {
 		this.username = username;
 	}
 
+	
+	// Metodi get e set per la password associata all'utente
 	public String getPassword() {
 		return this.password;
 	}
@@ -46,6 +75,8 @@ public class Utente {
 		this.password = password;
 	}
 	
+	
+	// Metodi get e set per le linee preferite dell'utente
 	public String[] getLineePreferite() {
 		return lineePreferite;
 	}
@@ -54,6 +85,8 @@ public class Utente {
 		this.lineePreferite = lineePreferite;
 	}
 	
+	
+	// Metodi get e set per le fermate preferite dell'utente
 	public String[] getFermatePreferite() {
 		return fermatePreferite;
 	}

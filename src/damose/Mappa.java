@@ -1,3 +1,17 @@
+/**********************************************************************************
+
+Classe "Mappa" per l'oggetto destinato a contenere la mappa visualizzata all'interno
+dell'applicazione. 
+
+METODI:
+- getLocalCache(), restituisce la cache locale utilizzata dalla mappa;
+- updateMap(), gestisce il cambiamento di "tipo" della mappa visualizzata;
+- aggiornaFermateVisibili(), viene invocato dinamicamente ogni volta che l'utente 
+  si muove sulla mappa o modifica lo zoom, disegna sulla mappa le fermate visibili
+  e scarta quelle non visibili.
+
+**********************************************************************************/
+
 package damose;
 
 import java.awt.Dimension;
@@ -30,6 +44,7 @@ public class Mappa extends JComponent {
 
     public Mappa(DatiGTFS dati) throws Exception {
     	
+    	// Assegnamento dei dati GTFS all'istanza
     	this.dati = dati;
     	
     	
@@ -61,7 +76,7 @@ public class Mappa extends JComponent {
         mapViewer.setZoom(4);
 
         
-        // Listener per la gestione del mouse sulla mappa
+        // Listener per le azioni eseguibili dal mouse sulla mappa
         PanMouseInputListener panListener = new PanMouseInputListener(mapViewer);
         ZoomMouseWheelListenerCursor zoomListener = new ZoomMouseWheelListenerCursor(mapViewer);
 
@@ -79,7 +94,7 @@ public class Mappa extends JComponent {
     }
 
     
-    // Metodo get per la cache locale dove vengono conservati i tile della mappa in modalità offline
+    // Metodo get per la cache locale, dove vengono conservati i tile della mappa in modalità offline
     public FileBasedLocalCache getLocalCache() {
         return localCache;
     }
@@ -87,14 +102,13 @@ public class Mappa extends JComponent {
     
     // Metodo che permette di aggiornare il tipo di mappa (normale, satellitare, mista)
     public void updateMap(DefaultTileFactory tileFactory) {
-    	
         mapViewer.setTileFactory(tileFactory);
         mapViewer.setZoom(mapViewer.getZoom());
         mapViewer.repaint();
     }
     
     
-    // Metodo che controlla quali sono le fermate visibili sulla mappa e le disegna
+    // Metodo che controlla quali sono le fermate visibili sulla mappa e le disegna, "eliminando" invece quelle non visibili
     public void aggiornaFermateVisibili() {
     	
     	int zoomAttuale = mapViewer.getZoom();

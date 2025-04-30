@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Random;
 
 
+
 public class UserPanel extends JPanel {
 	
 	private Utente utente;
@@ -24,30 +25,27 @@ public class UserPanel extends JPanel {
 	private JPasswordField inputPassword, inputConfermaPassword;
 	private DatiGTFS dati;
 
-	// Creo una funzione per nascondere tutto
 	
+	// Metodo utilizzato per nascondere tutti i componenti del pannello al momento di eventuali variazioni
 	private void nascondiTutto() {
-		// Svuoto gli input
+		
 		inputNome.setText("");
 		inputCognome.setText("");
 		inputUsername.setText("");
 		inputPassword.setText("");
 		inputConfermaPassword.setText("");
 		
-		
-		//Reimposto i bordi normali
 		inputNome.setBorder(UIManager.getBorder("TextField.border"));
 	    inputCognome.setBorder(UIManager.getBorder("TextField.border"));
 	    inputUsername.setBorder(UIManager.getBorder("TextField.border"));
 	    inputPassword.setBorder(UIManager.getBorder("TextField.border"));
 	    inputConfermaPassword.setBorder(UIManager.getBorder("TextField.border"));
 	    
-	    
-	    //Nascondo tutto
 	    for (Component c : this.getComponents()) {
 	        c.setVisible(false);
 	    }
 	}
+	
 	
 	// Costruzione del pannello utente (login, registrazione e profilo)
 	public UserPanel(Utente utente, DatiGTFS dati) {
@@ -321,9 +319,7 @@ public class UserPanel extends JPanel {
 		
 		this.add(btnBack);
 		
-		
 // ---------------------------------------------------------------------------------------------
-		
 		
 		// Funzionalità per il pulsante btnAccedi (rende visibile la schermata di login)
 		btnAccedi.addActionListener(new ActionListener() {
@@ -393,10 +389,8 @@ public class UserPanel extends JPanel {
 				btnRegistrati.setVisible(true);
 			}
 		});
-				
-				
-// ---------------------------------------------------------------------------------------------
-				
+					
+// ---------------------------------------------------------------------------------------------	
 				
 		// Funzionalità per il pulsante "Conferma registrazione"
 		btnConfermaRegistr.addActionListener(new ActionListener() {
@@ -474,7 +468,6 @@ public class UserPanel extends JPanel {
 						registrazioneEffettuata.setVisible(true);
 								
 						btnAccedi.setVisible(true);
-						
 					}
 							
 				} catch (IOException e1) {
@@ -504,14 +497,15 @@ public class UserPanel extends JPanel {
 					    titolo.setBounds(0, 120, 400, 50);
 					    titolo.setVisible(true);
 
-					    // Recupera le linee preferite dell'utente 
+					    // Recupero delle linee preferite dell'utente 
 					    String[] lineePreferite = utente.getLineePreferite();
 
 					    for (int i = 0; i < lineePreferite.length; i++) {
 					        String routeId = lineePreferite[i]; 
 
-					        // Crea il bottone con il routeId
+					        // Creazione del pulsante con il routeId
 					        JButton lineaBtn = new JButton(routeId);
+					        
 					        lineaBtn.setFocusable(false);
 					        lineaBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
 					        lineaBtn.setBackground(new Color(255,255,255)); 
@@ -520,7 +514,7 @@ public class UserPanel extends JPanel {
 					        
 					        int y = 300 + i * 60;
 					        
-					        //Controlla se esiste tra le varie linee
+					        // Controllo dell'esistenza delle varie linee
 					        Route linea = null;
 						    for (Route route : dati.getLinee()) {
 						        if (route.getId().getId().equals(routeId)) {
@@ -529,20 +523,23 @@ public class UserPanel extends JPanel {
 						        }
 						    }
 					        
-					        if(linea!= null)
-					        {					        	
-					        	JLabel nomeLinea = new JLabel(linea.getAgency().getName() + " - " + linea.getShortName()); 
+					        if (linea!= null) {
+					        	
+					        	JLabel nomeLinea = new JLabel(linea.getAgency().getName() + " - " + linea.getShortName());
+					        	
 					        	nomeLinea.setFont(new Font("Arial", Font.PLAIN, 16));
 					        	nomeLinea.setForeground(Color.WHITE);
-					        	nomeLinea.setBounds(110, y + 15, 300, 20); 
+					        	nomeLinea.setBounds(110, y + 15, 300, 20);
+					        	
 					        	UserPanel.this.add(nomeLinea);
-					        }
-					        else
-					        {
+					        } else {
+					        	
 					        	JLabel nomeLinea = new JLabel("Dati non disponibili"); 
+					        	
 					        	nomeLinea.setFont(new Font("Arial", Font.PLAIN, 16));
 					        	nomeLinea.setForeground(Color.WHITE);
 					        	nomeLinea.setBounds(110, y + 15, 300, 20);  
+					        	
 					        	UserPanel.this.add(nomeLinea);
 					        }
 				            
@@ -575,9 +572,7 @@ public class UserPanel extends JPanel {
 							erroreUsername.setVisible(false);
 							inputUsername.setBorder(new LineBorder(Color.GREEN, 1));
 						}
-						
 					}
-					
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
