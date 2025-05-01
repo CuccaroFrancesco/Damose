@@ -5,6 +5,7 @@ import javax.swing.border.LineBorder;
 
 import org.onebusaway.gtfs.model.AgencyAndId;
 import org.onebusaway.gtfs.model.Route;
+import org.onebusaway.gtfs.model.Stop;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -19,10 +20,12 @@ import java.util.Random;
 public class UserPanel extends JPanel {
 	
 	private Utente utente;
-	private JButton btnAccedi, btnRegistrati, btnConfermaLogin, btnConfermaRegistr, btnBack;
+	private JButton btnAccedi, btnRegistrati, btnConfermaLogin, btnConfermaRegistr, btnBack, btnToggleFermate, btnToggleLinee;
 	private JLabel titolo, lblNome, lblCognome, lblUsername, lblPassword, lblConfermaPassword, erroreNome, erroreCognome, erroreUsername, errorePassword, erroreConfermaPassword, registrazioneEffettuata; 
 	private JTextField inputNome, inputCognome, inputUsername;
 	private JPasswordField inputPassword, inputConfermaPassword;
+	private JPanel panelLineePreferite, panelFermatePreferite;
+	private JScrollPane fermateScrollPane, lineeScrollPane;
 	private DatiGTFS dati;
 
 	
@@ -479,104 +482,190 @@ public class UserPanel extends JPanel {
 				
 		// Funzionalità per il pulsante "Conferma Login"
 		btnConfermaLogin.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				
-				String username = inputUsername.getText().trim();
-				String password = inputPassword.getText().trim();
-				
-				try {
-					
-					String resoconto = utente.accedi(username, password);
-					
-					if (resoconto.equals("Verificata.")) {
+		    public void actionPerformed(ActionEvent e) {
+		        String username = inputUsername.getText().trim();
+		        String password = inputPassword.getText().trim();
+		        
+		        try {
+		            String resoconto = utente.accedi(username, password);
+		            
+		            if (resoconto.equals("Verificata.")) {
+		                nascondiTutto();
+		                
+		                titolo.setText(utente.getUsername());
+		                titolo.setBounds(0, 120, 400, 50);
+		                titolo.setVisible(true);
 
-					    nascondiTutto();
-					    
-					    titolo.setText(utente.getUsername());
-					    titolo.setBounds(0, 120, 400, 50);
-					    titolo.setVisible(true);
+		             // Recupero delle linee e fermate preferite dell'utente 
+		                String[] lineePreferite = utente.getLineePreferite();
+		                String[] fermatePreferite = utente.getFermatePreferite();
 
-					    // Recupero delle linee preferite dell'utente 
-					    String[] lineePreferite = utente.getLineePreferite();
+		                // Crea il pannello per le linee preferite
+		                panelLineePreferite = new JPanel();
+		                panelLineePreferite.setLayout(null);
+		                panelLineePreferite.setPreferredSize(new Dimension(400, Math.max(100, lineePreferite.length * 60)));
+		                panelLineePreferite.setBackground(new Color(130, 36, 51));
 
-					    for (int i = 0; i < lineePreferite.length; i++) {
-					        String routeId = lineePreferite[i]; 
+		                // Crea il pannello per le fermate preferite
+		                panelFermatePreferite = new JPanel();
+		                panelFermatePreferite.setLayout(null);
+		                panelFermatePreferite.setPreferredSize(new Dimension(400, Math.max(100, fermatePreferite.length * 60)));
+		                panelFermatePreferite.setBackground(new Color(130, 36, 51));
 
-					        // Creazione del pulsante con il routeId
-					        JButton lineaBtn = new JButton(routeId);
-					        
-					        lineaBtn.setFocusable(false);
-					        lineaBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
-					        lineaBtn.setBackground(new Color(255,255,255)); 
-					        lineaBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-					        lineaBtn.setBorder(BorderFactory.createEmptyBorder());
-					        
-					        int y = 300 + i * 60;
-					        
-					        // Controllo dell'esistenza delle varie linee
-					        Route linea = null;
-						    for (Route route : dati.getLinee()) {
-						        if (route.getId().getId().equals(routeId)) {
-						            linea = route;
-						            break;
-						        }
-						    }
-					        
-					        if (linea!= null) {
-					        	
-					        	JLabel nomeLinea = new JLabel(linea.getAgency().getName() + " - " + linea.getShortName());
-					        	
-					        	nomeLinea.setFont(new Font("Arial", Font.PLAIN, 16));
-					        	nomeLinea.setForeground(Color.WHITE);
-					        	nomeLinea.setBounds(110, y + 15, 300, 20);
-					        	
-					        	UserPanel.this.add(nomeLinea);
-					        } else {
-					        	
-					        	JLabel nomeLinea = new JLabel("Dati non disponibili"); 
-					        	
-					        	nomeLinea.setFont(new Font("Arial", Font.PLAIN, 16));
-					        	nomeLinea.setForeground(Color.WHITE);
-					        	nomeLinea.setBounds(110, y + 15, 300, 20);  
-					        	
-					        	UserPanel.this.add(nomeLinea);
-					        }
-				            
-					        lineaBtn.setBounds(50, y, 50, 50);
-					        UserPanel.this.add(lineaBtn);
-					    }
-					}
-					
-					else {
-						
-						errorePassword.setVisible(true);
-						inputPassword.setBorder(new LineBorder(Color.RED, 1));
-						
-						if (password.isBlank()) {
-							errorePassword.setText("Password non inserita.");
-						} else {
-							if (resoconto.equals("Password errata.")) {							
-								errorePassword.setText(resoconto);
-							}
-						}
-						
-						if (resoconto.equals("Utente non esistente.") || resoconto.equals("Username non inserito.")) {
-							
-							erroreUsername.setText(resoconto);
-							erroreUsername.setVisible(true);
-							inputUsername.setBorder(new LineBorder(Color.RED, 1));
-						
-						} else {
-							
-							erroreUsername.setVisible(false);
-							inputUsername.setBorder(new LineBorder(Color.GREEN, 1));
-						}
-					}
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			}
+		                // Linee preferite
+		                for (int i = 0; i < lineePreferite.length; i++) {
+		                    String routeId = lineePreferite[i]; 
+		                    int y = i * 60;
+
+		                    JButton lineaBtn = new JButton(routeId);
+		                    lineaBtn.setBounds(50, y, 50, 50);
+		                    lineaBtn.setFocusable(false);
+		                    lineaBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
+		                    lineaBtn.setBackground(Color.WHITE); 
+		                    lineaBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		                    lineaBtn.setBorder(BorderFactory.createEmptyBorder());
+
+		                    panelLineePreferite.add(lineaBtn);
+
+		                    Route linea = null;
+		                    for (Route route : dati.getLinee()) {
+		                        if (route.getId().getId().equals(routeId)) {
+		                            linea = route;
+		                            break;
+		                        }
+		                    }
+
+		                    JLabel nomeLinea = new JLabel(linea != null ? linea.getAgency().getName() + " - " + linea.getShortName() : "Dati non disponibili");
+		                    nomeLinea.setFont(new Font("Arial Nova", Font.PLAIN, 16));
+		                    nomeLinea.setForeground(Color.WHITE);
+		                    nomeLinea.setBounds(110, y + 15, 300, 20);
+		                    panelLineePreferite.add(nomeLinea);
+		                }
+
+		                // Fermate preferite
+
+		                for (int i = 0; i < fermatePreferite.length; i++) {
+		                    String stopId = fermatePreferite[i];
+		                    int y = i * 60;
+
+		                    JButton stopBtn = new JButton(stopId);
+		                    stopBtn.setBounds(50, y, 50, 50);
+		                    stopBtn.setFocusable(false);
+		                    stopBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
+		                    stopBtn.setBackground(Color.WHITE); 
+		                    stopBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		                    stopBtn.setBorder(BorderFactory.createEmptyBorder());
+
+		                    panelFermatePreferite.add(stopBtn);
+
+		                    Stop fermata = null;
+		                    for (Stop stop : dati.getFermate()) {
+		                        if (stop.getId().getId().equals(stopId)) {
+		                            fermata = stop;
+		                            break;
+		                        }
+		                    }
+
+		                    JLabel nomeFermata = new JLabel(fermata != null ? fermata.getName() : "Dati non disponibili");
+		                    nomeFermata.setFont(new Font("Arial Nova", Font.PLAIN, 16));
+		                    nomeFermata.setForeground(Color.WHITE);
+		                    nomeFermata.setBounds(110, y + 15, 300, 20);
+		                    panelFermatePreferite.add(nomeFermata);
+		                }
+		                
+		                // ScrollPane
+		                lineeScrollPane = new JScrollPane(panelLineePreferite);
+		                lineeScrollPane.setBorder(null);
+		                lineeScrollPane.setBounds(0, 250, 400, 250);
+		                lineeScrollPane.getVerticalScrollBar().setUnitIncrement(12);
+		                lineeScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		                lineeScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+		                fermateScrollPane = new JScrollPane(panelFermatePreferite);
+		                fermateScrollPane.setBorder(null);
+		                fermateScrollPane.setBounds(0, 300, 400, 250);
+		                fermateScrollPane.getVerticalScrollBar().setUnitIncrement(12);
+		                fermateScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		                fermateScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+		                // Bottoni toggle per mostrare/nascondere i pannelli
+		                btnToggleLinee = new JButton("Linee preferite: ▲");
+		                btnToggleLinee.setBounds(50, 200, 300, 30);
+		                btnToggleLinee.setFocusPainted(false);
+		                btnToggleLinee.setBackground(Color.WHITE);
+
+		                btnToggleFermate = new JButton("Fermate preferite: ▲");
+		                btnToggleFermate.setBounds(50, 250, 300, 30);
+		                btnToggleFermate.setFocusPainted(false);
+		                btnToggleFermate.setBackground(Color.WHITE);
+
+		                UserPanel.this.add(btnToggleLinee);
+		                UserPanel.this.add(btnToggleFermate);
+
+		                UserPanel.this.add(lineeScrollPane);
+		                UserPanel.this.add(fermateScrollPane);
+
+		                // Inizialmente nascosti
+		                lineeScrollPane.setVisible(false);
+		                fermateScrollPane.setVisible(false);
+
+		                // Variabili di stato
+		                final boolean[] mostraLinee = {false};
+		                final boolean[] mostraFermate = {false};
+
+		                // Listener toggle
+		                btnToggleLinee.addActionListener(ev -> {
+		                    mostraLinee[0] = !mostraLinee[0];
+		                    lineeScrollPane.setVisible(mostraLinee[0]);
+		                    btnToggleLinee.setText("Linee preferite: " + (mostraLinee[0] ? "▼" : "▲"));
+		                    if(mostraLinee[0])
+		                    {
+		                    	fermateScrollPane.setBounds(0, 580, 400, 250);
+		                    	btnToggleFermate.setBounds(50, 530, 300, 30);
+		                    }
+		                    else
+		                    {
+		                    	btnToggleFermate.setBounds(50, 250, 300, 30);
+		                    	fermateScrollPane.setBounds(0, 300, 400, 250);
+		                    }
+		                    UserPanel.this.repaint();
+		                });
+
+		                btnToggleFermate.addActionListener(ev -> {
+		                    mostraFermate[0] = !mostraFermate[0];
+		                    fermateScrollPane.setVisible(mostraFermate[0]);
+		                    btnToggleFermate.setText("Fermate preferite: " + (mostraFermate[0] ? "▼" : "▲"));
+		                    UserPanel.this.repaint();
+		                });		                
+
+		            }
+		            else {
+		                errorePassword.setVisible(true);
+		                inputPassword.setBorder(new LineBorder(Color.RED, 1));
+		                
+		                if (password.isBlank()) {
+		                    errorePassword.setText("Password non inserita.");
+		                } else {
+		                    if (resoconto.equals("Password errata.")) {							
+		                        errorePassword.setText(resoconto);
+		                    }
+		                }
+		                
+		                if (resoconto.equals("Utente non esistente.") || resoconto.equals("Username non inserito.")) {
+		                    erroreUsername.setText(resoconto);
+		                    erroreUsername.setVisible(true);
+		                    inputUsername.setBorder(new LineBorder(Color.RED, 1));
+		                } else {
+		                    erroreUsername.setVisible(false);
+		                    inputUsername.setBorder(new LineBorder(Color.GREEN, 1));
+		                }
+		            }
+		            
+		        } catch (IOException e1) {
+		            e1.printStackTrace();
+		        }
+		    }
 		});
+
 	}
 }
