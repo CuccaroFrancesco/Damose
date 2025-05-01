@@ -19,6 +19,7 @@ package damose;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.*;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -168,27 +169,36 @@ public class Navbar extends JPanel {
         	public void actionPerformed(ActionEvent e) {
         		
         		String lineaDaCercare = searchBar.getText();
-        		Route lineaTrovata = null;
-        		List<GeoPosition> puntiDaDisegnare = new ArrayList<>();
+        		List<GeoPosition> puntiDaDisegnare = costruisciLineaDaDisegnare(lineaDaCercare);
         		
-        		for (Route linea : dati.getLinee()) {
-        			if (linea.getId().getId().equals(lineaDaCercare)) {
-        				lineaTrovata = linea;
-        			}
-        		}
-        		
-        		for (Trip viaggio : dati.getDatiStatici().getTripsForRoute(lineaTrovata)) {
+        		if (puntiDaDisegnare.isEmpty()) {
         			
-        			List<ShapePoint> shapePoints = new ArrayList<>(dati.getDatiStatici().getShapePointsForShapeId(viaggio.getShapeId()));
-        			for (ShapePoint sp : shapePoints) {
-        				puntiDaDisegnare.add(new GeoPosition(sp.getLat(), sp.getLon()));
-        			}
-        			
-        			break;
-        		}
+        			System.out.println("Dati non ancora disponibili.");
+        			return;
         		
-        		mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare);
-        		mapPanel.repaint();
+        		} else {
+        			
+        			mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare);
+            		
+            		double latMin = Double.MAX_VALUE;
+            		double lonMin = Double.MAX_VALUE;
+            		double latMax = Double.MIN_VALUE;
+            		double lonMax = Double.MIN_VALUE;
+            		
+            		for (GeoPosition gp : puntiDaDisegnare) {
+            			if (gp.getLatitude() < latMin) latMin = gp.getLatitude();
+            			if (gp.getLongitude() < lonMin) lonMin = gp.getLongitude();
+            			if (gp.getLatitude() > latMax) latMax = gp.getLatitude();
+            			if (gp.getLongitude() > lonMax) lonMax = gp.getLongitude();
+            		}
+            		
+            		double latCentrale = (latMin + latMax) / 2;
+            		double lonCentrale = (lonMin + lonMax) / 2;
+            		GeoPosition centro = new GeoPosition(latCentrale - 0.005, lonCentrale + 0.0075);
+            		
+            		mapPanel.getMapViewer().setAddressLocation(centro);
+            		mapPanel.repaint();
+        		}
         	}
         });
         
@@ -231,4 +241,30 @@ public class Navbar extends JPanel {
     public JButton getBtnLogin() {
     	return this.btnLogin;
     }
+    
+    
+    // Metodo che restituisce la lista di GeoPosition corrispondenti alla shape di una determinata linea
+ 	public List<GeoPosition> costruisciLineaDaDisegnare(String lineaDaDisegnare) {
+ 		
+ 		Route lineaTrovata = null;
+ 		List<GeoPosition> puntiDaDisegnare = new ArrayList<>();
+ 		
+ 		for (Route linea : dati.getLinee()) {
+ 			if (linea.getId().getId().equals(lineaDaDisegnare)) {
+ 				lineaTrovata = linea;
+ 			}
+ 		}
+ 		
+ 		for (Trip viaggio : dati.getDatiStatici().getTripsForRoute(lineaTrovata)) {
+ 			
+ 			List<ShapePoint> shapePoints = new ArrayList<>(dati.getDatiStatici().getShapePointsForShapeId(viaggio.getShapeId()));
+ 			for (ShapePoint sp : shapePoints) {
+ 				puntiDaDisegnare.add(new GeoPosition(sp.getLat(), sp.getLon()));
+ 			}
+ 			
+ 			break;
+ 		}
+ 		
+ 		return puntiDaDisegnare;
+ 	}
 }

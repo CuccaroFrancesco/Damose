@@ -14,6 +14,9 @@ import java.util.ArrayList;
 
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
+import org.onebusaway.gtfs.model.Route;
+import org.onebusaway.gtfs.model.ShapePoint;
+import org.onebusaway.gtfs.model.Trip;
 import org.jxmapviewer.painter.*;
 
 

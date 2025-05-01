@@ -118,6 +118,12 @@ public class Mappa extends JComponent {
     }
     
     
+    // Metodo get per l'oggetto JXMapViewer associato alla mappa
+    public JXMapViewer getMapViewer() {
+    	return this.mapViewer;
+    }
+    
+    
     // Metodo get per il painterGroup, ossia il gruppo ordinato di painter che disegna sulla mappa
     public CompoundPainter<JXMapViewer> getPainterGroup() {
     	return this.painterGroup;

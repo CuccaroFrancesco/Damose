@@ -3,17 +3,16 @@ package damose;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
-import org.onebusaway.gtfs.model.AgencyAndId;
+import org.jxmapviewer.viewer.*;
+
 import org.onebusaway.gtfs.model.Route;
 import org.onebusaway.gtfs.model.Stop;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.*;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.List;
 
 
 
@@ -27,6 +26,8 @@ public class UserPanel extends JPanel {
 	private JPanel panelLineePreferite, panelFermatePreferite;
 	private JScrollPane fermateScrollPane, lineeScrollPane;
 	private DatiGTFS dati;
+	private Navbar navbar;
+	private Mappa mappa;
 
 	
 	// Metodo utilizzato per nascondere tutti i componenti del pannello al momento di eventuali variazioni
@@ -51,10 +52,13 @@ public class UserPanel extends JPanel {
 	
 	
 	// Costruzione del pannello utente (login, registrazione e profilo)
-	public UserPanel(Utente utente, DatiGTFS dati) {
+	public UserPanel(Utente utente, DatiGTFS dati, Navbar navbar, Mappa mappa) {
 		
 		this.dati = dati;
 		this.utente = utente;
+		this.navbar = navbar;
+		this.mappa = mappa;
+		
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);
 		
@@ -496,17 +500,17 @@ public class UserPanel extends JPanel {
 		                titolo.setBounds(0, 120, 400, 50);
 		                titolo.setVisible(true);
 
-		             // Recupero delle linee e fermate preferite dell'utente 
+		                // Recupero delle linee e delle fermate preferite dell'utente 
 		                String[] lineePreferite = utente.getLineePreferite();
 		                String[] fermatePreferite = utente.getFermatePreferite();
 
-		                // Crea il pannello per le linee preferite
+		                // Creazioe del pannello per le linee preferite
 		                panelLineePreferite = new JPanel();
 		                panelLineePreferite.setLayout(null);
 		                panelLineePreferite.setPreferredSize(new Dimension(400, Math.max(100, lineePreferite.length * 60)));
 		                panelLineePreferite.setBackground(new Color(130, 36, 51));
 
-		                // Crea il pannello per le fermate preferite
+		                // Creazione del pannello per le fermate preferite
 		                panelFermatePreferite = new JPanel();
 		                panelFermatePreferite.setLayout(null);
 		                panelFermatePreferite.setPreferredSize(new Dimension(400, Math.max(100, fermatePreferite.length * 60)));
@@ -514,18 +518,17 @@ public class UserPanel extends JPanel {
 
 		                // Linee preferite
 		                for (int i = 0; i < lineePreferite.length; i++) {
+		                	
 		                    String routeId = lineePreferite[i]; 
 		                    int y = i * 60;
 
 		                    JButton lineaBtn = new JButton(routeId);
+		                    
 		                    lineaBtn.setBounds(50, y, 50, 50);
-		                    lineaBtn.setFocusable(false);
 		                    lineaBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
 		                    lineaBtn.setBackground(Color.WHITE); 
 		                    lineaBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		                    lineaBtn.setBorder(BorderFactory.createEmptyBorder());
-
-		                    panelLineePreferite.add(lineaBtn);
 
 		                    Route linea = null;
 		                    for (Route route : dati.getLinee()) {
@@ -534,29 +537,67 @@ public class UserPanel extends JPanel {
 		                            break;
 		                        }
 		                    }
+		                    
+		                    lineaBtn.addActionListener(new ActionListener() {
+		                    	public void actionPerformed(ActionEvent e) {
+		                    		
+		                    		String lineaDaCercare = lineaBtn.getText();
+		                    		List<GeoPosition> puntiDaDisegnare = navbar.costruisciLineaDaDisegnare(lineaDaCercare);
+		                    		
+		                    		if (puntiDaDisegnare.isEmpty()) {
+		                    			
+		                    			System.out.println("Dati non ancora disponibili.");
+		                    			return;
+		                    		
+		                    		} else {
+		                    			
+		                    			mappa.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare);
+		                        		
+		                        		double latMin = Double.MAX_VALUE;
+		                        		double lonMin = Double.MAX_VALUE;
+		                        		double latMax = Double.MIN_VALUE;
+		                        		double lonMax = Double.MIN_VALUE;
+		                        		
+		                        		for (GeoPosition gp : puntiDaDisegnare) {
+		                        			if (gp.getLatitude() < latMin) latMin = gp.getLatitude();
+		                        			if (gp.getLongitude() < lonMin) lonMin = gp.getLongitude();
+		                        			if (gp.getLatitude() > latMax) latMax = gp.getLatitude();
+		                        			if (gp.getLongitude() > lonMax) lonMax = gp.getLongitude();
+		                        		}
+		                        		
+		                        		double latCentrale = (latMin + latMax) / 2;
+		                        		double lonCentrale = (lonMin + lonMax) / 2;
+		                        		GeoPosition centro = new GeoPosition(latCentrale - 0.005, lonCentrale + 0.0075);
+		                        		
+		                        		mappa.getMapViewer().setAddressLocation(centro);
+		                        		mappa.repaint();
+		                    		}
+		                    	}
+		                    });
 
 		                    JLabel nomeLinea = new JLabel(linea != null ? linea.getAgency().getName() + " - " + linea.getShortName() : "Dati non disponibili");
+		                    
 		                    nomeLinea.setFont(new Font("Arial Nova", Font.PLAIN, 16));
 		                    nomeLinea.setForeground(Color.WHITE);
 		                    nomeLinea.setBounds(110, y + 15, 300, 20);
+		                    
+		                    panelLineePreferite.add(lineaBtn);
 		                    panelLineePreferite.add(nomeLinea);
 		                }
 
 		                // Fermate preferite
-
 		                for (int i = 0; i < fermatePreferite.length; i++) {
 		                    String stopId = fermatePreferite[i];
 		                    int y = i * 60;
 
 		                    JButton stopBtn = new JButton(stopId);
+		                    
 		                    stopBtn.setBounds(50, y, 50, 50);
 		                    stopBtn.setFocusable(false);
 		                    stopBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
 		                    stopBtn.setBackground(Color.WHITE); 
 		                    stopBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		                    stopBtn.setBorder(BorderFactory.createEmptyBorder());
-
-		                    panelFermatePreferite.add(stopBtn);
 
 		                    Stop fermata = null;
 		                    for (Stop stop : dati.getFermate()) {
@@ -567,9 +608,12 @@ public class UserPanel extends JPanel {
 		                    }
 
 		                    JLabel nomeFermata = new JLabel(fermata != null ? fermata.getName() : "Dati non disponibili");
+		                    
 		                    nomeFermata.setFont(new Font("Arial Nova", Font.PLAIN, 16));
 		                    nomeFermata.setForeground(Color.WHITE);
 		                    nomeFermata.setBounds(110, y + 15, 300, 20);
+		                    
+		                    panelFermatePreferite.add(stopBtn);
 		                    panelFermatePreferite.add(nomeFermata);
 		                }
 		                
@@ -666,6 +710,5 @@ public class UserPanel extends JPanel {
 		        }
 		    }
 		});
-
 	}
 }
