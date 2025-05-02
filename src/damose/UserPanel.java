@@ -552,24 +552,6 @@ public class UserPanel extends JPanel {
 		                    		} else {
 		                    			
 		                    			mappa.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare);
-		                        		
-		                        		double latMin = Double.MAX_VALUE;
-		                        		double lonMin = Double.MAX_VALUE;
-		                        		double latMax = Double.MIN_VALUE;
-		                        		double lonMax = Double.MIN_VALUE;
-		                        		
-		                        		for (GeoPosition gp : puntiDaDisegnare) {
-		                        			if (gp.getLatitude() < latMin) latMin = gp.getLatitude();
-		                        			if (gp.getLongitude() < lonMin) lonMin = gp.getLongitude();
-		                        			if (gp.getLatitude() > latMax) latMax = gp.getLatitude();
-		                        			if (gp.getLongitude() > lonMax) lonMax = gp.getLongitude();
-		                        		}
-		                        		
-		                        		double latCentrale = (latMin + latMax) / 2;
-		                        		double lonCentrale = (lonMin + lonMax) / 2;
-		                        		GeoPosition centro = new GeoPosition(latCentrale - 0.005, lonCentrale + 0.0075);
-		                        		
-		                        		mappa.getMapViewer().setAddressLocation(centro);
 		                        		mappa.repaint();
 		                    		}
 		                    	}
