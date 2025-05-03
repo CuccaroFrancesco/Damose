@@ -74,9 +74,20 @@ public class Main extends JFrame {
         navbar.setBounds(0, 0, screenSize.width, 60);   // Posizione e dimensione della navbar
         layeredPane.add(navbar, JLayeredPane.PALETTE_LAYER);
         
+        // Aggiunta del pannello delle linee 
+        lineaPanel lineaPanel = new lineaPanel(utente, dati, navbar);
+        
+        lineaPanel.setBounds(0, 0, 400, screenSize.height - 60);
+        layeredPane.add(lineaPanel, Integer.valueOf(101));
+        
+        // Aggiunta del pannello delle fermate 
+        stopPanel stopPanel = new stopPanel(utente, dati, navbar);
+        
+        stopPanel.setBounds(0, 0, 400, screenSize.height - 60);
+        layeredPane.add(stopPanel, Integer.valueOf(101));
         
         // Aggiunta del pannello utente (inizialmente invisibile)
-        UserPanel userPanel = new UserPanel(utente, dati, navbar, mapPanel);
+        UserPanel userPanel = new UserPanel(utente, dati, navbar, mapPanel, stopPanel, lineaPanel);
         
         userPanel.setBounds(screenSize.width - 400, 70, 400, screenSize.height - 60);
         userPanel.setVisible(false);

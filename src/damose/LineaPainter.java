@@ -85,6 +85,41 @@ public class LineaPainter implements Painter<JXMapViewer> {
     }
 	
 	
+	// Metodo che restituisce la lista di GeoPosition corrispondenti alla shape di una determinata linea
+	 	public static void costruisciLineaDaDisegnare(String lineaDaDisegnare, Mappa mapPanel, DatiGTFS dati) {
+	 		
+	 		Route lineaTrovata = null;
+	 		List<GeoPosition> puntiDaDisegnare = new ArrayList<>();
+	 		
+	 		for (Route linea : dati.getLinee()) {
+	 			if (linea.getId().getId().equals(lineaDaDisegnare)) {
+	 				lineaTrovata = linea;
+	 			}
+	 		}
+	 		
+	 		for (Trip viaggio : dati.getDatiStatici().getTripsForRoute(lineaTrovata)) {
+	 			
+	 			List<ShapePoint> shapePoints = new ArrayList<>(dati.getDatiStatici().getShapePointsForShapeId(viaggio.getShapeId()));
+	 			for (ShapePoint sp : shapePoints) {
+	 				puntiDaDisegnare.add(new GeoPosition(sp.getLat(), sp.getLon()));
+	 			}
+	 			
+	 			break;
+	 		}
+	 		
+	 		if (puntiDaDisegnare.isEmpty()) {
+    			
+    			System.out.println("Dati non ancora disponibili.");
+    			return;
+    		
+    		} else {
+    			
+    			mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare);
+        		mapPanel.repaint();
+    		}
+	 	}
+	
+	
 	// Metodo set per impostare la linea da disegnare
 	public void setLineaDaDisegnare(List<GeoPosition> linea) {
 		this.linea = linea;

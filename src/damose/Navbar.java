@@ -164,23 +164,12 @@ public class Navbar extends JPanel {
         });
         
         
-        // Funzionalità di ricerca di una linea per la searchBar (PROVVISORIA: TEST PER LINEAPAINTER.JAVA)
+        // Funzionalità di ricerca di una linea per la searchBar 
         searchBar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
         		String lineaDaCercare = searchBar.getText();
-        		List<GeoPosition> puntiDaDisegnare = costruisciLineaDaDisegnare(lineaDaCercare);
-        		
-        		if (puntiDaDisegnare.isEmpty()) {
-        			
-        			System.out.println("Dati non ancora disponibili.");
-        			return;
-        		
-        		} else {
-        			
-        			mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare);
-            		mapPanel.repaint();
-        		}
+        		LineaPainter.costruisciLineaDaDisegnare(lineaDaCercare, mapPanel, dati);
         	}
         });
         
@@ -223,30 +212,4 @@ public class Navbar extends JPanel {
     public JButton getBtnLogin() {
     	return this.btnLogin;
     }
-    
-    
-    // Metodo che restituisce la lista di GeoPosition corrispondenti alla shape di una determinata linea
- 	public List<GeoPosition> costruisciLineaDaDisegnare(String lineaDaDisegnare) {
- 		
- 		Route lineaTrovata = null;
- 		List<GeoPosition> puntiDaDisegnare = new ArrayList<>();
- 		
- 		for (Route linea : dati.getLinee()) {
- 			if (linea.getId().getId().equals(lineaDaDisegnare)) {
- 				lineaTrovata = linea;
- 			}
- 		}
- 		
- 		for (Trip viaggio : dati.getDatiStatici().getTripsForRoute(lineaTrovata)) {
- 			
- 			List<ShapePoint> shapePoints = new ArrayList<>(dati.getDatiStatici().getShapePointsForShapeId(viaggio.getShapeId()));
- 			for (ShapePoint sp : shapePoints) {
- 				puntiDaDisegnare.add(new GeoPosition(sp.getLat(), sp.getLon()));
- 			}
- 			
- 			break;
- 		}
- 		
- 		return puntiDaDisegnare;
- 	}
 }

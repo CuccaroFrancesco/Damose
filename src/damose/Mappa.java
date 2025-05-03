@@ -149,6 +149,14 @@ public class Mappa extends JComponent {
         mapViewer.repaint();
     }
     
+    public void zoomMappa(double longit, double lat)
+    {
+    	GeoPosition target = new GeoPosition(lat, longit);
+        mapViewer.setAddressLocation(target); 
+        mapViewer.setZoom(5); 
+        mapViewer.repaint();
+    }
+    
     
     // Metodo che controlla quali sono le fermate visibili sulla mappa e le disegna, "eliminando" invece quelle non visibili
     public void aggiornaFermateVisibili() {

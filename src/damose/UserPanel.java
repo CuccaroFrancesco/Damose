@@ -28,6 +28,8 @@ public class UserPanel extends JPanel {
 	private DatiGTFS dati;
 	private Navbar navbar;
 	private Mappa mappa;
+	private stopPanel stopPanel;
+	private lineaPanel lineaPanel;
 
 	
 	// Metodo utilizzato per nascondere tutti i componenti del pannello al momento di eventuali variazioni
@@ -52,12 +54,14 @@ public class UserPanel extends JPanel {
 	
 	
 	// Costruzione del pannello utente (login, registrazione e profilo)
-	public UserPanel(Utente utente, DatiGTFS dati, Navbar navbar, Mappa mappa) {
+	public UserPanel(Utente utente, DatiGTFS dati, Navbar navbar, Mappa mappa, stopPanel stopPanel, lineaPanel lineaPanel) {
 		
 		this.dati = dati;
 		this.utente = utente;
 		this.navbar = navbar;
 		this.mappa = mappa;
+		this.stopPanel = stopPanel;
+		this.lineaPanel = lineaPanel;
 		
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);
@@ -324,6 +328,11 @@ public class UserPanel extends JPanel {
 		btnBack.setFocusPainted(false);
 		btnBack.setContentAreaFilled(false);
 		
+		ImageIcon iconW = new ImageIcon("src/resources/indietro.png");
+        Image scaledImageW = iconW.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+        ImageIcon newIconW = new ImageIcon(scaledImageW);
+        btnBack.setIcon(newIconW);
+        
 		this.add(btnBack);
 		
 // ---------------------------------------------------------------------------------------------
@@ -518,62 +527,55 @@ public class UserPanel extends JPanel {
 
 		                // Linee preferite
 		                for (int i = 0; i < lineePreferite.length; i++) {
-		                	
-		                    String routeId = lineePreferite[i]; 
+		                    String routeId = lineePreferite[i];
 		                    int y = i * 60;
 
 		                    JButton lineaBtn = new JButton(routeId);
-		                    
 		                    lineaBtn.setBounds(50, y, 50, 50);
 		                    lineaBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
 		                    lineaBtn.setBackground(Color.WHITE); 
 		                    lineaBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		                    lineaBtn.setBorder(BorderFactory.createEmptyBorder());
 
-		                    Route linea = null;
+		                    // Usa un array per "contenere" la variabile linea
+		                    final Route[] lineaArray = new Route[1]; // Array finale per linea
 		                    for (Route route : dati.getLinee()) {
 		                        if (route.getId().getId().equals(routeId)) {
-		                            linea = route;
+		                            lineaArray[0] = route;  // Assegna la route all'interno dell'array
 		                            break;
 		                        }
 		                    }
-		                    
+
+		                    // Aggiungi l'ActionListener
 		                    lineaBtn.addActionListener(new ActionListener() {
-		                    	public void actionPerformed(ActionEvent e) {
-		                    		
-		                    		String lineaDaCercare = lineaBtn.getText();
-		                    		List<GeoPosition> puntiDaDisegnare = navbar.costruisciLineaDaDisegnare(lineaDaCercare);
-		                    		
-		                    		if (puntiDaDisegnare.isEmpty()) {
-		                    			
-		                    			System.out.println("Dati non ancora disponibili.");
-		                    			return;
-		                    		
-		                    		} else {
-		                    			
-		                    			mappa.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare);
-		                        		mappa.repaint();
-		                    		}
-		                    	}
+		                        public void actionPerformed(ActionEvent e) {
+		                        	if (lineaArray[0] != null) {
+		                                lineaPanel.creaPannelloLinea(lineaArray[0]);
+		                                stopPanel.setVisible(false);
+		                            } else {
+		                                System.out.println("Linea non trovata");
+		                            }
+		                        }
 		                    });
 
-		                    JLabel nomeLinea = new JLabel(linea != null ? linea.getAgency().getName() + " - " + linea.getShortName() : "Dati non disponibili");
-		                    
+		                    // Nome della linea o messaggio di errore
+		                    JLabel nomeLinea = new JLabel(lineaArray[0] != null ? lineaArray[0].getAgency().getName() + " - " + lineaArray[0].getShortName() : "Dati non disponibili");
 		                    nomeLinea.setFont(new Font("Arial Nova", Font.PLAIN, 16));
 		                    nomeLinea.setForeground(Color.WHITE);
 		                    nomeLinea.setBounds(110, y + 15, 300, 20);
-		                    
+
+		                    // Aggiungi il pulsante e l'etichetta al pannello
 		                    panelLineePreferite.add(lineaBtn);
 		                    panelLineePreferite.add(nomeLinea);
 		                }
 
-		                // Fermate preferite
+
+		             // Fermate preferite
 		                for (int i = 0; i < fermatePreferite.length; i++) {
 		                    String stopId = fermatePreferite[i];
 		                    int y = i * 60;
 
 		                    JButton stopBtn = new JButton(stopId);
-		                    
 		                    stopBtn.setBounds(50, y, 50, 50);
 		                    stopBtn.setFocusable(false);
 		                    stopBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
@@ -581,23 +583,38 @@ public class UserPanel extends JPanel {
 		                    stopBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		                    stopBtn.setBorder(BorderFactory.createEmptyBorder());
 
-		                    Stop fermata = null;
+		                    // Trova la fermata corrispondente a stopId
+		                    final Stop[] fermata = new Stop[1]; // Usa un array per rendere la variabile finale
 		                    for (Stop stop : dati.getFermate()) {
 		                        if (stop.getId().getId().equals(stopId)) {
-		                            fermata = stop;
+		                            fermata[0] = stop;
 		                            break;
 		                        }
 		                    }
 
-		                    JLabel nomeFermata = new JLabel(fermata != null ? fermata.getName() : "Dati non disponibili");
-		                    
+		                    // Aggiungi l'ActionListener
+		                    stopBtn.addActionListener(new ActionListener() {
+		                        public void actionPerformed(ActionEvent e) {
+		                            if (fermata[0] != null) {
+		                                stopPanel.creaPannelloFermata(fermata[0]);
+		                                lineaPanel.setVisible(false);
+		                            } else {
+		                                System.out.println("Fermata non trovata");
+		                            }
+		                        }
+		                    });
+
+		                    // Nome della fermata o messaggio di errore
+		                    JLabel nomeFermata = new JLabel(fermata[0] != null ? fermata[0].getName() : "Dati non disponibili");
 		                    nomeFermata.setFont(new Font("Arial Nova", Font.PLAIN, 16));
 		                    nomeFermata.setForeground(Color.WHITE);
 		                    nomeFermata.setBounds(110, y + 15, 300, 20);
-		                    
+
+		                    // Aggiungi il pulsante e l'etichetta al pannello
 		                    panelFermatePreferite.add(stopBtn);
 		                    panelFermatePreferite.add(nomeFermata);
 		                }
+
 		                
 		                // ScrollPane
 		                lineeScrollPane = new JScrollPane(panelLineePreferite);
