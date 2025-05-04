@@ -86,16 +86,9 @@ public class LineaPainter implements Painter<JXMapViewer> {
 	
 	
 	// Metodo che restituisce la lista di GeoPosition corrispondenti alla shape di una determinata linea
-	 	public static void costruisciLineaDaDisegnare(String lineaDaDisegnare, Mappa mapPanel, DatiGTFS dati) {
+	 	public static void costruisciLineaDaDisegnare(Route lineaTrovata, Mappa mapPanel, DatiGTFS dati) {
 	 		
-	 		Route lineaTrovata = null;
 	 		List<GeoPosition> puntiDaDisegnare = new ArrayList<>();
-	 		
-	 		for (Route linea : dati.getLinee()) {
-	 			if (linea.getId().getId().equals(lineaDaDisegnare)) {
-	 				lineaTrovata = linea;
-	 			}
-	 		}
 	 		
 	 		for (Trip viaggio : dati.getDatiStatici().getTripsForRoute(lineaTrovata)) {
 	 			
@@ -115,6 +108,11 @@ public class LineaPainter implements Painter<JXMapViewer> {
     		} else {
     			
     			mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare);
+    			
+    			int centro = puntiDaDisegnare.size() / 2;
+    			GeoPosition puntoCentrale = puntiDaDisegnare.get(centro);
+    			mapPanel.zoomMappa(puntoCentrale.getLongitude(), puntoCentrale.getLatitude());
+    			
         		mapPanel.repaint();
     		}
 	 	}

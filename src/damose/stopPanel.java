@@ -23,12 +23,10 @@ public class stopPanel extends JPanel {
 	private JButton btnWheelChair, btnClose;
 	private Utente utente;
 	private DatiGTFS dati;
-	private Navbar navbar;
 	
-	public stopPanel(Utente utente, DatiGTFS dati, Navbar navbar) {
+	public stopPanel(Utente utente, DatiGTFS dati) {
 		this.utente = utente;
 		this.dati = dati;
-		this.navbar = navbar;
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);
 		
@@ -113,7 +111,7 @@ public class stopPanel extends JPanel {
 		this.setVisible(true);
 		
 		titolo.setText(fermata.getName());
-		codiceFermata.setText(fermata.getCode());
+		codiceFermata.setText("ID: " + fermata.getCode());
 		int accessibile = fermata.getWheelchairBoarding(); 
 		switch(accessibile)
 		{

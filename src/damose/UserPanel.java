@@ -539,18 +539,14 @@ public class UserPanel extends JPanel {
 
 		                    // Usa un array per "contenere" la variabile linea
 		                    final Route[] lineaArray = new Route[1]; // Array finale per linea
-		                    for (Route route : dati.getLinee()) {
-		                        if (route.getId().getId().equals(routeId)) {
-		                            lineaArray[0] = route;  // Assegna la route all'interno dell'array
-		                            break;
-		                        }
-		                    }
+		                    lineaArray[0] = dati.cercaRoute(routeId);
 
 		                    // Aggiungi l'ActionListener
 		                    lineaBtn.addActionListener(new ActionListener() {
 		                        public void actionPerformed(ActionEvent e) {
 		                        	if (lineaArray[0] != null) {
 		                                lineaPanel.creaPannelloLinea(lineaArray[0]);
+		                                LineaPainter.costruisciLineaDaDisegnare(lineaArray[0], mappa, dati);
 		                                stopPanel.setVisible(false);
 		                            } else {
 		                                System.out.println("Linea non trovata");
@@ -585,18 +581,14 @@ public class UserPanel extends JPanel {
 
 		                    // Trova la fermata corrispondente a stopId
 		                    final Stop[] fermata = new Stop[1]; // Usa un array per rendere la variabile finale
-		                    for (Stop stop : dati.getFermate()) {
-		                        if (stop.getId().getId().equals(stopId)) {
-		                            fermata[0] = stop;
-		                            break;
-		                        }
-		                    }
+		                    fermata[0] = dati.cercaFermata(stopId);
 
 		                    // Aggiungi l'ActionListener
 		                    stopBtn.addActionListener(new ActionListener() {
 		                        public void actionPerformed(ActionEvent e) {
 		                            if (fermata[0] != null) {
 		                                stopPanel.creaPannelloFermata(fermata[0]);
+		                                mappa.zoomMappa(fermata[0].getLon(), fermata[0].getLat());
 		                                lineaPanel.setVisible(false);
 		                            } else {
 		                                System.out.println("Fermata non trovata");

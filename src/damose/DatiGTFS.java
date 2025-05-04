@@ -95,6 +95,26 @@ public class DatiGTFS {
 		return this.datiStatici.getAllShapeIds();
 	}
 	
+	public Route cercaRoute(String routeId)
+	{
+		for (Route route : this.getLinee()) {
+            if (route.getId().getId().equals(routeId)) {
+                return route;
+            }
+        }
+		return null;
+	}
+	
+	public Stop cercaFermata(String stopId)
+	{
+		for (Stop stop : this.getFermate()) {
+            if (stop.getId().getId().equals(stopId)) {
+                return stop;
+            }
+        }
+		return null;
+	}
+	
 // ---------------------------------------------------------------------------------------------
 
 	// Metodo get per i dati real-time GTFS dell'istanza

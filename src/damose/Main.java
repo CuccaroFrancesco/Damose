@@ -68,23 +68,23 @@ public class Main extends JFrame {
         layeredPane.add(mapPanel, JLayeredPane.DEFAULT_LAYER);
 
         
-        // Aggiunta della navbar alla finestra principale
-        Navbar navbar = new Navbar(mapPanel, dati);
-        
-        navbar.setBounds(0, 0, screenSize.width, 60);   // Posizione e dimensione della navbar
-        layeredPane.add(navbar, JLayeredPane.PALETTE_LAYER);
-        
         // Aggiunta del pannello delle linee 
-        lineaPanel lineaPanel = new lineaPanel(utente, dati, navbar);
+        lineaPanel lineaPanel = new lineaPanel(utente, dati);
         
         lineaPanel.setBounds(0, 0, 400, screenSize.height - 60);
         layeredPane.add(lineaPanel, Integer.valueOf(101));
         
         // Aggiunta del pannello delle fermate 
-        stopPanel stopPanel = new stopPanel(utente, dati, navbar);
+        stopPanel stopPanel = new stopPanel(utente, dati);
         
         stopPanel.setBounds(0, 0, 400, screenSize.height - 60);
         layeredPane.add(stopPanel, Integer.valueOf(101));
+        
+        // Aggiunta della navbar alla finestra principale
+        Navbar navbar = new Navbar(mapPanel, dati, stopPanel, lineaPanel);
+        
+        navbar.setBounds(0, 0, screenSize.width, 60);   // Posizione e dimensione della navbar
+        layeredPane.add(navbar, JLayeredPane.PALETTE_LAYER);
         
         // Aggiunta del pannello utente (inizialmente invisibile)
         UserPanel userPanel = new UserPanel(utente, dati, navbar, mapPanel, stopPanel, lineaPanel);
@@ -100,7 +100,7 @@ public class Main extends JFrame {
         	@Override
             public void componentResized(ComponentEvent e) {
         		
-        		calibra(navbar, userPanel, mapPanel);
+        		calibra(navbar, userPanel, mapPanel, stopPanel, lineaPanel);
             }
         });
 
@@ -111,18 +111,17 @@ public class Main extends JFrame {
         	public void actionPerformed(ActionEvent e) {
         		
         		if (userPanel.isVisible()) {
-        			
         			// Pannello invisibile e mappa scoperta
         			userPanel.setVisible(false);
                     mapPanel.setBounds(0, 60, screenSize.width, screenSize.height - 60);
-                    calibra(navbar, userPanel, mapPanel);
+                    calibra(navbar, userPanel, mapPanel, stopPanel, lineaPanel);
                     
         		} else {
         			
         			// Pannello visibile e mappa coperta
         			userPanel.setVisible(true);
         			mapPanel.setBounds(0, 60, screenSize.width - 400, screenSize.height);
-        			calibra(navbar, userPanel, mapPanel);
+        			calibra(navbar, userPanel, mapPanel, stopPanel, lineaPanel);
         		}
         	}
         });
@@ -130,7 +129,7 @@ public class Main extends JFrame {
 	
 	
     // Metodo che gestisce l'adattamento dinamico delle dimensioni della navbar e delle sue componenti
-    public void calibra(Navbar navbar, UserPanel userPanel, Mappa mapPanel) {
+    public void calibra(Navbar navbar, UserPanel userPanel, Mappa mapPanel, stopPanel stopPanel, lineaPanel lineaPanel) {
     	
     	int newWidth = getWidth();              // Nuova larghezza della finestra
     	int newHeight = getHeight();            // Nuova altezza della finestra

@@ -11,11 +11,15 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import org.onebusaway.gtfs.model.Route;
+import java.util.List;
+
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -23,15 +27,13 @@ import javax.swing.JButton;
 public class lineaPanel extends JPanel {
 	
 	private JLabel titolo, scrittaAgenzia;
-	private JButton btnWheelChair, btnClose, btnLink;
+	private JButton btnWheelChair, btnClose, btnLink, btnPreferiti;
 	private Utente utente;
 	private DatiGTFS dati;
-	private Navbar navbar;
 	
-	public lineaPanel(Utente utente, DatiGTFS dati, Navbar navbar) {
+	public lineaPanel(Utente utente, DatiGTFS dati) {
 		this.utente = utente;
 		this.dati = dati;
-		this.navbar = navbar;
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);
 		
@@ -63,7 +65,7 @@ public class lineaPanel extends JPanel {
 		titolo.setFont(new Font("Arial Nova", Font.BOLD, 24));
 		titolo.setFocusable(false);
 								
-		titolo.setBounds(20, 107, 380, 50);
+		titolo.setBounds(20, 107, 340, 50);
 								
 		this.add(titolo);
 		
@@ -96,6 +98,19 @@ public class lineaPanel extends JPanel {
         btnWheelChair.setIcon(newIconW);
         
         this.add(btnWheelChair);
+        
+        btnPreferiti = new JButton();
+        btnPreferiti.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
+        btnPreferiti.setContentAreaFilled(false);
+        btnPreferiti.setFocusPainted(false);
+        btnPreferiti.setBorderPainted(false);
+        btnPreferiti.setBackground(new Color(130, 36, 51));
+		
+        btnPreferiti.setPreferredSize(new Dimension(50, 50));
+        btnPreferiti.setBounds(280, 107, 205, 50);
+		
+        this.add(btnPreferiti);
         
         scrittaAgenzia = new JLabel("Nome agenzia");
         scrittaAgenzia.setForeground(Color.WHITE);
@@ -135,9 +150,72 @@ public class lineaPanel extends JPanel {
 	public void creaPannelloLinea(Route linea) {
 		this.setVisible(true);
 		
+		if (utente.getLineePreferite() != null) {
+		    boolean isPreferita = false;
+		    for (String preferito : utente.getLineePreferite()) {
+		        if (preferito.equals(linea.getId().getId())) {
+		            isPreferita = true;
+		            break;
+		        }
+		    }
+
+		    String iconPath = isPreferita ? "src/resources/cuore.png" : "src/resources/cuore-vuoto.png";
+		    ImageIcon icon = new ImageIcon(iconPath);
+		    Image scaledImage = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		    btnPreferiti.setIcon(new ImageIcon(scaledImage));
+
+		}
+		
+		btnPreferiti.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        
+		        String[] preferiti = utente.getLineePreferite();
+		        String idLinea = linea.getId().getId();
+		        
+		        List<String> lista = new ArrayList<>();
+		        if (preferiti != null) {
+		            lista = new ArrayList<>(Arrays.asList(preferiti));
+		        }
+		        
+		        boolean isOraPreferita;
+		        
+		        if (lista.contains(idLinea)) {
+		            lista.remove(idLinea);
+		            isOraPreferita = false;
+		        } else {
+		            lista.add(idLinea);
+		            isOraPreferita = true;
+		        }
+		        
+		        try {
+					utente.cambiaLineePreferite(lista.toArray(new String[0]));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+		        
+		        String iconPath = isOraPreferita ? "src/resources/cuore.png" : "src/resources/cuore-vuoto.png";
+		        ImageIcon icon = new ImageIcon(iconPath);
+		        Image scaledImage = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		        btnPreferiti.setIcon(new ImageIcon(scaledImage));
+		    }
+		});
+
+		
+		
 		String agenzia = linea.getAgency().getName();
-		titolo.setText(linea.getShortName());
+		String longName = linea.getLongName();
+		String shortName = linea.getShortName();
 		scrittaAgenzia.setText(agenzia);
+		System.out.println(longName);
+		if(longName == null || longName.isEmpty())
+		{
+			titolo.setText(shortName);
+		}
+		else
+		{
+			titolo.setText(longName);
+			scrittaAgenzia.setText(shortName + "  -  " + agenzia);
+		}
 		
 		btnLink.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

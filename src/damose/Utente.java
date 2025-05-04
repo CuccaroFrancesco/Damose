@@ -25,8 +25,12 @@ METODI:
 package damose;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 
 
 
@@ -85,14 +89,83 @@ public class Utente {
 		this.lineePreferite = lineePreferite;
 	}
 	
+	public void cambiaLineePreferite(String[] lineePreferite) throws IOException {
+		this.setLineePreferite(lineePreferite);
+		File inputFile = new File("files/utenti.txt");
+		File tempFile = new File("files/utenti_temp.txt");
+
+		BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+		String line;
+		while ((line = reader.readLine()) != null) {
+		    String[] dati = line.split(",");
+
+		        String usernameInFile = dati[0];
+		        if (usernameInFile.equals(this.username)) {
+		            String nuoveLinee = String.join("-", lineePreferite); 
+		            System.out.println("Linee preferite: " + nuoveLinee);
+		            String nuovaRiga = this.username + "," + this.nome + "," + this.cognome + "," + this.password + "," + nuoveLinee + "," + this.fermatePreferite;
+		            writer.write(nuovaRiga);
+		        } else {
+		            writer.write(line);
+		        }
+		        writer.newLine();
+		    }
+
+		reader.close();
+		writer.close();
+		    
+		if (!inputFile.delete()) {
+			throw new IOException("Impossibile eliminare il file originale.");
+		}
+		if (!tempFile.renameTo(inputFile)) {
+			throw new IOException("Impossibile rinominare il file temporaneo.");
+		}
+	}
+	
 	
 	// Metodi get e set per le fermate preferite dell'utente
 	public String[] getFermatePreferite() {
 		return fermatePreferite;
 	}
-
+	
 	public void setFermatePreferite(String[] fermatePreferite) {
 		this.fermatePreferite = fermatePreferite;
+	}
+
+	public void cambiaFermatePreferite(String[] fermatePreferite) throws IOException {
+		this.setFermatePreferite(fermatePreferite);
+		File inputFile = new File("files/utenti.txt");
+		File tempFile = new File("files/utenti_temp.txt");
+
+		BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+		String line;
+		while ((line = reader.readLine()) != null) {
+		    String[] dati = line.split(",");
+
+		        String usernameInFile = dati[0];
+		        if (usernameInFile.equals(this.username)) {
+		            String nuoveFermate = String.join("-", this.fermatePreferite); 
+		            String nuovaRiga = this.username + "," + this.nome + "," + this.cognome + "," + this.password + "," + this.lineePreferite + "," + nuoveFermate;
+		            writer.write(nuovaRiga);
+		        } else {
+		            writer.write(line);
+		        }
+		        writer.newLine();
+		    }
+
+		reader.close();
+		writer.close();
+		    
+		if (!inputFile.delete()) {
+			throw new IOException("Impossibile eliminare il file originale.");
+		}
+		if (!tempFile.renameTo(inputFile)) {
+			throw new IOException("Impossibile rinominare il file temporaneo.");
+		}
 	}
 	
 	

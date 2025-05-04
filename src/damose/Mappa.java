@@ -153,7 +153,7 @@ public class Mappa extends JComponent {
     {
     	GeoPosition target = new GeoPosition(lat, longit);
         mapViewer.setAddressLocation(target); 
-        mapViewer.setZoom(5); 
+        mapViewer.setZoom(2); 
         mapViewer.repaint();
     }
     
