@@ -69,13 +69,13 @@ public class Main extends JFrame {
 
         
         // Aggiunta del pannello delle linee 
-        lineaPanel lineaPanel = new lineaPanel(utente, dati);
+        LineaPanel lineaPanel = new LineaPanel(utente, dati);
         
         lineaPanel.setBounds(0, 0, 400, screenSize.height - 60);
         layeredPane.add(lineaPanel, Integer.valueOf(101));
         
         // Aggiunta del pannello delle fermate 
-        stopPanel stopPanel = new stopPanel(utente, dati);
+        StopPanel stopPanel = new StopPanel(utente, dati);
         
         stopPanel.setBounds(0, 0, 400, screenSize.height - 60);
         layeredPane.add(stopPanel, Integer.valueOf(101));
@@ -129,7 +129,7 @@ public class Main extends JFrame {
 	
 	
     // Metodo che gestisce l'adattamento dinamico delle dimensioni della navbar e delle sue componenti
-    public void calibra(Navbar navbar, UserPanel userPanel, Mappa mapPanel, stopPanel stopPanel, lineaPanel lineaPanel) {
+    public void calibra(Navbar navbar, UserPanel userPanel, Mappa mapPanel, StopPanel stopPanel, LineaPanel lineaPanel) {
     	
     	int newWidth = getWidth();              // Nuova larghezza della finestra
     	int newHeight = getHeight();            // Nuova altezza della finestra

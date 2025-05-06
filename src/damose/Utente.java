@@ -30,14 +30,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 
 public class Utente {
 	
 	private String nome, cognome, username, password;
-	private String[] lineePreferite, fermatePreferite;
+	private List<String> lineePreferite, fermatePreferite;
 	
 	
 	// Metodi get e set per il nome associato all'utente
@@ -81,97 +83,118 @@ public class Utente {
 	
 	
 	// Metodi get e set per le linee preferite dell'utente
-	public String[] getLineePreferite() {
+	public List<String> getLineePreferite() {
 		return lineePreferite;
 	}
 
-	public void setLineePreferite(String[] lineePreferite) {
-		if (lineePreferite.equals(" ")) {
-			this.lineePreferite = new String[0];
-		} else {
-			this.lineePreferite = lineePreferite;			
-		}
-	}
-	
-	public void cambiaLineePreferite(String[] lineePreferite) throws IOException {
-		this.setLineePreferite(lineePreferite);
-		File inputFile = new File("files/utenti.txt");
-		File tempFile = new File("files/utenti_temp.txt");
-
-		BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-		BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-
-		String line;
-		while ((line = reader.readLine()) != null) {
-		    String[] dati = line.split(",");
-
-		        String usernameInFile = dati[0];
-		        if (usernameInFile.equals(this.username)) {
-		            String nuoveLinee = String.join("-", this.lineePreferite); 
-		            String nuoveFermate = String.join("-", this.fermatePreferite);
-		            String nuovaRiga = this.username + "," + this.nome + "," + this.cognome + "," + this.password + "," + nuoveLinee + "," + nuoveFermate;
-		            writer.write(nuovaRiga);
-		        } else {
-		            writer.write(line);
-		        }
-		        writer.newLine();
-		    }
-
-		reader.close();
-		writer.close();
-		    
-		if (!inputFile.delete()) {
-			throw new IOException("Impossibile eliminare il file originale.");
-		}
-		if (!tempFile.renameTo(inputFile)) {
-			throw new IOException("Impossibile rinominare il file temporaneo.");
-		}
+	public void setLineePreferite(List<String> lineePreferite) {
+		this.lineePreferite = lineePreferite.equals(" ") ? new ArrayList<>() : lineePreferite;
 	}
 	
 	
 	// Metodi get e set per le fermate preferite dell'utente
-	public String[] getFermatePreferite() {
+	public List<String> getFermatePreferite() {
 		return fermatePreferite;
 	}
 	
-	public void setFermatePreferite(String[] fermatePreferite) {
-		if (fermatePreferite.equals(" ")) {
-			this.fermatePreferite = new String[0];
-		} else {
-			this.fermatePreferite = fermatePreferite;			
-		}
+	public void setFermatePreferite(List<String> fermatePreferite) {
+		this.fermatePreferite = fermatePreferite.equals(" ") ? new ArrayList<>() : fermatePreferite;
 	}
-
-	public void cambiaFermatePreferite(String[] fermatePreferite) throws IOException {
-		this.setFermatePreferite(fermatePreferite);
+	
+	
+	// Metodo per modificare le linee preferite (sia attributo che nel file di testo) dell'utente loggato
+	public void cambiaLineePreferite(List<String> lineePreferite) throws IOException {
+		this.setLineePreferite(lineePreferite);
+		
 		File inputFile = new File("files/utenti.txt");
 		File tempFile = new File("files/utenti_temp.txt");
 
-		BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-		BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+		try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+			 BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+			
+			 String line;
+			 while ((line = reader.readLine()) != null) {
+				 List<String> dati = new ArrayList<>();
+			    
+			     for (String dato : line.split(",")) {
+			    	dati.add(dato);
+			     }
 
-		String line;
-		while ((line = reader.readLine()) != null) {
-		    String[] dati = line.split(",");
+			     String usernameInFile = dati.get(0);
+			    
+			     if (usernameInFile.equals(this.username)) {
+			        String nuoveLinee = String.join("-", this.lineePreferite); 
+			        String nuoveFermate = String.join("-", this.fermatePreferite);
+			        String nuovaRiga = this.username + "," + this.nome + "," + this.cognome + "," + this.password + "," + nuoveLinee + "," + nuoveFermate;
 
-		    String usernameInFile = dati[0];
-		    if (usernameInFile.equals(this.username)) {
-		    	String nuoveFermate = String.join("-", this.fermatePreferite); 
-		    	String nuoveLinee = String.join("-", this.lineePreferite);
-		    	String nuovaRiga = this.username + "," + this.nome + "," + this.cognome + "," + this.password + "," + nuoveLinee + "," + nuoveFermate;
-		        writer.write(nuovaRiga);
-		    } else {
-		        writer.write(line);
-		    }
-		    writer.newLine();
+			        writer.write(nuovaRiga);
+			        
+			     } else {
+			        writer.write(line);
+			     }
+			    
+			     writer.newLine();
+			}
+			
+			reader.close();
+			writer.close();
+			
+		} catch(IOException e) {
+			e.printStackTrace();
 		}
-
-		reader.close();
-		writer.close();
 		    
 		if (!inputFile.delete()) {
 			throw new IOException("Impossibile eliminare il file originale.");
 		}
+		
+		if (!tempFile.renameTo(inputFile)) {
+			throw new IOException("Impossibile rinominare il file temporaneo.");
+		}
+	}
+
+	
+	// Metodo per modificare le fermate preferite (sia attributo che nel file di testo) dell'utente loggato
+	public void cambiaFermatePreferite(List<String> fermatePreferite) throws IOException {
+		this.setFermatePreferite(fermatePreferite);
+		
+		File inputFile = new File("files/utenti.txt");
+		File tempFile = new File("files/utenti_temp.txt");
+		
+		try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+			 BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+			
+			 String line;
+			 while ((line = reader.readLine()) != null) {
+				 List<String> dati = new ArrayList<>();
+				 
+			     for (String dato : line.split(",")) {
+			    	 dati.add(dato);
+			     }
+
+			     String usernameInFile = dati.get(0);
+			     if (usernameInFile.equals(this.username)) {
+			    	 String nuoveFermate = String.join("-", this.fermatePreferite); 
+			    	 String nuoveLinee = String.join("-", this.lineePreferite);
+			    	 String nuovaRiga = this.username + "," + this.nome + "," + this.cognome + "," + this.password + "," + nuoveLinee + "," + nuoveFermate;
+			         writer.write(nuovaRiga);
+			     } else {
+			         writer.write(line);
+			     }
+			     
+			    writer.newLine();
+			}
+
+			reader.close();
+			writer.close();
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		    
+		if (!inputFile.delete()) {
+			throw new IOException("Impossibile eliminare il file originale.");
+		}
+		
 		if (!tempFile.renameTo(inputFile)) {
 			throw new IOException("Impossibile rinominare il file temporaneo.");
 		}
@@ -189,22 +212,23 @@ public class Utente {
         String riga;
         
         while ((riga = reader.readLine()) != null) {
-            String[] dati = riga.split(",");
-            for (String dato: dati)
-            {            	
-            	System.out.println(dato);
-            }
+            List<String> dati = new ArrayList<>();
             
-            if (dati.length > 0 && dati[0].trim().equals(username.trim())) {
+            for (String dato : riga.split(",")) {
+            	dati.add(dato);
+            }
+
+            if (dati.size() > 0 && dati.get(0).equals(username.trim())) {
             	
-            	if(dati[3].trim().equals(password)) {  
+            	if(dati.get(3).trim().equals(password)) {  
             		
             		this.setUsername(username.trim());
-            		this.setNome(dati[1].trim());
-            		this.setCognome(dati[2].trim());
+            		this.setNome(dati.get(1).trim());
+            		this.setCognome(dati.get(2).trim());
             		this.setPassword(password.trim());
-            		this.setLineePreferite(dati[4].trim().split("-"));
-            		this.setFermatePreferite(dati[5].trim().split("-"));
+            		this.setLineePreferite(new ArrayList<>(Arrays.asList(dati.get(4).trim().split("-"))));
+            		this.setFermatePreferite(new ArrayList<>(Arrays.asList(dati.get(5).trim().split("-"))));
+            		System.out.println(this.fermatePreferite);
             		return "Verificata.";
             		
             	} else {

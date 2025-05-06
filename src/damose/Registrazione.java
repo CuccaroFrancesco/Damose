@@ -139,7 +139,7 @@ public class Registrazione {
 	public static String addUser(String nome, String cognome, String username, String password, String confirmPass) throws IOException {
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter("files/utenti.txt", true));
-		writer.write(username + "," + nome + "," + cognome + "," + password + ",,\n");
+		writer.write(username + "," + nome + "," + cognome + "," + password + ", , \n");
 		writer.flush();
 		writer.close();
 		

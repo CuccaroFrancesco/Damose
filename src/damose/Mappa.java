@@ -149,11 +149,12 @@ public class Mappa extends JComponent {
         mapViewer.repaint();
     }
     
-    public void zoomMappa(double lon, double lat)
-    {
+    
+    // Metodo che centra 
+    public void centraMappa(double lon, double lat, int zoom) {
     	GeoPosition target = new GeoPosition(lat, lon);
         mapViewer.setAddressLocation(target); 
-        mapViewer.setZoom(2); 
+        mapViewer.setZoom(zoom); 
         mapViewer.repaint();
     }
     

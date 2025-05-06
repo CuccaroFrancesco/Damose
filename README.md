@@ -13,18 +13,13 @@ ___
 - Inserire dinamicamente i dati real-time
 - Visualizzare messaggio di avviso se i dati real-time non sono disponibili (errori o mancanza di rete)
 
-#### Dati statici:
-- Caricare i dati relativi agli orari delle corse
-- Caricare i dati relativi alle linee
-- Caricare i dati relativi alle shapes
-
 #### Estetica:
 - Creare un logo per l'applicazione
 - Creare una schermata di caricamento all'avvio(?) (guadagnerebbe tempo per il caricamento dei dati)
 - Inserire animazioni per il pannello utente
 - Personalizzare l'aspetto dei waypoint (fermate di agenzie diverse, mezzi, ecc. ecc.)
 
-#### Fermate:
+#### StopPanel:
 Alla selezione di una determinata fermata, dovrebbero diventare accessibili le seguenti informazioni:
 - informazioni identificative
 	- nome
@@ -37,7 +32,7 @@ Alla selezione di una determinata fermata, dovrebbero diventare accessibili le s
 - ritardo tipico dei mezzi per tale fermata
 - (OPZIONALE) vicinanza a punti di interesse
 
-#### Linee:
+#### LineaPanel:
 - Implementare una classe per le linee (con relativi pannelli)
 	- Costruttore
 	- Come attributi, i dati di una determinata linea
@@ -46,7 +41,6 @@ Alla selezione di una determinata fermata, dovrebbero diventare accessibili le s
 
 #### Mappa:
 - Conservare lo zoom e la posizione quando si passa da un tipo di mappa all'altro
-- Implementare metodo che zoomma automaticamente su un punto di interesse selezionato
 - Inserire filtri per cosa visualizzare sulla mappa
 	- fermate
 		- fermate con alto tasso di puntualità
@@ -57,7 +51,6 @@ Alla selezione di una determinata fermata, dovrebbero diventare accessibili le s
 	- mezzi
 		- distinzione tra tipo di mezzo
 	- linee
-- Modificare lo zoom-threshold per cui sono visibili le fermate(?)
 
 #### Mezzi:
 - Visualizzazione della posizione stimata sulla mappa (aggiornata ogni 30 secondi)

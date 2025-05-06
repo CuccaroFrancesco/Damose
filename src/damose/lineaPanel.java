@@ -24,14 +24,14 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-public class lineaPanel extends JPanel {
+public class LineaPanel extends JPanel {
 	
 	private JLabel titolo, scrittaAgenzia;
 	private JButton btnWheelChair, btnClose, btnLink, btnPreferiti;
 	private Utente utente;
 	private DatiGTFS dati;
 	
-	public lineaPanel(Utente utente, DatiGTFS dati) {
+	public LineaPanel(Utente utente, DatiGTFS dati) {
 		this.utente = utente;
 		this.dati = dati;
 		this.setBackground(new Color(130, 36, 51));
@@ -68,49 +68,6 @@ public class lineaPanel extends JPanel {
 		titolo.setBounds(20, 107, 340, 50);
 								
 		this.add(titolo);
-		
-		JLabel lblAccessibilit = new JLabel("Accessibilità");
-		lblAccessibilit.setHorizontalAlignment(SwingConstants.CENTER);
-		lblAccessibilit.setForeground(Color.WHITE);
-		lblAccessibilit.setFont(new Font("Arial Nova", Font.BOLD, 24));
-		lblAccessibilit.setFocusable(false);
-		lblAccessibilit.setBounds(0, 344, 400, 50);
-		add(lblAccessibilit);
-		
-		JButton btnWheelChair = new JButton();
-		btnWheelChair.setForeground(new Color(255, 255, 255));
-		btnWheelChair.setFont(new Font("Arial Nova", Font.BOLD, 15));
-		btnWheelChair.setHorizontalAlignment(SwingConstants.LEADING);
-		btnWheelChair.setText("Disponibilità");
-		btnWheelChair.setFocusable(false);
-		
-		btnWheelChair.setContentAreaFilled(false);
-		btnWheelChair.setFocusPainted(false);
-		btnWheelChair.setBorderPainted(false);
-		btnWheelChair.setBackground(new Color(130, 36, 51));
-		
-		btnWheelChair.setPreferredSize(new Dimension(50, 50));
-		btnWheelChair.setBounds(10, 400, 205, 50);
-		
-		ImageIcon iconW = new ImageIcon("src/resources/sedia.png");
-        Image scaledImageW = iconW.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-        ImageIcon newIconW = new ImageIcon(scaledImageW);
-        btnWheelChair.setIcon(newIconW);
-        
-        this.add(btnWheelChair);
-        
-        btnPreferiti = new JButton();
-        btnPreferiti.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		
-        btnPreferiti.setContentAreaFilled(false);
-        btnPreferiti.setFocusPainted(false);
-        btnPreferiti.setBorderPainted(false);
-        btnPreferiti.setBackground(new Color(130, 36, 51));
-		
-        btnPreferiti.setPreferredSize(new Dimension(50, 50));
-        btnPreferiti.setBounds(280, 107, 205, 50);
-		
-        this.add(btnPreferiti);
         
         scrittaAgenzia = new JLabel("Nome agenzia");
         scrittaAgenzia.setForeground(Color.WHITE);
@@ -122,7 +79,7 @@ public class lineaPanel extends JPanel {
         btnClose = new JButton("Chiudi pannello");
      	btnClose.addActionListener(new ActionListener() {
      		public void actionPerformed(ActionEvent e) {
-     			lineaPanel.this.setVisible(false);
+     			LineaPanel.this.setVisible(false);
      		}
      	});
      			
@@ -150,6 +107,19 @@ public class lineaPanel extends JPanel {
 	public void creaPannelloLinea(Route linea) {
 		this.setVisible(true);
 		
+		btnPreferiti = new JButton();
+        btnPreferiti.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
+        btnPreferiti.setContentAreaFilled(false);
+        btnPreferiti.setFocusPainted(false);
+        btnPreferiti.setBorderPainted(false);
+        btnPreferiti.setBackground(new Color(130, 36, 51));
+		
+        btnPreferiti.setPreferredSize(new Dimension(50, 50));
+        btnPreferiti.setBounds(280, 107, 205, 50);
+		
+        this.add(btnPreferiti);
+		
 		if (utente.getLineePreferite() != null) {
 		    boolean isPreferita = false;
 		    for (String preferito : utente.getLineePreferite()) {
@@ -169,13 +139,8 @@ public class lineaPanel extends JPanel {
 		btnPreferiti.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        
-		        String[] preferiti = utente.getLineePreferite();
+		        List<String> lista = utente.getLineePreferite();
 		        String idLinea = linea.getId().getId();
-		        
-		        List<String> lista = new ArrayList<>();
-		        if (preferiti != null) {
-		            lista = new ArrayList<>(Arrays.asList(preferiti));
-		        }
 		        
 		        boolean isOraPreferita;
 		        
@@ -188,7 +153,7 @@ public class lineaPanel extends JPanel {
 		        }
 		        
 		        try {
-					utente.cambiaLineePreferite(lista.toArray(new String[0]));
+					utente.cambiaLineePreferite(lista);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}

@@ -36,11 +36,11 @@ public class Navbar extends JPanel {
     private JPanel mapButtonGroup;
     private JButton mappaNormale, mappaSatellitare, mappaMista, btnLogin;
     private DatiGTFS dati;
-    private stopPanel stopPanel;
-    private lineaPanel lineaPanel;
+    private StopPanel stopPanel;
+    private LineaPanel lineaPanel;
 
     
-    public Navbar(Mappa mapPanel, DatiGTFS dati, stopPanel stopPanel, lineaPanel lineaPanel) {
+    public Navbar(Mappa mapPanel, DatiGTFS dati, StopPanel stopPanel, LineaPanel lineaPanel) {
     	
     	// Assegnamento della mappa all'istanza
         this.mapPanel = mapPanel;
@@ -177,7 +177,7 @@ public class Navbar extends JPanel {
         		Route linea = dati.cercaRoute(lineaDaCercare);
         		if(fermata != null) {
         			stopPanel.creaPannelloFermata(fermata);
-                    mapPanel.zoomMappa(fermata.getLon(), fermata.getLat());
+                    mapPanel.centraMappa(fermata.getLon(), fermata.getLat(), 2);
                     lineaPanel.setVisible(false);
         		}
         		if(linea != null)

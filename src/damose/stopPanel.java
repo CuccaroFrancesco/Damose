@@ -17,14 +17,14 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class stopPanel extends JPanel {
+public class StopPanel extends JPanel {
 	
 	private JLabel titolo, codiceFermata, lblArrivi;
 	private JButton btnWheelChair, btnClose;
 	private Utente utente;
 	private DatiGTFS dati;
 	
-	public stopPanel(Utente utente, DatiGTFS dati) {
+	public StopPanel(Utente utente, DatiGTFS dati) {
 		this.utente = utente;
 		this.dati = dati;
 		this.setBackground(new Color(130, 36, 51));
@@ -55,7 +55,7 @@ public class stopPanel extends JPanel {
 		lblArrivi.setFont(new Font("Arial Nova", Font.BOLD, 24));
 		lblArrivi.setFocusable(false);
 		lblArrivi.setBounds(0, 250, 400, 50);
-		add(lblArrivi);
+		this.add(lblArrivi);
 		
 		btnWheelChair = new JButton();
 		btnWheelChair.setForeground(new Color(255, 255, 255));
@@ -82,7 +82,7 @@ public class stopPanel extends JPanel {
      	btnClose = new JButton("Chiudi pannello");
      	btnClose.addActionListener(new ActionListener() {
      		public void actionPerformed(ActionEvent e) {
-     			stopPanel.this.setVisible(false);
+     			StopPanel.this.setVisible(false);
      		}
      	});
      			
@@ -125,7 +125,5 @@ public class stopPanel extends JPanel {
 				btnWheelChair.setText("Nessuna informazione");
 				break;
 		}
-	}
-	
-	
+	}	
 }

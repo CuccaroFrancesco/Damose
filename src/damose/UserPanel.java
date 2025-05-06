@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,8 +29,8 @@ public class UserPanel extends JPanel {
 	private DatiGTFS dati;
 	private Navbar navbar;
 	private Mappa mappa;
-	private stopPanel stopPanel;
-	private lineaPanel lineaPanel;
+	private StopPanel stopPanel;
+	private LineaPanel lineaPanel;
 
 	
 	// Metodo utilizzato per nascondere tutti i componenti del pannello al momento di eventuali variazioni
@@ -54,7 +55,7 @@ public class UserPanel extends JPanel {
 	
 	
 	// Costruzione del pannello utente (login, registrazione e profilo)
-	public UserPanel(Utente utente, DatiGTFS dati, Navbar navbar, Mappa mappa, stopPanel stopPanel, lineaPanel lineaPanel) {
+	public UserPanel(Utente utente, DatiGTFS dati, Navbar navbar, Mappa mappa, StopPanel stopPanel, LineaPanel lineaPanel) {
 		
 		this.dati = dati;
 		this.utente = utente;
@@ -510,24 +511,24 @@ public class UserPanel extends JPanel {
 		                titolo.setVisible(true);
 
 		                // Recupero delle linee e delle fermate preferite dell'utente 
-		                String[] lineePreferite = utente.getLineePreferite();
-		                String[] fermatePreferite = utente.getFermatePreferite();
+		                List<String> lineePreferite = utente.getLineePreferite();
+		                List<String> fermatePreferite = utente.getFermatePreferite();
 
 		                // Creazioe del pannello per le linee preferite
 		                panelLineePreferite = new JPanel();
 		                panelLineePreferite.setLayout(null);
-		                panelLineePreferite.setPreferredSize(new Dimension(400, Math.max(100, lineePreferite.length * 60)));
+		                panelLineePreferite.setPreferredSize(new Dimension(400, Math.max(100, lineePreferite.size() * 60)));
 		                panelLineePreferite.setBackground(new Color(130, 36, 51));
 
 		                // Creazione del pannello per le fermate preferite
 		                panelFermatePreferite = new JPanel();
 		                panelFermatePreferite.setLayout(null);
-		                panelFermatePreferite.setPreferredSize(new Dimension(400, Math.max(100, fermatePreferite.length * 60)));
+		                panelFermatePreferite.setPreferredSize(new Dimension(400, Math.max(100, fermatePreferite.size() * 60)));
 		                panelFermatePreferite.setBackground(new Color(130, 36, 51));
 
 		                // Linee preferite
-		                for (int i = 0; i < lineePreferite.length; i++) {
-		                    String routeId = lineePreferite[i];
+		                for (int i = 0; i < lineePreferite.size(); i++) {
+		                    String routeId = lineePreferite.get(i);
 		                    int y = i * 60;
 
 		                    JButton lineaBtn = new JButton(routeId);
@@ -567,8 +568,8 @@ public class UserPanel extends JPanel {
 
 
 		             // Fermate preferite
-		                for (int i = 0; i < fermatePreferite.length; i++) {
-		                    String stopId = fermatePreferite[i];
+		                for (int i = 0; i < fermatePreferite.size(); i++) {
+		                    String stopId = fermatePreferite.get(i);
 		                    int y = i * 60;
 
 		                    JButton stopBtn = new JButton(stopId);
@@ -588,7 +589,7 @@ public class UserPanel extends JPanel {
 		                        public void actionPerformed(ActionEvent e) {
 		                            if (fermata[0] != null) {
 		                                stopPanel.creaPannelloFermata(fermata[0]);
-		                                mappa.zoomMappa(fermata[0].getLon(), fermata[0].getLat());
+		                                mappa.centraMappa(fermata[0].getLon(), fermata[0].getLat(), 2);
 		                                lineaPanel.setVisible(false);
 		                            } else {
 		                                System.out.println("Fermata non trovata");
@@ -653,16 +654,15 @@ public class UserPanel extends JPanel {
 		                    mostraLinee[0] = !mostraLinee[0];
 		                    lineeScrollPane.setVisible(mostraLinee[0]);
 		                    btnToggleLinee.setText("Linee preferite: " + (mostraLinee[0] ? "▼" : "▲"));
-		                    if(mostraLinee[0])
-		                    {
+		                    
+		                    if (mostraLinee[0]) {
 		                    	fermateScrollPane.setBounds(0, 580, 400, 250);
 		                    	btnToggleFermate.setBounds(50, 530, 300, 30);
-		                    }
-		                    else
-		                    {
+		                    } else {
 		                    	btnToggleFermate.setBounds(50, 250, 300, 30);
 		                    	fermateScrollPane.setBounds(0, 300, 400, 250);
 		                    }
+		                    
 		                    UserPanel.this.repaint();
 		                });
 
@@ -673,8 +673,7 @@ public class UserPanel extends JPanel {
 		                    UserPanel.this.repaint();
 		                });		                
 
-		            }
-		            else {
+		            } else {
 		                errorePassword.setVisible(true);
 		                inputPassword.setBorder(new LineBorder(Color.RED, 1));
 		                

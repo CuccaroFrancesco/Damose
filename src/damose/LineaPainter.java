@@ -111,7 +111,7 @@ public class LineaPainter implements Painter<JXMapViewer> {
     			
     			int centro = puntiDaDisegnare.size() / 2;
     			GeoPosition puntoCentrale = puntiDaDisegnare.get(centro);
-    			mapPanel.zoomMappa(puntoCentrale.getLongitude(), puntoCentrale.getLatitude());
+    			mapPanel.centraMappa(puntoCentrale.getLongitude(), puntoCentrale.getLatitude(), 4);
     			
         		mapPanel.repaint();
     		}
