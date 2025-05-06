@@ -37,6 +37,7 @@ public class DatiGTFS {
 	private GtfsRelationalDaoImpl datiStatici;
 	private FeedMessage datiRealTime;
 	
+	
 	// Metodo che permette di caricare dei dati GTFS statici da file di testo contenuti in una cartella
 	public void caricaDatiStaticiGTFS(String path, boolean caricaStopTimes) throws Exception {
 			
@@ -95,23 +96,27 @@ public class DatiGTFS {
 		return this.datiStatici.getAllShapeIds();
 	}
 	
-	public Route cercaRoute(String routeId)
-	{
+	
+	// Metodo che cerca e ritorna una linea in base al suo ID
+	public Route cercaRoute(String routeId) {
 		for (Route route : this.getLinee()) {
             if (route.getId().getId().equals(routeId)) {
                 return route;
             }
         }
+		
 		return null;
 	}
 	
-	public Stop cercaFermata(String stopId)
-	{
+	
+	// Metodo che cerca e ritorna una fermata in base al suo ID
+	public Stop cercaFermata(String stopId) {
 		for (Stop stop : this.getFermate()) {
             if (stop.getId().getId().equals(stopId)) {
                 return stop;
             }
         }
+		
 		return null;
 	}
 	

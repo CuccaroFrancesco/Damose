@@ -140,7 +140,7 @@ public class Navbar extends JPanel {
         // Barra di ricerca, con annessa gestione del testo placeholder
         searchBar = new JTextField("  Cerca linea o fermata...");
         
-        searchBar.setBounds(290, 15, 500, 40);
+        searchBar.setBounds(400, 15, 500, 40);
         searchBar.setMinimumSize(new Dimension(370, 40));
         searchBar.setMaximumSize(new Dimension(500, 40));
         

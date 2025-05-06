@@ -118,8 +118,8 @@ public class LineaPanel extends JPanel {
 	}
 	
 	public void creaPannelloLinea(Route linea) {
+		
 		this.setVisible(true);
-		System.out.println("Prova");
 		
 		if (utente.getLineePreferite() != null) {
 		    boolean isPreferita = false;
@@ -180,7 +180,7 @@ public class LineaPanel extends JPanel {
 		String longName = linea.getLongName();
 		String shortName = linea.getShortName();
 		scrittaAgenzia.setText(agenzia);
-		System.out.println(longName);
+
 		if(longName == null || longName.isEmpty())
 		{
 			titolo.setText(shortName);

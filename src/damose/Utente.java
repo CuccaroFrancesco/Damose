@@ -228,7 +228,7 @@ public class Utente {
             		this.setPassword(password.trim());
             		this.setLineePreferite(new ArrayList<>(Arrays.asList(dati.get(4).trim().split("-"))));
             		this.setFermatePreferite(new ArrayList<>(Arrays.asList(dati.get(5).trim().split("-"))));
-            		System.out.println(this.fermatePreferite);
+
             		return "Verificata.";
             		
             	} else {

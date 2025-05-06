@@ -64,7 +64,7 @@ public class Main extends JFrame {
         // Aggiunta della mappa alla finestra principale
         Mappa mapPanel = new Mappa(dati, painterGroup);
         
-        mapPanel.setBounds(0, 60, screenSize.width, screenSize.height - 60);   // Dimensioni pari alle dimensioni dello schermo - altezza navbar
+        mapPanel.setBounds(0, 60, screenSize.width, screenSize.height - 70);   // Dimensioni pari alle dimensioni dello schermo - altezza navbar
         layeredPane.add(mapPanel, JLayeredPane.DEFAULT_LAYER);
 
         
@@ -83,7 +83,7 @@ public class Main extends JFrame {
         // Aggiunta della navbar alla finestra principale
         Navbar navbar = new Navbar(mapPanel, dati, stopPanel, lineaPanel);
         
-        navbar.setBounds(0, 0, screenSize.width, 60);   // Posizione e dimensione della navbar
+        navbar.setBounds(0, 0, screenSize.width, 60);
         layeredPane.add(navbar, JLayeredPane.PALETTE_LAYER);
         
         // Aggiunta del pannello utente (inizialmente invisibile)
@@ -111,6 +111,7 @@ public class Main extends JFrame {
         	public void actionPerformed(ActionEvent e) {
         		
         		if (userPanel.isVisible()) {
+        			
         			// Pannello invisibile e mappa scoperta
         			userPanel.setVisible(false);
                     mapPanel.setBounds(0, 60, screenSize.width, screenSize.height - 60);
@@ -134,50 +135,21 @@ public class Main extends JFrame {
     	int newWidth = getWidth();              // Nuova larghezza della finestra
     	int newHeight = getHeight();            // Nuova altezza della finestra
     	
-    	userPanel.setBounds(newWidth - 400, 0, 400, newHeight);
+    	userPanel.setBounds(newWidth - 400, 70, 400, newHeight);
     	
-    	if(userPanel.isVisible()) {                                                          // Se il pannello utente è visibile...
+    	navbar.setBounds(0, 0, newWidth, 70);
+		navbar.getBtnLogin().setBounds(newWidth - navbar.getBtnLogin().getWidth() - 30, 10, 50, 50);
+		
+		if ((newWidth / 2) - 250 <= 230) {                                               
     		
-    		mapPanel.setBounds(0, 60, getWidth() - 400, getHeight());
-    		navbar.setBounds(0, 0, getWidth() - userPanel.getWidth(), 70);
-    		navbar.getBtnLogin().setBounds(navbar.getWidth() - navbar.getBtnLogin().getWidth() - 30, 10, 50, 50);
-    		this.setMinimumSize(new Dimension(1080, 720));
-    		
-    		
-    		if ((navbar.getWidth() / 2) - 250 <= 230) {                                      // ...e l'ascissa prevista per l'inizio della searchBar sarebbe minore di 230...
-        		
-        		if (navbar.getWidth() - 340 <= 500) {                                        // ...e la larghezza della searchBar è maggiore o uguale allo spazio ad essa allocato...
-        			navbar.getSearchBar().setBounds(230, 15, navbar.getWidth() - 340, 40);
-        		} 
-        		
-        		else {                                                                       // ...e la larghezza della searchBar è minore dello spazio ad essa allocato...
-        			navbar.getSearchBar().setBounds(230, 15, 500, 40);
-        		}	
-        	}
-        	
-        	else {
-        		navbar.getSearchBar().setBounds((navbar.getWidth() / 2) - 250, 15, 500, 40);
-        	}
-    		
-    	} else {                                                                             // Se il pannello utente non è visibile...
-    		
-    		navbar.setBounds(0, 0, newWidth, 70);
-    		navbar.getBtnLogin().setBounds(newWidth - navbar.getBtnLogin().getWidth() - 30, 10, 50, 50);
-    		
-    		if ((newWidth / 2) - 250 <= 230) {                                               // ...e l'ascissa prevista per l'inizio della searchBar sarebbe minore di 230...
-        		
-        		if (newWidth - 340 <= 500) {                                                 // ...e la larghezza della searchBar è maggiore o uguale allo spazio ad essa allocato...
-        			navbar.getSearchBar().setBounds(230, 15, newWidth - 340, 40);
-        		} 
-        		
-        		else {                                                                       // ...e la larghezza della searchBar è minore dello spazio ad essa allocato...
-        			navbar.getSearchBar().setBounds(230, 15, 500, 40);
-        		}	
-        	}
-        	
-        	else {
-        		navbar.getSearchBar().setBounds((navbar.getWidth() / 2) - 250, 15, 500, 40);
-        	}
+    		if (newWidth - 340 <= 500) {                                                 
+    			navbar.getSearchBar().setBounds(230, 15, newWidth - 340, 40);
+    		} else {                                                                     
+    			navbar.getSearchBar().setBounds(230, 15, 500, 40);
+    		}
+    	
+    	} else {
+    		navbar.getSearchBar().setBounds((navbar.getWidth() / 2) - 250, 15, 500, 40);
     	}
     }
     
