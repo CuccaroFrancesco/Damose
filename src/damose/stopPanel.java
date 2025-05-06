@@ -122,7 +122,7 @@ public class stopPanel extends JPanel {
 				btnWheelChair.setText("Non accessibile");
 				break;
 			default:
-				btnWheelChair.setText("Non accessibile");
+				btnWheelChair.setText("Nessuna informazione");
 				break;
 		}
 	}

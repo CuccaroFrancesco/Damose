@@ -86,7 +86,11 @@ public class Utente {
 	}
 
 	public void setLineePreferite(String[] lineePreferite) {
-		this.lineePreferite = lineePreferite;
+		if (lineePreferite.equals(" ")) {
+			this.lineePreferite = new String[0];
+		} else {
+			this.lineePreferite = lineePreferite;			
+		}
 	}
 	
 	public void cambiaLineePreferite(String[] lineePreferite) throws IOException {
@@ -103,9 +107,9 @@ public class Utente {
 
 		        String usernameInFile = dati[0];
 		        if (usernameInFile.equals(this.username)) {
-		            String nuoveLinee = String.join("-", lineePreferite); 
-		            System.out.println("Linee preferite: " + nuoveLinee);
-		            String nuovaRiga = this.username + "," + this.nome + "," + this.cognome + "," + this.password + "," + nuoveLinee + "," + this.fermatePreferite;
+		            String nuoveLinee = String.join("-", this.lineePreferite); 
+		            String nuoveFermate = String.join("-", this.fermatePreferite);
+		            String nuovaRiga = this.username + "," + this.nome + "," + this.cognome + "," + this.password + "," + nuoveLinee + "," + nuoveFermate;
 		            writer.write(nuovaRiga);
 		        } else {
 		            writer.write(line);
@@ -131,7 +135,11 @@ public class Utente {
 	}
 	
 	public void setFermatePreferite(String[] fermatePreferite) {
-		this.fermatePreferite = fermatePreferite;
+		if (fermatePreferite.equals(" ")) {
+			this.fermatePreferite = new String[0];
+		} else {
+			this.fermatePreferite = fermatePreferite;			
+		}
 	}
 
 	public void cambiaFermatePreferite(String[] fermatePreferite) throws IOException {
@@ -146,16 +154,17 @@ public class Utente {
 		while ((line = reader.readLine()) != null) {
 		    String[] dati = line.split(",");
 
-		        String usernameInFile = dati[0];
-		        if (usernameInFile.equals(this.username)) {
-		            String nuoveFermate = String.join("-", this.fermatePreferite); 
-		            String nuovaRiga = this.username + "," + this.nome + "," + this.cognome + "," + this.password + "," + this.lineePreferite + "," + nuoveFermate;
-		            writer.write(nuovaRiga);
-		        } else {
-		            writer.write(line);
-		        }
-		        writer.newLine();
+		    String usernameInFile = dati[0];
+		    if (usernameInFile.equals(this.username)) {
+		    	String nuoveFermate = String.join("-", this.fermatePreferite); 
+		    	String nuoveLinee = String.join("-", this.lineePreferite);
+		    	String nuovaRiga = this.username + "," + this.nome + "," + this.cognome + "," + this.password + "," + nuoveLinee + "," + nuoveFermate;
+		        writer.write(nuovaRiga);
+		    } else {
+		        writer.write(line);
 		    }
+		    writer.newLine();
+		}
 
 		reader.close();
 		writer.close();
@@ -181,6 +190,10 @@ public class Utente {
         
         while ((riga = reader.readLine()) != null) {
             String[] dati = riga.split(",");
+            for (String dato: dati)
+            {            	
+            	System.out.println(dato);
+            }
             
             if (dati.length > 0 && dati[0].trim().equals(username.trim())) {
             	
@@ -190,8 +203,8 @@ public class Utente {
             		this.setNome(dati[1].trim());
             		this.setCognome(dati[2].trim());
             		this.setPassword(password.trim());
-            		this.setLineePreferite(dati[4].split("-"));
-            		this.setFermatePreferite(dati[5].split("-"));
+            		this.setLineePreferite(dati[4].trim().split("-"));
+            		this.setFermatePreferite(dati[5].trim().split("-"));
             		return "Verificata.";
             		
             	} else {

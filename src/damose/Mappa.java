@@ -149,9 +149,9 @@ public class Mappa extends JComponent {
         mapViewer.repaint();
     }
     
-    public void zoomMappa(double longit, double lat)
+    public void zoomMappa(double lon, double lat)
     {
-    	GeoPosition target = new GeoPosition(lat, longit);
+    	GeoPosition target = new GeoPosition(lat, lon);
         mapViewer.setAddressLocation(target); 
         mapViewer.setZoom(2); 
         mapViewer.repaint();
