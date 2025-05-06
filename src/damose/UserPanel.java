@@ -76,7 +76,7 @@ public class UserPanel extends JPanel {
 		titolo.setFocusable(false);
 				
 		titolo.setHorizontalAlignment(SwingConstants.CENTER);
-		titolo.setBounds(0, 180, 400, 50);
+		titolo.setBounds(0, 180, 350, 50);
 				
 		this.add(titolo);
 		
@@ -84,7 +84,7 @@ public class UserPanel extends JPanel {
 		// Pulsante per l'accesso (con account già esistente)
 		btnAccedi = new JButton("Accedi");
 		
-		btnAccedi.setBounds(75, 300, 250, 45);
+		btnAccedi.setBounds(50, 300, 250, 45);
 		btnAccedi.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		this.add(btnAccedi);
@@ -93,7 +93,7 @@ public class UserPanel extends JPanel {
 		// Pulsante per la registrazione (creazione di un nuovo account)
 		btnRegistrati = new JButton("Registrati");
 		
-		btnRegistrati.setBounds(75, 380, 250, 45);
+		btnRegistrati.setBounds(50, 380, 250, 45);
 		btnRegistrati.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
 		this.add(btnRegistrati);
@@ -103,7 +103,7 @@ public class UserPanel extends JPanel {
 		// Label per la casella di testo inputNome
 		lblNome = new JLabel("Nome");
 							
-		lblNome.setBounds(75, 150, 95, 35);
+		lblNome.setBounds(50, 150, 95, 35);
 		lblNome.setVisible(false);
 							
 		lblNome.setForeground(Color.WHITE);
@@ -116,7 +116,7 @@ public class UserPanel extends JPanel {
 		// Casella di testo per inserire il nome per la registrazione
 		inputNome = new JTextField();
 					
-		inputNome.setBounds(75, 180, 250, 30);
+		inputNome.setBounds(50, 180, 250, 30);
 		inputNome.setVisible(false);
 					
 		this.add(inputNome);
@@ -126,7 +126,7 @@ public class UserPanel extends JPanel {
 		// Label per la casella di testo inputCognome
 		lblCognome = new JLabel("Cognome");
 									
-		lblCognome.setBounds(75, 225, 95, 35);
+		lblCognome.setBounds(50, 225, 95, 35);
 		lblCognome.setVisible(false);
 									
 		lblCognome.setForeground(Color.WHITE);
@@ -139,7 +139,7 @@ public class UserPanel extends JPanel {
 		// Casella di testo per inserire il cognome per la registrazione
 		inputCognome = new JTextField();
 							
-		inputCognome.setBounds(75, 255, 250, 30);
+		inputCognome.setBounds(50, 255, 250, 30);
 		inputCognome.setVisible(false);
 							
 		this.add(inputCognome);
@@ -149,7 +149,7 @@ public class UserPanel extends JPanel {
 		// Label per la casella di testo inputUsername
 		lblUsername = new JLabel("Username");
 			
-		lblUsername.setBounds(75, 300, 95, 35);
+		lblUsername.setBounds(50, 300, 95, 35);
 		lblUsername.setVisible(false);
 			
 		lblUsername.setForeground(Color.WHITE);
@@ -162,7 +162,7 @@ public class UserPanel extends JPanel {
 		// Casella di testo per inserire lo username dell'account 
 		inputUsername = new JTextField();
 		
-		inputUsername.setBounds(75, 330, 250, 30);
+		inputUsername.setBounds(50, 330, 250, 30);
 		inputUsername.setVisible(false);
 		
 		this.add(inputUsername);
@@ -172,7 +172,7 @@ public class UserPanel extends JPanel {
 		// Label per la casella di testo inputPassword
 		lblPassword = new JLabel("Password");
 			
-		lblPassword.setBounds(75, 375, 95, 30);
+		lblPassword.setBounds(50, 375, 95, 30);
 		lblPassword.setVisible(false);
 			
 		lblPassword.setForeground(Color.WHITE);
@@ -185,7 +185,7 @@ public class UserPanel extends JPanel {
 		// Casella di testo per inserire la password dell'account 
 		inputPassword = new JPasswordField();
 		
-		inputPassword.setBounds(75, 405, 250, 30);
+		inputPassword.setBounds(50, 405, 250, 30);
 		inputPassword.setVisible(false);
 		
 		this.add(inputPassword);
@@ -195,7 +195,7 @@ public class UserPanel extends JPanel {
 		// Label per la casella di testo inputConfirmPassword
 		lblConfermaPassword = new JLabel("Conferma password");
 									
-		lblConfermaPassword.setBounds(75, 450, 200, 30);
+		lblConfermaPassword.setBounds(50, 450, 200, 30);
 		lblConfermaPassword.setVisible(false);
 									
 		lblConfermaPassword.setForeground(Color.WHITE);
@@ -208,7 +208,7 @@ public class UserPanel extends JPanel {
 		// Casella di testo per confermare la password dell'account da creare
 		inputConfermaPassword = new JPasswordField();
 						
-		inputConfermaPassword.setBounds(75, 480, 250, 30);
+		inputConfermaPassword.setBounds(50, 480, 250, 30);
 		inputConfermaPassword.setVisible(false);
 						
 		this.add(inputConfermaPassword);
@@ -223,7 +223,7 @@ public class UserPanel extends JPanel {
 		erroreNome.setVerticalAlignment(SwingConstants.TOP);
 		
 		erroreNome.setVisible(false);
-		erroreNome.setBounds(75, 210, 250, 20);
+		erroreNome.setBounds(50, 210, 250, 20);
 		
 		this.add(erroreNome);
 		
@@ -236,7 +236,7 @@ public class UserPanel extends JPanel {
 		erroreCognome.setVerticalAlignment(SwingConstants.TOP);
 				
 		erroreCognome.setVisible(false);
-		erroreCognome.setBounds(75, 285, 250, 20);
+		erroreCognome.setBounds(50, 285, 250, 20);
 				
 		this.add(erroreCognome);
 		
@@ -249,7 +249,7 @@ public class UserPanel extends JPanel {
 		erroreUsername.setVerticalAlignment(SwingConstants.TOP);
 		
 		erroreUsername.setVisible(false);
-		erroreUsername.setBounds(75, 360, 250, 20);
+		erroreUsername.setBounds(50, 360, 250, 20);
 		
 		this.add(erroreUsername);
 		
@@ -262,7 +262,7 @@ public class UserPanel extends JPanel {
 		errorePassword.setVerticalAlignment(SwingConstants.TOP);
 		
 		errorePassword.setVisible(false);
-		errorePassword.setBounds(75, 435, 250, 20);
+		errorePassword.setBounds(50, 435, 250, 20);
 		
 		this.add(errorePassword);
 		
@@ -275,7 +275,7 @@ public class UserPanel extends JPanel {
 		erroreConfermaPassword.setVerticalAlignment(SwingConstants.TOP);
 		
 		erroreConfermaPassword.setVisible(false);
-		erroreConfermaPassword.setBounds(75, 510, 250, 20);
+		erroreConfermaPassword.setBounds(50, 510, 250, 20);
 		
 		this.add(erroreConfermaPassword);
 		
@@ -288,7 +288,7 @@ public class UserPanel extends JPanel {
 		
 		registrazioneEffettuata.setFont(new Font("Arial Nova", Font.BOLD, 20));
 		registrazioneEffettuata.setForeground(new Color(0, 255, 0));
-		registrazioneEffettuata.setBounds(0, 220 , 400, 50);
+		registrazioneEffettuata.setBounds(0, 220, 350, 50);
 		
 		this.add(registrazioneEffettuata);
 		
@@ -297,7 +297,7 @@ public class UserPanel extends JPanel {
 		// Pulsante per confermare le credenziali di login
 		btnConfermaLogin = new JButton("Conferma");
 		
-		btnConfermaLogin.setBounds(100, 480, 200, 45);
+		btnConfermaLogin.setBounds(75, 480, 200, 45);
 		btnConfermaLogin.setVisible(false);
 		btnConfermaLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
@@ -307,7 +307,7 @@ public class UserPanel extends JPanel {
 		// Pulsante per confermare i dati della registrazione
 		btnConfermaRegistr = new JButton("Conferma");
 			
-		btnConfermaRegistr.setBounds(100, 600, 200, 45);
+		btnConfermaRegistr.setBounds(75, 600, 200, 45);
 		btnConfermaRegistr.setVisible(false);
 		btnConfermaRegistr.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 				
@@ -316,9 +316,9 @@ public class UserPanel extends JPanel {
 // ---------------------------------------------------------------------------------------------
 		
 		// Pulsante per tornare indietro
-		btnBack = new JButton("Torna indietro");
+		btnBack = new JButton(" Torna indietro");
 			
-		btnBack.setBounds(10, 11, 185, 23);
+		btnBack.setBounds(0, 10, 160, 25);
 		btnBack.setVisible(false);
 		btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			
@@ -330,7 +330,7 @@ public class UserPanel extends JPanel {
 		btnBack.setContentAreaFilled(false);
 		
 		ImageIcon iconBack = new ImageIcon("src/resources/indietro.png");
-        Image scaledImageBack = iconBack.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+        Image scaledImageBack = iconBack.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         ImageIcon newIconBack = new ImageIcon(scaledImageBack);
         btnBack.setIcon(newIconBack);
         
@@ -347,7 +347,7 @@ public class UserPanel extends JPanel {
 				btnBack.setVisible(true);
 				
 				titolo.setText("Login");
-				titolo.setBounds(0, 200, 400, 50);
+				titolo.setBounds(0, 200, 350, 50);
 				titolo.setVisible(true);
 				
 				inputUsername.setVisible(true);
@@ -369,7 +369,7 @@ public class UserPanel extends JPanel {
 				btnBack.setVisible(true);
 				
 				titolo.setText("Registrazione");
-				titolo.setBounds(0, 100, 400, 50);
+				titolo.setBounds(0, 100, 350, 50);
 				titolo.setVisible(true);
 					
 				lblNome.setVisible(true);
@@ -399,7 +399,7 @@ public class UserPanel extends JPanel {
 				nascondiTutto();	
 				
 				titolo.setText("Ospite");
-				titolo.setBounds(0, 200, 400, 50);
+				titolo.setBounds(0, 200, 350, 50);
 				titolo.setVisible(true);
 				
 				btnAccedi.setVisible(true);
@@ -509,7 +509,7 @@ public class UserPanel extends JPanel {
 		            	nascondiTutto();
 		                
 		                titolo.setText(utente.getUsername());
-		                titolo.setBounds(0, 120, 400, 50);
+		                titolo.setBounds(0, 120, 350, 50);
 		                titolo.setVisible(true);
 
 		                // Recupero delle linee e delle fermate preferite dell'utente 
@@ -519,13 +519,13 @@ public class UserPanel extends JPanel {
 		                // Creazioe del pannello per le linee preferite
 		                panelLineePreferite = new JPanel();
 		                panelLineePreferite.setLayout(null);
-		                panelLineePreferite.setPreferredSize(new Dimension(400, Math.max(100, lineePreferite.size() * 60)));
+		                panelLineePreferite.setPreferredSize(new Dimension(350, Math.max(100, lineePreferite.size() * 60)));
 		                panelLineePreferite.setBackground(new Color(130, 36, 51));
 
 		                // Creazione del pannello per le fermate preferite
 		                panelFermatePreferite = new JPanel();
 		                panelFermatePreferite.setLayout(null);
-		                panelFermatePreferite.setPreferredSize(new Dimension(400, Math.max(100, fermatePreferite.size() * 60)));
+		                panelFermatePreferite.setPreferredSize(new Dimension(350, Math.max(100, fermatePreferite.size() * 60)));
 		                panelFermatePreferite.setBackground(new Color(130, 36, 51));
 
 		                // Linee preferite
@@ -536,7 +536,7 @@ public class UserPanel extends JPanel {
 
 		                    JButton lineaBtn = new JButton(routeId);
 		                    
-		                    lineaBtn.setBounds(50, y, 50, 50);
+		                    lineaBtn.setBounds(25, y, 50, 50);
 		                    lineaBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
 		                    lineaBtn.setBackground(Color.WHITE); 
 		                    lineaBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -550,7 +550,7 @@ public class UserPanel extends JPanel {
 		                    lineaBtn.addActionListener(new ActionListener() {
 		                    	public void actionPerformed(ActionEvent e) {
 		                    		if (lineaArray[0] != null) {
-		                    			lineaPanel.creaPannelloLinea(lineaArray[0]);
+		                    			lineaPanel.creaPannelloLinea(lineaArray[0], dati);
 		                                LineaPainter.costruisciLineaDaDisegnare(lineaArray[0], mappa, dati);
 		                                stopPanel.setVisible(false);
 		                            } else {
@@ -564,7 +564,7 @@ public class UserPanel extends JPanel {
 		                    
 		                    nomeLinea.setFont(new Font("Arial Nova", Font.PLAIN, 16));
 		                    nomeLinea.setForeground(Color.WHITE);
-		                    nomeLinea.setBounds(110, y + 15, 300, 20);
+		                    nomeLinea.setBounds(85, y + 15, 250, 20);
 
 		                    // Aggiungi il pulsante e l'etichetta al pannello
 		                    panelLineePreferite.add(lineaBtn);
@@ -579,7 +579,7 @@ public class UserPanel extends JPanel {
 
 		                JButton stopBtn = new JButton(stopId);
 		                 
-		                stopBtn.setBounds(50, y, 50, 50);
+		                stopBtn.setBounds(25, y, 50, 50);
 		                stopBtn.setFocusable(false);
 		                stopBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
 		                stopBtn.setBackground(Color.WHITE); 
@@ -608,7 +608,7 @@ public class UserPanel extends JPanel {
 		                 
 		                nomeFermata.setFont(new Font("Arial Nova", Font.PLAIN, 16));
 		                nomeFermata.setForeground(Color.WHITE);
-		                nomeFermata.setBounds(110, y + 15, 300, 20);
+		                nomeFermata.setBounds(85, y + 15, 250, 20);
 
 		                // Aggiungi il pulsante e l'etichetta al pannello
 		                panelFermatePreferite.add(stopBtn);
@@ -620,7 +620,7 @@ public class UserPanel extends JPanel {
 		            lineeScrollPane = new JScrollPane(panelLineePreferite);
 		            
 		            lineeScrollPane.setBorder(null);
-		            lineeScrollPane.setBounds(0, 250, 400, 250);
+		            lineeScrollPane.setBounds(0, 250, 350, 250);
 		            lineeScrollPane.getVerticalScrollBar().setUnitIncrement(12);
 		            lineeScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		            lineeScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -630,7 +630,7 @@ public class UserPanel extends JPanel {
 		            fermateScrollPane = new JScrollPane(panelFermatePreferite);
 		            
 		            fermateScrollPane.setBorder(null);
-		            fermateScrollPane.setBounds(0, 300, 400, 250);
+		            fermateScrollPane.setBounds(0, 300, 350, 250);
 		            fermateScrollPane.getVerticalScrollBar().setUnitIncrement(12);
 		            fermateScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		            fermateScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -639,13 +639,13 @@ public class UserPanel extends JPanel {
 		            // Bottoni toggle per mostrare/nascondere i pannelli
 		            btnToggleLinee = new JButton("Linee preferite: ▲");
 		            
-		            btnToggleLinee.setBounds(50, 200, 300, 30);
+		            btnToggleLinee.setBounds(25, 200, 300, 30);
 		            btnToggleLinee.setFocusPainted(false);
 		            btnToggleLinee.setBackground(Color.WHITE);
 
 		            btnToggleFermate = new JButton("Fermate preferite: ▲");
 		            
-		            btnToggleFermate.setBounds(50, 250, 300, 30);
+		            btnToggleFermate.setBounds(25, 250, 300, 30);
 		            btnToggleFermate.setFocusPainted(false);
 		            btnToggleFermate.setBackground(Color.WHITE);
 
@@ -671,11 +671,11 @@ public class UserPanel extends JPanel {
 		                    btnToggleLinee.setText("Linee preferite: " + (mostraLinee[0] ? "▼" : "▲"));
 		                    
 		                    if (mostraLinee[0]) {
-		                    	fermateScrollPane.setBounds(0, 580, 400, 250);
-		                    	btnToggleFermate.setBounds(50, 530, 300, 30);
+		                    	fermateScrollPane.setBounds(0, 580, 350, 250);
+		                    	btnToggleFermate.setBounds(25, 530, 300, 30);
 		                    } else {
-		                    	btnToggleFermate.setBounds(50, 250, 300, 30);
-		                    	fermateScrollPane.setBounds(0, 300, 400, 250);
+		                    	fermateScrollPane.setBounds(0, 300, 350, 250);
+		                    	btnToggleFermate.setBounds(25, 250, 300, 30);
 		                    }
 		                    
 		                    UserPanel.this.repaint();

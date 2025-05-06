@@ -17,6 +17,7 @@ METODI:
 package damose;
 
 import javax.swing.*;
+import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
@@ -53,6 +54,7 @@ public class Navbar extends JPanel {
         this.setOpaque(true);
         this.setBackground(new Color(130, 36, 51));
         this.setLayout(null);
+        this.setBorder(new MatteBorder(0, 0, 1, 0, Color.BLACK));;
 
         
         // Pulsanti per scelta del tipo di mappa (normale, satellitare, mista)
@@ -182,7 +184,7 @@ public class Navbar extends JPanel {
         		}
         		if(linea != null)
         		{
-        			lineaPanel.creaPannelloLinea(linea);
+        			lineaPanel.creaPannelloLinea(linea, dati);
                     stopPanel.setVisible(false);
                     LineaPainter.costruisciLineaDaDisegnare(linea, mapPanel, dati);
         		}
@@ -208,7 +210,6 @@ public class Navbar extends JPanel {
         btnLogin.setIcon(newIcon);
         
         this.add(btnLogin);
-        
     }
     
     

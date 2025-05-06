@@ -64,32 +64,32 @@ public class Main extends JFrame {
         // Aggiunta della mappa alla finestra principale
         Mappa mapPanel = new Mappa(dati, painterGroup);
         
-        mapPanel.setBounds(0, 60, screenSize.width, screenSize.height - 70);   // Dimensioni pari alle dimensioni dello schermo - altezza navbar
+        mapPanel.setBounds(0, 70, screenSize.width, screenSize.height - 70);   // Dimensioni pari alle dimensioni dello schermo - altezza navbar
         layeredPane.add(mapPanel, JLayeredPane.DEFAULT_LAYER);
 
         
         // Aggiunta del pannello delle linee 
         LineaPanel lineaPanel = new LineaPanel(utente, dati);
         
-        lineaPanel.setBounds(0, 60, 350, screenSize.height);
+        lineaPanel.setBounds(0, 70, 350, screenSize.height - 70);
         layeredPane.add(lineaPanel, Integer.valueOf(101));
         
         // Aggiunta del pannello delle fermate 
         StopPanel stopPanel = new StopPanel(utente, dati);
         
-        stopPanel.setBounds(0, 60, 350, screenSize.height);
+        stopPanel.setBounds(0, 70, 350, screenSize.height - 70);
         layeredPane.add(stopPanel, Integer.valueOf(101));
         
         // Aggiunta della navbar alla finestra principale
         Navbar navbar = new Navbar(mapPanel, dati, stopPanel, lineaPanel);
         
-        navbar.setBounds(0, 0, screenSize.width, 60);
+        navbar.setBounds(0, 0, screenSize.width, 70);
         layeredPane.add(navbar, JLayeredPane.PALETTE_LAYER);
         
         // Aggiunta del pannello utente (inizialmente invisibile)
         UserPanel userPanel = new UserPanel(utente, dati, navbar, mapPanel, stopPanel, lineaPanel);
         
-        userPanel.setBounds(screenSize.width - 400, 70, 400, screenSize.height - 60);
+        userPanel.setBounds(screenSize.width - 350, 70, 350, screenSize.height - 70);
         userPanel.setVisible(false);
         layeredPane.add(userPanel, Integer.valueOf(101));
         
@@ -100,7 +100,7 @@ public class Main extends JFrame {
         	@Override
             public void componentResized(ComponentEvent e) {
         		
-        		calibra(navbar, userPanel, mapPanel, stopPanel, lineaPanel);
+        		calibra(navbar, userPanel);
             }
         });
 
@@ -114,15 +114,15 @@ public class Main extends JFrame {
         			
         			// Pannello invisibile e mappa scoperta
         			userPanel.setVisible(false);
-                    mapPanel.setBounds(0, 60, screenSize.width, screenSize.height - 60);
-                    calibra(navbar, userPanel, mapPanel, stopPanel, lineaPanel);
+                    mapPanel.setBounds(0, 70, screenSize.width, screenSize.height - 70);
+                    calibra(navbar, userPanel);
                     
         		} else {
         			
         			// Pannello visibile e mappa coperta
         			userPanel.setVisible(true);
-        			mapPanel.setBounds(0, 60, screenSize.width - 400, screenSize.height);
-        			calibra(navbar, userPanel, mapPanel, stopPanel, lineaPanel);
+        			mapPanel.setBounds(0, 70, screenSize.width - 350, screenSize.height - 70);
+        			calibra(navbar, userPanel);
         		}
         	}
         });
@@ -130,12 +130,12 @@ public class Main extends JFrame {
 	
 	
     // Metodo che gestisce l'adattamento dinamico delle dimensioni della navbar e delle sue componenti
-    public void calibra(Navbar navbar, UserPanel userPanel, Mappa mapPanel, StopPanel stopPanel, LineaPanel lineaPanel) {
+    public void calibra(Navbar navbar, UserPanel userPanel) {
     	
     	int newWidth = getWidth();              // Nuova larghezza della finestra
     	int newHeight = getHeight();            // Nuova altezza della finestra
     	
-    	userPanel.setBounds(newWidth - 400, 70, 400, newHeight);
+    	userPanel.setBounds(newWidth - 350, 70, 350, newHeight - 70);
     	
     	navbar.setBounds(0, 0, newWidth, 70);
 		navbar.getBtnLogin().setBounds(newWidth - navbar.getBtnLogin().getWidth() - 30, 10, 50, 50);
