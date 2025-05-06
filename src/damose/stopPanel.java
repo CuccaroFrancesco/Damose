@@ -15,12 +15,14 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class StopPanel extends JPanel {
 	
 	private JLabel titolo, codiceFermata, lblArrivi;
-	private JButton btnWheelChair, btnClose;
+	private JButton btnWheelChair, btnClose, btnPreferiti;
 	private Utente utente;
 	private DatiGTFS dati;
 	
@@ -30,13 +32,26 @@ public class StopPanel extends JPanel {
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);
 		
-		titolo = new JLabel("Nome fermata");
+		btnPreferiti = new JButton();
+        btnPreferiti.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
+        btnPreferiti.setContentAreaFilled(false);
+        btnPreferiti.setFocusPainted(false);
+        btnPreferiti.setBorderPainted(false);
+        btnPreferiti.setBackground(new Color(130, 36, 51));
+		
+        btnPreferiti.setPreferredSize(new Dimension(50, 50));
+        btnPreferiti.setBounds(350, 107, 50, 50);
+		
+        this.add(btnPreferiti);
+        
+        titolo = new JLabel("Nome fermata");
 		
 		titolo.setForeground(new Color(255, 255, 255));
 		titolo.setFont(new Font("Arial Nova", Font.BOLD, 24));
 		titolo.setFocusable(false);
 								
-		titolo.setBounds(20, 107, 380, 50);
+		titolo.setBounds(20, 107, 340, 50);
 								
 		this.add(titolo);
 		
@@ -125,5 +140,38 @@ public class StopPanel extends JPanel {
 				btnWheelChair.setText("Nessuna informazione");
 				break;
 		}
+		
+		for (ActionListener al : btnPreferiti.getActionListeners()) {
+		    btnPreferiti.removeActionListener(al);
+		}
+		
+		btnPreferiti.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        
+		        List<String> lista = utente.getFermatePreferite();
+		        String idFermata = fermata.getId().getId();
+		        
+		        boolean isOraPreferita;
+		        
+		        if (lista.contains(idFermata)) {
+		            lista.remove(idFermata);
+		            isOraPreferita = false;
+		        } else {
+		            lista.add(idFermata);
+		            isOraPreferita = true;
+		        }
+		        
+		        try {
+					utente.cambiaFermatePreferite(lista);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+		        
+		        String iconPath = isOraPreferita ? "src/resources/cuore.png" : "src/resources/cuore-vuoto.png";
+		        ImageIcon icon = new ImageIcon(iconPath);
+		        Image scaledImage = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		        btnPreferiti.setIcon(new ImageIcon(scaledImage));
+		    }
+		});
 	}	
 }

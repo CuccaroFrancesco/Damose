@@ -49,8 +49,8 @@ public class Main extends JFrame {
     	Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
     	
         this.setTitle("Damose App Trasporti");
-        this.setSize(new Dimension(1080, 720));
-        this.setMinimumSize(new Dimension(720, 480));
+        this.setSize(new Dimension(1678, 715));
+        this.setMinimumSize(new Dimension(1400, 720));
         this.setMaximumSize(screenSize);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -71,13 +71,13 @@ public class Main extends JFrame {
         // Aggiunta del pannello delle linee 
         LineaPanel lineaPanel = new LineaPanel(utente, dati);
         
-        lineaPanel.setBounds(0, 0, 400, screenSize.height - 60);
+        lineaPanel.setBounds(0, 60, 350, screenSize.height);
         layeredPane.add(lineaPanel, Integer.valueOf(101));
         
         // Aggiunta del pannello delle fermate 
         StopPanel stopPanel = new StopPanel(utente, dati);
         
-        stopPanel.setBounds(0, 0, 400, screenSize.height - 60);
+        stopPanel.setBounds(0, 60, 350, screenSize.height);
         layeredPane.add(stopPanel, Integer.valueOf(101));
         
         // Aggiunta della navbar alla finestra principale

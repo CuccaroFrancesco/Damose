@@ -24,20 +24,26 @@ Alla selezione di una determinata fermata, dovrebbero diventare accessibili le s
 - informazioni identificative
 	- nome
 	- codice
+	- coordinate
 	- ID
-	- tipo
-	- indirizzo
+	- tipo 
+	- accessibilità
 - linee passanti per tale fermata
-- se presente, mezzo in avvicinamento con linea di appartenenza e orario di arrivo
+- se presente, prossimi arrivi con linea di appartenenza e orario di arrivo e direzione
 - ritardo tipico dei mezzi per tale fermata
 - (OPZIONALE) vicinanza a punti di interesse
 
 #### LineaPanel:
-- Implementare una classe per le linee (con relativi pannelli)
-	- Costruttore
-	- Come attributi, i dati di una determinata linea
-	- Metodi get per ottenere singoli attributi di una linea
-	- Metodo per stampare visivamente la linea sulla mappa
+- Informazioni:
+	- Agenzia
+	- ID
+	- Short Name
+	- Long Name
+	- Url
+	- Tipo (0 tram, 1 metro, 2 treni, 3 bus)
+- Mezzi attualmente sulla linea
+- Fermate della linea
+- 
 
 #### Mappa:
 - Conservare lo zoom e la posizione quando si passa da un tipo di mappa all'altro

@@ -37,6 +37,19 @@ public class LineaPanel extends JPanel {
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);
 		
+		btnPreferiti = new JButton();
+        btnPreferiti.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
+        btnPreferiti.setContentAreaFilled(false);
+        btnPreferiti.setFocusPainted(false);
+        btnPreferiti.setBorderPainted(false);
+        btnPreferiti.setBackground(new Color(130, 36, 51));
+		
+        btnPreferiti.setPreferredSize(new Dimension(50, 50));
+        btnPreferiti.setBounds(350, 107, 50, 50);
+		
+        this.add(btnPreferiti);
+		
 		btnLink = new JButton();
 		btnLink.setForeground(new Color(255, 255, 255));
 		btnLink.setFont(new Font("Arial Nova", Font.BOLD, 15));
@@ -106,19 +119,7 @@ public class LineaPanel extends JPanel {
 	
 	public void creaPannelloLinea(Route linea) {
 		this.setVisible(true);
-		
-		btnPreferiti = new JButton();
-        btnPreferiti.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		
-        btnPreferiti.setContentAreaFilled(false);
-        btnPreferiti.setFocusPainted(false);
-        btnPreferiti.setBorderPainted(false);
-        btnPreferiti.setBackground(new Color(130, 36, 51));
-		
-        btnPreferiti.setPreferredSize(new Dimension(50, 50));
-        btnPreferiti.setBounds(280, 107, 205, 50);
-		
-        this.add(btnPreferiti);
+		System.out.println("Prova");
 		
 		if (utente.getLineePreferite() != null) {
 		    boolean isPreferita = false;
@@ -134,6 +135,14 @@ public class LineaPanel extends JPanel {
 		    Image scaledImage = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		    btnPreferiti.setIcon(new ImageIcon(scaledImage));
 
+		}
+		
+		for (ActionListener al : btnPreferiti.getActionListeners()) {
+		    btnPreferiti.removeActionListener(al);
+		}
+		
+		for (ActionListener al : btnLink.getActionListeners()) {
+		    btnLink.removeActionListener(al);
 		}
 		
 		btnPreferiti.addActionListener(new ActionListener() {
