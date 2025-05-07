@@ -120,6 +120,18 @@ public class DatiGTFS {
 		return null;
 	}
 	
+	// Metodo che restituisce tutte le fermate partendo da una linea
+	public List<Stop> getFermatePerLinea(Route linea) {
+		String idLinea = linea.getId().getId();
+		Trip viaggio = this.datiStatici.getTripsForRoute(linea).getFirst();
+		List<StopTime> stopTimes = this.datiStatici.getStopTimesForTrip(viaggio);
+		List<Stop> listaFermate = new ArrayList<>();
+		for (StopTime stopTime: stopTimes) {
+			listaFermate.add((Stop) stopTime.getStop());
+		}
+		return listaFermate;
+	}
+	
 // ---------------------------------------------------------------------------------------------
 
 	// Metodo get per i dati real-time GTFS dell'istanza

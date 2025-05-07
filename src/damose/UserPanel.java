@@ -545,6 +545,10 @@ public class UserPanel extends JPanel {
 		                    // Usa un array per "contenere" la variabile linea
 		                    final Route[] lineaArray = new Route[1];    // Array finale per linea
 		                    lineaArray[0] = dati.cercaRoute(routeId);
+		                    
+		                    for (ActionListener a : lineaBtn.getActionListeners()) {
+		                    	lineaBtn.removeActionListener(a);
+		            		}
 
 		                    // Aggiungi l'ActionListener
 		                    lineaBtn.addActionListener(new ActionListener() {
