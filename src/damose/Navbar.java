@@ -35,7 +35,7 @@ public class Navbar extends JPanel {
 	private Mappa mapPanel;
     private JTextField searchBar;
     private JPanel mapButtonGroup;
-    private JButton mappaNormale, mappaSatellitare, mappaMista, btnLogin;
+    private JButton mappaNormale, mappaSatellitare, mappaMista, btnLogin, btnRicerca;
     private DatiGTFS dati;
     private StopPanel stopPanel;
     private LineaPanel lineaPanel;
@@ -191,6 +191,25 @@ public class Navbar extends JPanel {
         });
         
         this.add(searchBar);
+        
+        // Pulsante per la barra di ricerca
+        btnRicerca = new JButton();
+        
+        btnRicerca.setContentAreaFilled(false);
+        btnRicerca.setFocusPainted(false);
+        btnRicerca.setBorderPainted(false);
+        btnRicerca.setBackground(new Color(130, 36, 51));
+        btnRicerca.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        
+        btnRicerca.setPreferredSize(new Dimension(50, 50));
+        btnRicerca.setBounds(searchBar.getX() + searchBar.getWidth() - 10, 10, 50, 50);
+        
+        ImageIcon iconRicerca = new ImageIcon("src/resources/ricerca.png");
+        Image scaledImageRicerca = iconRicerca.getImage().getScaledInstance(44, 44, Image.SCALE_SMOOTH);
+        ImageIcon newIconRicerca = new ImageIcon(scaledImageRicerca);
+        btnRicerca.setIcon(newIconRicerca);
+        
+        this.add(btnRicerca);
         
         
         // Pulsante per la sezione utente e il login

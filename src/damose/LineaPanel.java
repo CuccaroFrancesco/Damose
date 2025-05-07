@@ -35,10 +35,11 @@ public class LineaPanel extends JPanel {
 	private JButton btnClose, btnAgency, btnFavorite, btnWebsite, btnRouteType;
 	private JPanel fermatePanel;
 	private JScrollPane fermateScrollPane;
-	private ImageIcon iconFermata, newIconFermata;
-	private Image scaledImageFermata;
+	private ImageIcon iconFermata, newIconFermata, iconInizio, newIconInizio, iconFine, newIconFine;
+	private Image scaledImageFermata, newImgFine, newImgInizio;
 	private Utente utente;
 	private DatiGTFS dati;
+
 	
 	// Costruttore del lineaPanel
 	public LineaPanel(Utente utente, DatiGTFS dati) {
@@ -178,7 +179,7 @@ public class LineaPanel extends JPanel {
 		btnWebsite.setBackground(new Color(130, 36, 51));
 		
 		btnWebsite.setPreferredSize(new Dimension(20, 20));
-		btnWebsite.setBounds(0, 155, 120, 20);
+		btnWebsite.setBounds(0, 160, 120, 20);
 		
 		ImageIcon iconWebsite = new ImageIcon("src/resources/mondo.png");
         Image scaledImageWebsite = iconWebsite.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
@@ -204,13 +205,26 @@ public class LineaPanel extends JPanel {
 		btnRouteType.setFocusable(false);
 		
 		btnRouteType.setPreferredSize(new Dimension(20, 20));
-		btnRouteType.setBounds(175, 155, 150, 20);
+		btnRouteType.setBounds(175, 160, 150, 20);
 		
 		this.add(btnRouteType);
 		
+		
+		// Icona intermezzo linea
 		iconFermata = new ImageIcon("src/resources/linea.png");
         scaledImageFermata = iconFermata.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         newIconFermata = new ImageIcon(scaledImageFermata);
+        
+        // Icona inizio linea
+        iconInizio = new ImageIcon("src/resources/linea-inizio.png");
+        newImgInizio = iconInizio.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        newIconInizio = new ImageIcon(newImgInizio);
+
+        // Icona fine linea
+        iconFine = new ImageIcon("src/resources/linea-fine.png");
+        newImgFine = iconFine.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        newIconFine = new ImageIcon(newImgFine);
+
 	}
 	
 	
@@ -287,7 +301,7 @@ public class LineaPanel extends JPanel {
 		switch (agencyName) {
 			case "Atac":
 				ImageIcon iconAtac = new ImageIcon("src/resources/atac-logo.png");
-		        Image scaledImageAtac = iconAtac.getImage().getScaledInstance(50, 41, Image.SCALE_SMOOTH);
+		        Image scaledImageAtac = iconAtac.getImage().getScaledInstance(60, 41, Image.SCALE_SMOOTH);
 		        ImageIcon newIconAtac = new ImageIcon(scaledImageAtac);
 		        btnAgency.setIcon(newIconAtac);
 		        
@@ -329,14 +343,23 @@ public class LineaPanel extends JPanel {
             
             stopBtn.setBounds(10, y, 290, 40);
             stopBtn.setFocusable(false);
+            stopBtn.setContentAreaFilled(false);
             stopBtn.setFocusPainted(false);
+            stopBtn.setBorderPainted(false);
             stopBtn.setFont(new Font("Arial Nova", Font.BOLD, 12));
             stopBtn.setText("   " + fermata.getName());
             stopBtn.setForeground(new Color(255, 255, 255));
             stopBtn.setBackground(new Color(130, 36, 51));
             stopBtn.setBorder(BorderFactory.createEmptyBorder());
             stopBtn.setHorizontalAlignment(SwingConstants.LEADING);
-	        stopBtn.setIcon(newIconFermata);
+            
+            if (i == 0) {
+        		stopBtn.setIcon(newIconInizio); // Icona inizio
+        	} else if (i == fermate.size() - 1) {
+        		stopBtn.setIcon(newIconFine);  // Icona fine
+        	} else {
+        		stopBtn.setIcon(newIconFermata); // Icona normale
+        	}
             
 	        fermatePanel.add(stopBtn);
             
