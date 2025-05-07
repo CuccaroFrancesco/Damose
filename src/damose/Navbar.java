@@ -150,25 +150,23 @@ public class Navbar extends JPanel {
         searchBar.setFont(new Font("Arial Nova", Font.BOLD, 12));
         searchBar.setForeground(new Color(0, 0, 0));
         
-        this.add(searchBar);
-
+        // Gestione del testo placeholder della searchBar
         searchBar.addFocusListener(new FocusListener() {
         	
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (searchBar.getText().equals("  Cerca linea o fermata...")) {
-                    searchBar.setText("");     // Cancella il testo attuale
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (searchBar.getText().isEmpty()) {
-                    searchBar.setText("  Cerca linea o fermata...");     // Reinserisce il testo predefinito
-                }
-            }
+        	@Override
+        	public void focusGained(FocusEvent e) {
+        		if (searchBar.getText().equals("  Cerca linea o fermata...")) {
+        			searchBar.setText("");     // Cancella il testo attuale
+        		}
+        	}
+        	
+        	@Override
+        	public void focusLost(FocusEvent e) {
+        		if (searchBar.getText().isEmpty()) {
+        			searchBar.setText("  Cerca linea o fermata...");     // Reinserisce il testo predefinito
+        		}
+        	}
         });
-        
         
         // Funzionalità di ricerca di una linea per la searchBar 
         searchBar.addActionListener(new ActionListener() {
@@ -177,19 +175,22 @@ public class Navbar extends JPanel {
         		String lineaDaCercare = searchBar.getText();
         		Stop fermata = dati.cercaFermata(lineaDaCercare);
         		Route linea = dati.cercaRoute(lineaDaCercare);
-        		if(fermata != null) {
+        		
+        		if (fermata != null) {
         			stopPanel.creaPannelloFermata(fermata);
-                    mapPanel.centraMappa(fermata.getLon(), fermata.getLat(), 2);
-                    lineaPanel.setVisible(false);
+        			mapPanel.centraMappa(fermata.getLon(), fermata.getLat(), 2);
+        			lineaPanel.setVisible(false);
         		}
-        		if(linea != null)
+        		if (linea != null)
         		{
         			lineaPanel.creaPannelloLinea(linea, dati);
-                    stopPanel.setVisible(false);
-                    LineaPainter.costruisciLineaDaDisegnare(linea, mapPanel, dati);
+        			stopPanel.setVisible(false);
+        			LineaPainter.costruisciLineaDaDisegnare(linea, mapPanel, dati);
         		}
         	}
         });
+        
+        this.add(searchBar);
         
         
         // Pulsante per la sezione utente e il login

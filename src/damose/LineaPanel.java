@@ -26,8 +26,8 @@ import javax.swing.JButton;
 
 public class LineaPanel extends JPanel {
 	
-	private JLabel codiceLinea, agenziaENomeLinea;
-	private JButton btnWheelChair, btnClose, btnLink, btnPreferiti;
+	private JLabel codiceLinea, agenziaENomeLinea, lblFermate, lblMezzi;
+	private JButton btnClose, btnAgency, btnFavorite, btnWebsite, btnRouteType;
 	private Utente utente;
 	private DatiGTFS dati;
 	
@@ -39,16 +39,17 @@ public class LineaPanel extends JPanel {
 		
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);
+		this.setVisible(false);
 		
 		
 		// JLabel che contiene il nome (long name) della linea in questione
 		codiceLinea = new JLabel("Codice linea");
 		
 		codiceLinea.setForeground(Color.WHITE);
-		codiceLinea.setFont(new Font("Arial Nova", Font.BOLD, 26));
+		codiceLinea.setFont(new Font("Arial Nova", Font.BOLD, 30));
 		codiceLinea.setFocusable(false);
 								
-		codiceLinea.setBounds(80, 70, 200, 50);
+		codiceLinea.setBounds(80, 70, 180, 50);
 								
 		this.add(codiceLinea);
         
@@ -56,89 +57,147 @@ public class LineaPanel extends JPanel {
 		// JLabel che contiene il nome dell'agenzia che gestisce la linea in questione
         agenziaENomeLinea = new JLabel("Agenzia  -  Nome linea");
         
-        agenziaENomeLinea.setForeground(Color.WHITE);
-        agenziaENomeLinea.setFont(new Font("Arial Nova", Font.PLAIN, 12));
+        agenziaENomeLinea.setForeground(new Color(210, 210, 210));
+        agenziaENomeLinea.setFont(new Font("Arial Nova", Font.ITALIC, 12));
         agenziaENomeLinea.setFocusable(false);
         
-        agenziaENomeLinea.setBounds(20, 120, 300, 20);
+        agenziaENomeLinea.setBounds(20, 125, 300, 20);
         
         this.add(agenziaENomeLinea);
         
         
-        // Pulsante per l'aggiunta o la rimozione della linea ai preferiti dell'utente
-        btnPreferiti = new JButton();
+        // JLabel per il testo "Fermate:"
+        lblFermate = new JLabel("Fermate:");
         
-        btnPreferiti.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        lblFermate.setForeground(Color.WHITE);
+        lblFermate.setFont(new Font("Arial Nova", Font.BOLD, 24));
+        lblFermate.setFocusable(false);
         
-        btnPreferiti.setContentAreaFilled(false);
-        btnPreferiti.setFocusPainted(false);
-        btnPreferiti.setBorderPainted(false);
-        btnPreferiti.setBackground(new Color(130, 36, 51));
+        lblFermate.setBounds(20, 200, 150, 50);
         
-        btnPreferiti.setEnabled(false);
-        btnPreferiti.setVisible(false);
+        this.add(lblFermate);
         
-        btnPreferiti.setPreferredSize(new Dimension(50, 50));
-        btnPreferiti.setBounds(290, 70, 50, 50);
         
-        this.add(btnPreferiti);
+        // JLabel per il testo "Mezzi:"
+        lblMezzi = new JLabel("Mezzi:");
+        
+        lblMezzi.setForeground(Color.WHITE);
+        lblMezzi.setFont(new Font("Arial Nova", Font.BOLD, 24));
+        lblMezzi.setFocusable(false);
+        
+        lblMezzi.setBounds(20, 500, 150, 50);
+        
+        this.add(lblMezzi);
         
         
         // Pulsante per chiudere il lineaPanel
         btnClose = new JButton("Chiudi pannello");
-     			
-     	btnClose.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-     			
-     	btnClose.setFont(new Font("Arial Nova", Font.BOLD, 14));
-     	btnClose.setForeground(new Color(255, 255, 255));
-     			
-     	btnClose.setBorderPainted(false);
-     	btnClose.setFocusPainted(false);
-     	btnClose.setContentAreaFilled(false);
-     	
-     	btnClose.setBounds(-25, 5, 200, 30);
-     		
-     	ImageIcon iconClose = new ImageIcon("src/resources/close.png");
-     	Image scaledImageClose = iconClose.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        
+        btnClose.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        
+        btnClose.setFont(new Font("Arial Nova", Font.BOLD, 14));
+        btnClose.setForeground(new Color(255, 255, 255));
+        
+        btnClose.setBorderPainted(false);
+        btnClose.setFocusPainted(false);
+        btnClose.setContentAreaFilled(false);
+        
+        btnClose.setBounds(-25, 5, 200, 30);
+        
+        ImageIcon iconClose = new ImageIcon("src/resources/close.png");
+        Image scaledImageClose = iconClose.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         ImageIcon newIconClose = new ImageIcon(scaledImageClose);
         btnClose.setIcon(newIconClose);
         
         btnClose.addActionListener(new ActionListener() {
-     		public void actionPerformed(ActionEvent e) {
-     			LineaPanel.this.setVisible(false);
-     		}
-     	});
-             
-    	this.add(btnClose);   
+        	public void actionPerformed(ActionEvent e) {
+        		LineaPanel.this.setVisible(false);
+        	}
+        });
+        
+        this.add(btnClose);
+        
+        
+        // Pulsante per il logo dell'agenzia di trasporti che gestisce la linea (non interattivo, serve solo a visualizzare comodamente il logo)
+        btnAgency = new JButton();
+		
+        btnAgency.setContentAreaFilled(false);
+		btnAgency.setFocusPainted(false);
+		btnAgency.setBorderPainted(false);
+		btnAgency.setBackground(new Color(255, 255, 255));
+		
+		btnAgency.setFocusable(false);
+		
+		btnAgency.setPreferredSize(new Dimension(50, 50));
+		btnAgency.setBounds(20, 70, 50, 50);
+		
+		this.add(btnAgency);
+        
+        
+        // Pulsante per l'aggiunta o la rimozione della linea ai preferiti dell'utente
+        btnFavorite = new JButton();
+        
+        btnFavorite.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        
+        btnFavorite.setContentAreaFilled(false);
+        btnFavorite.setFocusPainted(false);
+        btnFavorite.setBorderPainted(false);
+        btnFavorite.setBackground(new Color(130, 36, 51));
+        
+        btnFavorite.setEnabled(false);
+        btnFavorite.setVisible(false);
+        
+        btnFavorite.setPreferredSize(new Dimension(50, 50));
+        btnFavorite.setBounds(290, 70, 50, 50);
+        
+        this.add(btnFavorite);
 
         
         // Pulsante per aprire l'URL relativo alla linea in questione
-		btnLink = new JButton();
+		btnWebsite = new JButton();
 		
-		btnLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnWebsite.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
-		btnLink.setForeground(new Color(255, 255, 255));
-		btnLink.setFont(new Font("Arial Nova", Font.BOLD, 12));
-		btnLink.setHorizontalAlignment(SwingConstants.LEADING);
-		btnLink.setText("Sito Web");
+		btnWebsite.setForeground(new Color(255, 255, 255));
+		btnWebsite.setFont(new Font("Arial Nova", Font.BOLD, 12));
+		btnWebsite.setText(" Sito Web");
+		btnWebsite.setHorizontalAlignment(SwingConstants.LEADING);
 		
-		btnLink.setContentAreaFilled(false);
-		btnLink.setFocusPainted(false);
-		btnLink.setBorderPainted(false);
-		btnLink.setBackground(new Color(130, 36, 51));
+		btnWebsite.setContentAreaFilled(false);
+		btnWebsite.setFocusPainted(false);
+		btnWebsite.setBorderPainted(false);
+		btnWebsite.setBackground(new Color(130, 36, 51));
 		
-		btnLink.setPreferredSize(new Dimension(20, 20));
-		btnLink.setBounds(0, 150, 200, 20);
+		btnWebsite.setPreferredSize(new Dimension(20, 20));
+		btnWebsite.setBounds(0, 155, 120, 20);
 		
-		ImageIcon iconLink = new ImageIcon("src/resources/mondo.png");
-        Image scaledImageLink = iconLink.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-        ImageIcon newIconLink = new ImageIcon(scaledImageLink);
-        btnLink.setIcon(newIconLink);
+		ImageIcon iconWebsite = new ImageIcon("src/resources/mondo.png");
+        Image scaledImageWebsite = iconWebsite.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        ImageIcon newIconWebsite = new ImageIcon(scaledImageWebsite);
+        btnWebsite.setIcon(newIconWebsite);
         
-		this.add(btnLink);
+		this.add(btnWebsite);
 		
 		
-		this.setVisible(false);
+		// Pulsante per il tipo di linea (tram, metro, treni, bus) (non interattivo, serve solo a visualizzare comodamente icona e informazione)
+		btnRouteType = new JButton();
+		
+		btnRouteType.setForeground(Color.WHITE);
+		btnRouteType.setFont(new Font("Arial Nova", Font.BOLD, 12));
+		btnRouteType.setHorizontalAlignment(SwingConstants.LEADING);
+		btnRouteType.setText("Tipo di trasporto");
+		
+		btnRouteType.setContentAreaFilled(false);
+		btnRouteType.setFocusPainted(false);
+		btnRouteType.setBorderPainted(false);
+		btnRouteType.setBackground(new Color(130, 36, 51));
+		
+		btnRouteType.setFocusable(false);
+		
+		btnRouteType.setPreferredSize(new Dimension(20, 20));
+		btnRouteType.setBounds(175, 155, 150, 20);
+		
+		this.add(btnRouteType);
 	}
 	
 	
@@ -148,8 +207,8 @@ public class LineaPanel extends JPanel {
 		this.setVisible(true);
 		
 		if (utente.getLineePreferite() != null) {
-			btnPreferiti.setEnabled(true);
-			btnPreferiti.setVisible(true);
+			btnFavorite.setEnabled(true);
+			btnFavorite.setVisible(true);
 			
 		    boolean isPreferita = false;
 		    
@@ -163,18 +222,18 @@ public class LineaPanel extends JPanel {
 		    String iconCuorePath = isPreferita ? "src/resources/cuore.png" : "src/resources/cuore-vuoto.png";
 		    ImageIcon iconCuore = new ImageIcon(iconCuorePath);
 		    Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		    btnPreferiti.setIcon(new ImageIcon(scaledImageCuore));
+		    btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
 		}
 		
-		for (ActionListener a : btnPreferiti.getActionListeners()) {
-		    btnPreferiti.removeActionListener(a);
+		for (ActionListener a : btnFavorite.getActionListeners()) {
+			btnFavorite.removeActionListener(a);
 		}
 		
-		for (ActionListener a : btnLink.getActionListeners()) {
-		    btnLink.removeActionListener(a);
+		for (ActionListener a : btnWebsite.getActionListeners()) {
+		    btnWebsite.removeActionListener(a);
 		}
 		
-		btnPreferiti.addActionListener(new ActionListener() {
+		btnFavorite.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        
 		        List<String> lineePreferite = utente.getLineePreferite();
@@ -199,29 +258,51 @@ public class LineaPanel extends JPanel {
 		        String iconCuorePath = isOraPreferita ? "src/resources/cuore.png" : "src/resources/cuore-vuoto.png";
 			    ImageIcon iconCuore = new ImageIcon(iconCuorePath);
 			    Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-			    btnPreferiti.setIcon(new ImageIcon(scaledImageCuore));
+			    btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
 		    }
 		});
 		
-		String agenzia = linea.getAgency().getName();
+		String agencyName = linea.getAgency().getName();
 		String longName = linea.getLongName();
 		String shortName = linea.getShortName();
 		String url = linea.getUrl();
-		int tipoLinea = linea.getType();
+		int routeType = linea.getType();
 		
-		codiceLinea.setText(shortName);
-		
-		if(longName == null || longName.isEmpty()) {
-			agenziaENomeLinea.setText(agenzia);
-		} else {
-			agenziaENomeLinea.setText(agenzia + " - " + longName);
+		switch (agencyName) {
+			case "Atac":
+				ImageIcon iconAtac = new ImageIcon("src/resources/atac-logo.png");
+		        Image scaledImageAtac = iconAtac.getImage().getScaledInstance(50, 41, Image.SCALE_SMOOTH);
+		        ImageIcon newIconAtac = new ImageIcon(scaledImageAtac);
+		        btnAgency.setIcon(newIconAtac);
+		        
+		        break;
+		    
+			case "Autoservizi Troiani":
+				ImageIcon iconTroiani = new ImageIcon("src/resources/autoservizi-troiani-logo.png");
+		        Image scaledImageTroiani = iconTroiani.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+		        ImageIcon newIconTroiani = new ImageIcon(scaledImageTroiani);
+		        btnAgency.setIcon(newIconTroiani);
+		        
+		        break;
+		    
+			default:
+				break;
 		}
 		
-		btnLink.addActionListener(new ActionListener() {
+		codiceLinea.setText(" " + shortName);
+		
+		if (longName == null || longName.isEmpty()) {
+			agenziaENomeLinea.setText(agencyName);
+		} else {
+			agenziaENomeLinea.setText(agencyName + "  -  " + longName);
+		}
+		
+		btnWebsite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				if (Desktop.isDesktopSupported()) {
                     Desktop desktop = Desktop.getDesktop();
+                    
                     try {
 						desktop.browse(new URI(url));
 					} catch (IOException e1) {
@@ -232,5 +313,76 @@ public class LineaPanel extends JPanel {
                 }
 			}
 		});
+		
+		switch (routeType) {
+			case 0:
+				ImageIcon iconTram = new ImageIcon("src/resources/tram.png");
+		        Image scaledImageTram = iconTram.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		        ImageIcon newIconTram = new ImageIcon(scaledImageTram);
+		        btnRouteType.setIcon(newIconTram);
+		        
+		        btnRouteType.setText(" Tram");
+		        break;
+			
+			case 1:
+				ImageIcon iconMetro = new ImageIcon("src/resources/metro.png");
+		        Image scaledImageMetro = iconMetro.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		        ImageIcon newIconMetro = new ImageIcon(scaledImageMetro);
+		        btnRouteType.setIcon(newIconMetro);
+		        
+		        btnRouteType.setText(" Metropolitana");
+		        
+		        switch (shortName) {
+		        	case "MEA":
+		        		ImageIcon iconMetroA = new ImageIcon("src/resources/metro-a-logo-withborder.png");
+				        Image scaledImageMetroA = iconMetroA.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+				        ImageIcon newIconMetroA = new ImageIcon(scaledImageMetroA);
+				        btnAgency.setIcon(newIconMetroA);
+				        
+				        codiceLinea.setText(" Metro A");
+				        
+				        break;
+				    
+		        	case "MEB", "MEB1":
+		        		ImageIcon iconMetroB = new ImageIcon("src/resources/metro-b-logo-withborder.png");
+				        Image scaledImageMetroB = iconMetroB.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+				        ImageIcon newIconMetroB = new ImageIcon(scaledImageMetroB);
+				        btnAgency.setIcon(newIconMetroB);
+				        
+				        codiceLinea.setText(" Metro B");
+				        
+				        break;
+				    
+		        	case "MEC":
+		        		ImageIcon iconMetroC = new ImageIcon("src/resources/metro-c-logo-withborder.png");
+				        Image scaledImageMetroC = iconMetroC.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+				        ImageIcon newIconMetroC = new ImageIcon(scaledImageMetroC);
+				        btnAgency.setIcon(newIconMetroC);
+				        
+				        codiceLinea.setText(" Metro C");
+				        
+				        break;
+		        }
+		        
+		        break;
+		        
+			case 2:
+				ImageIcon iconTreno = new ImageIcon("src/resources/train.png");
+		        Image scaledImageTreno = iconTreno.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		        ImageIcon newIconTreno = new ImageIcon(scaledImageTreno);
+		        btnRouteType.setIcon(newIconTreno);
+		        
+		        btnRouteType.setText(" Treno");
+		        break;
+		        
+			case 3:
+				ImageIcon iconBus = new ImageIcon("src/resources/bus.png");
+		        Image scaledImageBus = iconBus.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		        ImageIcon newIconBus = new ImageIcon(scaledImageBus);
+		        btnRouteType.setIcon(newIconBus);
+		        
+		        btnRouteType.setText(" Autobus");
+		        break;
+		}
 	}
 }
