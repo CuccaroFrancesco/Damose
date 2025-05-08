@@ -570,5 +570,7 @@ public class LineaPanel extends JPanel {
 		        btnRouteType.setText(" Autobus");
 		        break;
 		}
+		this.revalidate();
+		this.repaint();
 	}
 }

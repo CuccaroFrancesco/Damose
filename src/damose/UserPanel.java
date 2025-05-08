@@ -556,18 +556,9 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	}
 	
 	private void aggiornaPreferiti()
-	{	
-		boolean statoLineeVisible = false;
-		boolean statoFermateVisible = false;
-		
-		if (lineeScrollPane != null) {
-			remove(lineeScrollPane);
-			statoLineeVisible = lineeScrollPane.isVisible();
-		}
-		if (fermateScrollPane != null) {
-			remove(fermateScrollPane);
-			statoFermateVisible = fermateScrollPane.isVisible();
-		}
+	{
+		if (lineeScrollPane != null) remove(lineeScrollPane);
+		if (fermateScrollPane != null) remove(fermateScrollPane);
 		if (btnToggleLinee != null) remove(btnToggleLinee);
 		if (btnToggleFermate != null) remove(btnToggleFermate);
 		
@@ -649,7 +640,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
         }
 
         
-    if(!lineePreferite.toString().equals("[]")) {
+    if(!fermatePreferite.toString().equals("[]")) {
     	// Fermate preferite
         for (int i = 0; i < fermatePreferite.size(); i++) {
         	String stopId = fermatePreferite.get(i);
@@ -751,21 +742,9 @@ public class UserPanel extends JPanel implements PreferitiObserver {
     UserPanel.this.add(fermateScrollPane);
 
     
-    // Ripristina la visibilità dei pannelli in base allo stato salvato
-    lineeScrollPane.setVisible(statoLineeVisible);
-    fermateScrollPane.setVisible(statoFermateVisible);
-
-    // Imposta il testo dei bottoni in base allo stato
-    btnToggleLinee.setText("Linee preferite: " + (statoLineeVisible ? "▼" : "▲"));
-    btnToggleFermate.setText("Fermate preferite: " + (statoFermateVisible ? "▼" : "▲"));
-
-    // Inizialmente li impostiamo come invisibili, se necessario li renderemo visibili al toggle
-    if (!statoLineeVisible) {
-        lineeScrollPane.setVisible(false);
-    }
-    if (!statoFermateVisible) {
-        fermateScrollPane.setVisible(false);
-    }
+    // Inizialmente nascosti
+    lineeScrollPane.setVisible(false);
+    fermateScrollPane.setVisible(false);
 
     // Variabili di stato
     final boolean[] mostraLinee = {false};

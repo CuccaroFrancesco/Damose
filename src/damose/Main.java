@@ -136,6 +136,8 @@ public class Main extends JFrame {
     	} else {
     		navbar.getSearchBar().setBounds((navbar.getWidth() / 2) - 250, 15, 500, 40);
     	}
+		
+		navbar.getBtnRicerca().setBounds(460, 8, 30, 25);
     }
     
     

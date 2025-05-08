@@ -35,6 +35,7 @@ public class Navbar extends JPanel {
 	private Mappa mapPanel;
     private JTextField searchBar;
     private JPanel mapButtonGroup;
+    private JLayeredPane searchLayeredPane;
     private JButton mappaNormale, mappaSatellitare, mappaMista, btnLogin, btnRicerca;
     private DatiGTFS dati;
     private StopPanel stopPanel;
@@ -104,6 +105,7 @@ public class Navbar extends JPanel {
         		mappaNormale.setEnabled(false);
         		mappaSatellitare.setEnabled(true);
         		mappaMista.setEnabled(true);
+        		Navbar.this.requestFocusInWindow();
         	}
         });
         
@@ -113,6 +115,7 @@ public class Navbar extends JPanel {
         		mappaNormale.setEnabled(true);
         		mappaSatellitare.setEnabled(false);
         		mappaMista.setEnabled(true);
+        		Navbar.this.requestFocusInWindow();
         	}
         });
         
@@ -122,6 +125,7 @@ public class Navbar extends JPanel {
         		mappaNormale.setEnabled(true);
         		mappaSatellitare.setEnabled(true);
         		mappaMista.setEnabled(false);
+        		Navbar.this.requestFocusInWindow();
         	}
         });
         
@@ -139,6 +143,11 @@ public class Navbar extends JPanel {
         this.add(mapButtonGroup);
         
         
+        ImageIcon iconRicerca = new ImageIcon("src/resources/ricerca.png");
+        Image scaledImageRicerca = iconRicerca.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+        ImageIcon newIconRicerca = new ImageIcon(scaledImageRicerca);
+        
+        
         // Barra di ricerca, con annessa gestione del testo placeholder
         searchBar = new JTextField("  Cerca linea o fermata...");
         
@@ -150,50 +159,16 @@ public class Navbar extends JPanel {
         searchBar.setFont(new Font("Arial Nova", Font.BOLD, 12));
         searchBar.setForeground(new Color(0, 0, 0));
         
-        // Gestione del testo placeholder della searchBar
-        searchBar.addFocusListener(new FocusListener() {
-        	
-        	@Override
-        	public void focusGained(FocusEvent e) {
-        		if (searchBar.getText().equals("  Cerca linea o fermata...")) {
-        			searchBar.setText("");     // Cancella il testo attuale
-        		}
-        	}
-        	
-        	@Override
-        	public void focusLost(FocusEvent e) {
-        		if (searchBar.getText().isEmpty()) {
-        			searchBar.setText("  Cerca linea o fermata...");     // Reinserisce il testo predefinito
-        		}
-        	}
-        });
+        searchLayeredPane = new JLayeredPane();
+        searchLayeredPane.setBounds(400, 15, 500, 40);  // stesse dimensioni della searchBar
+        searchLayeredPane.setLayout(null);
+        searchLayeredPane.setOpaque(false);
         
-        // Funzionalità di ricerca di una linea per la searchBar 
-        searchBar.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		String lineaDaCercare = searchBar.getText();
-        		Stop fermata = dati.cercaFermata(lineaDaCercare);
-        		Route linea = dati.cercaRoute(lineaDaCercare);
-        		
-        		if (fermata != null) {
-        			stopPanel.creaPannelloFermata(fermata);
-        			mapPanel.centraMappa(fermata.getLon(), fermata.getLat(), 2);
-        			lineaPanel.setVisible(false);
-        		}
-        		if (linea != null)
-        		{
-        			lineaPanel.creaPannelloLinea(linea, dati);
-        			stopPanel.setVisible(false);
-        			LineaPainter.costruisciLineaDaDisegnare(linea, mapPanel, dati);
-        		}
-        	}
-        });
-        
-        this.add(searchBar);
+        searchBar.setBounds(0, 0, 500, 40); // relativo al layered pane
         
         // Pulsante per la barra di ricerca
         btnRicerca = new JButton();
+        searchLayeredPane.setLayer(btnRicerca, 100);
         
         btnRicerca.setContentAreaFilled(false);
         btnRicerca.setFocusPainted(false);
@@ -201,15 +176,50 @@ public class Navbar extends JPanel {
         btnRicerca.setBackground(new Color(130, 36, 51));
         btnRicerca.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         
-        btnRicerca.setPreferredSize(new Dimension(50, 50));
-        btnRicerca.setBounds(searchBar.getX() + searchBar.getWidth() - 10, 10, 50, 50);
-        
-        ImageIcon iconRicerca = new ImageIcon("src/resources/ricerca.png");
-        Image scaledImageRicerca = iconRicerca.getImage().getScaledInstance(44, 44, Image.SCALE_SMOOTH);
-        ImageIcon newIconRicerca = new ImageIcon(scaledImageRicerca);
+        btnRicerca.setPreferredSize(new Dimension(30, 25));
         btnRicerca.setIcon(newIconRicerca);
         
-        this.add(btnRicerca);
+        searchLayeredPane.add(btnRicerca, 100);  
+        searchLayeredPane.add(searchBar, Integer.valueOf(1));      
+        
+        this.add(searchLayeredPane);
+
+        
+        // Gestione del testo placeholder della searchBar
+        searchBar.addFocusListener(new FocusListener() {
+        	
+        	@Override
+        	public void focusGained(FocusEvent e) {
+        		if (searchBar.getText().equals("  Cerca linea o fermata...")) {
+        			searchBar.setText("");     // Cancella il testo attuale
+        			Navbar.this.getBtnRicerca().repaint();
+        		}
+        	}
+        	
+        	@Override
+        	public void focusLost(FocusEvent e) {
+        		if (searchBar.getText().isEmpty()) {
+        			searchBar.setText("  Cerca linea o fermata...");     // Reinserisce il testo predefinito
+        			Navbar.this.getBtnRicerca().repaint();
+        		}
+        	}
+        });
+        
+        
+        // Funzionalità di ricerca di una linea per la lente di ricerca
+        btnRicerca.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		ricerca();
+        	}
+        });
+        
+        // Funzionalità di ricerca di una linea per la searchBar 
+        searchBar.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		ricerca();
+        	}
+        });
+        
         
         
         // Pulsante per la sezione utente e il login
@@ -234,8 +244,12 @@ public class Navbar extends JPanel {
     
     
     // Metodo get per la barra di ricerca
-    public JTextField getSearchBar() {
-    	return this.searchBar;
+    public JLayeredPane getSearchBar() {
+    	return this.searchLayeredPane;
+    }
+    
+    public JButton getBtnRicerca() {
+    	return this.btnRicerca;
     }
     
     
@@ -248,5 +262,15 @@ public class Navbar extends JPanel {
     // Metodo get per il pulsante della sezione utente
     public JButton getBtnLogin() {
     	return this.btnLogin;
+    }
+    
+    // Metodo per la ricerca
+    public void ricerca()
+    {
+    	String lineaDaCercare = searchBar.getText();
+		Ricerca ricerca = new Ricerca();
+		ricerca.effettuaRicerca(lineaDaCercare, dati, stopPanel, lineaPanel, mapPanel);
+		searchBar.setText("  Cerca linea o fermata...");
+		Navbar.this.requestFocusInWindow();
     }
 }
