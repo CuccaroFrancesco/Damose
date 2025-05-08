@@ -8,15 +8,16 @@ ___
 ## Cose da fare:
 
 #### Dati real-time:
-- Caricare i dati relativi alla posizione, velocità e direzione dei mezzi (implementare relativi pannelli)
+- Caricare i dati relativi alla posizione, velocità e direzione dei mezzi
 - Caricare i dati relativi a eventuali ritardi, eccezioni o altre modifiche straordinarie ai servizi
 - Inserire dinamicamente i dati real-time
 - Visualizzare messaggio di avviso se i dati real-time non sono disponibili (errori o mancanza di rete)
 
 #### Estetica:
 - Creare un logo per l'applicazione
-- Creare una schermata di caricamento all'avvio(?) (guadagnerebbe tempo per il caricamento dei dati)
-- Inserire animazioni per il pannello utente
+- Creare una schermata di caricamento all'avvio (guadagnerebbe tempo per il caricamento dei dati)
+- Inserire animazioni per i vari pannelli pop-up (scorrimento o fade)
+- Inserire un frame di transizione (cuore bianco leggermente più grande) tra cuore pieno e cuore vuoto nel btnPreferiti
 - Personalizzare l'aspetto dei waypoint (fermate di agenzie diverse, mezzi, ecc. ecc.)
 
 #### StopPanel:
@@ -31,22 +32,13 @@ Alla selezione di una determinata fermata, dovrebbero diventare accessibili le s
 - linee passanti per tale fermata
 - se presente, prossimi arrivi con linea di appartenenza e orario di arrivo e direzione
 - ritardo tipico dei mezzi per tale fermata
-- (OPZIONALE) vicinanza a punti di interesse
+- (OPZIONALE MA SAREBBE BELLO) vicinanza a punti di interesse
 
 #### LineaPanel:
-- Informazioni:
-	- Agenzia
-	- ID
-	- Short Name
-	- Long Name
-	- Url
-	- Tipo (0 tram, 1 metro, 2 treni, 3 bus)
+Da implementare:
 - Mezzi attualmente sulla linea
-- Fermate della linea
-- 
 
 #### Mappa:
-- Conservare lo zoom e la posizione quando si passa da un tipo di mappa all'altro
 - Inserire filtri per cosa visualizzare sulla mappa
 	- fermate
 		- fermate con alto tasso di puntualità
@@ -72,7 +64,6 @@ Alla selezione di un determinato mezzo, dovrebbero diventare accessibili le segu
 
 #### Navbar:
 - Aggiungere funzionalità per la barra di ricerca
-- Perfezionare il pulsante per la sezione utente
 
 #### Ricerca:
 - Ricerca di una fermata per nome e codice
@@ -86,57 +77,13 @@ Alla selezione di un determinato mezzo, dovrebbero diventare accessibili le segu
 
 #### Utente:
 - Icona del profilo
-- Impostazioni di personalizzazione per l'utente
-	- modifica del colore della navbar
-	- modifica del colore del pannello utente
-	- scelta dei dati da visualizzare per linee, fermate e mezzi
-- Inserimento e visualizzazione di fermate e linee preferite
+- Impostazioni di personalizzazione per l'utente:
+  - Cambiare tema
+  - Liberare la cache
+  - Visualizzare solo fermate e linee preferite
 - Pulsante di logout
 ___
 
 ## TESTING UNITARIO
 ...
 ___
-
-## Classi da sviluppare
-
-#### Utente:
-- ID;
-- nome;
-- email;
-- posizione;
-- password;
-- posizioneAttuale;
-- listaLineePreferite; (in locale)
-- listaFermatePreferite; (in locale)
-
-#### Mezzo di trasporto:
-- ID;
-- numeroLinea;
-- tipoDiMezzo; (bus, metro, tram)
-- posizione;
-- statoDiTransito;
-- affollamento;
-- tempoDiRitardo;
-- orarioDiPartenza;
-- orariDiArrivoPrevisti; (array, per fermata, visualizzato con ritardo ma mai modificato)
-
-#### Fermata:
-- ID;
-- nome; 
-- posizione;
-- listaLinee;
-
-#### Linea
-- nome;
-- numero;
-- listaFermate;
-- listaPuntualità; (anticipo, ritardo, puntuali, annullati) —> [23,15,76,4]; (rendere percentuale)
-- colore;
-
-#### Mappa:
-- Zoom;
-- Centrare alla posizione attuale;
-- Switch tra mappa normale e satellitare;
-- Inserimento di waypoint arbitrari;
-- Icone interattive (se clicco sulla fermata, vedo tutte le linee passanti per essa);
