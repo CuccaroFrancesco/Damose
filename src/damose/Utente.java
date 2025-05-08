@@ -40,7 +40,17 @@ public class Utente {
 	
 	private String nome, cognome, username, password;
 	private List<String> lineePreferite, fermatePreferite;
+	private PreferitiObserver observer;
+
+	public void setObserver(PreferitiObserver observer) {
+	    this.observer = observer;
+	}
 	
+	private void notificaObserver() {
+	    if (observer != null) {
+	        observer.onPreferitiChanged();
+	    }
+	}
 	
 	// Metodi get e set per il nome associato all'utente
 	public String getNome() {
@@ -150,6 +160,7 @@ public class Utente {
 		if (!tempFile.renameTo(inputFile)) {
 			throw new IOException("Impossibile rinominare il file temporaneo.");
 		}
+		notificaObserver();
 	}
 
 	
@@ -198,6 +209,8 @@ public class Utente {
 		if (!tempFile.renameTo(inputFile)) {
 			throw new IOException("Impossibile rinominare il file temporaneo.");
 		}
+		notificaObserver();
+
 	}
 	
 	

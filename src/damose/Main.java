@@ -21,30 +21,9 @@ public class Main extends JFrame {
     	DatiGTFS dati = new DatiGTFS();
     	CompoundPainter<JXMapViewer> painterGroup = new CompoundPainter<JXMapViewer>();
     	
+    	dati.caricaDati();
+
     	
-    	// Caricamento dei dati GTFS statici
-        ExecutorService executor = Executors.newFixedThreadPool(2);
-        
-        try {
-        	
-        	dati.caricaDatiStaticiGTFS("staticGTFS", false);
-        	
-        	Future<?> caricamentoInBackground = executor.submit(() -> {
-        		
-        		try {
-        			dati.caricaDatiStaticiGTFS("staticGTFS", true);
-        		} catch (Exception e) {
-        			e.printStackTrace();
-        		}
-        	});
-        	
-        } catch (Exception e) {
-        	e.printStackTrace();
-        } finally {
-        	executor.shutdown();
-        }
-    	
-        
     	// Costruzione e gestione della finestra principale
     	Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
     	
@@ -100,7 +79,7 @@ public class Main extends JFrame {
         	@Override
             public void componentResized(ComponentEvent e) {
         		
-        		calibra(navbar, userPanel);
+        		calibra(navbar, userPanel, mapPanel);
             }
         });
 
@@ -115,14 +94,14 @@ public class Main extends JFrame {
         			// Pannello invisibile e mappa scoperta
         			userPanel.setVisible(false);
                     mapPanel.setBounds(0, 70, screenSize.width, screenSize.height - 70);
-                    calibra(navbar, userPanel);
+                    calibra(navbar, userPanel, mapPanel);
                     
         		} else {
         			
         			// Pannello visibile e mappa coperta
         			userPanel.setVisible(true);
         			mapPanel.setBounds(0, 70, screenSize.width - 350, screenSize.height - 70);
-        			calibra(navbar, userPanel);
+        			calibra(navbar, userPanel, mapPanel);
         		}
         	}
         });
@@ -130,12 +109,18 @@ public class Main extends JFrame {
 	
 	
     // Metodo che gestisce l'adattamento dinamico delle dimensioni della navbar e delle sue componenti
-    public void calibra(Navbar navbar, UserPanel userPanel) {
+    public void calibra(Navbar navbar, UserPanel userPanel, Mappa mapPanel) {
     	
     	int newWidth = getWidth();              // Nuova larghezza della finestra
     	int newHeight = getHeight();            // Nuova altezza della finestra
     	
     	userPanel.setBounds(newWidth - 350, 70, 350, newHeight - 70);
+    	
+    	if (userPanel.isVisible()) {
+    		mapPanel.setBounds(0, 70, newWidth - 350, newHeight - 70);
+    	} else {
+    		mapPanel.setBounds(0, 70, newWidth, newHeight - 70);
+    	}
     	
     	navbar.setBounds(0, 0, newWidth, 70);
 		navbar.getBtnLogin().setBounds(newWidth - navbar.getBtnLogin().getWidth() - 30, 10, 50, 50);

@@ -17,20 +17,22 @@ import java.util.List;
 
 
 
-public class UserPanel extends JPanel {
+public class UserPanel extends JPanel implements PreferitiObserver {
 	
 	private Utente utente;
-	private JButton btnAccedi, btnRegistrati, btnConfermaLogin, btnConfermaRegistr, btnBack, btnToggleFermate, btnToggleLinee;
-	private JLabel titolo, lblNome, lblCognome, lblUsername, lblPassword, lblConfermaPassword, erroreNome, erroreCognome, erroreUsername, errorePassword, erroreConfermaPassword, registrazioneEffettuata; 
-	private JTextField inputNome, inputCognome, inputUsername;
-	private JPasswordField inputPassword, inputConfermaPassword;
-	private JPanel panelLineePreferite, panelFermatePreferite;
-	private JScrollPane fermateScrollPane, lineeScrollPane;
 	private DatiGTFS dati;
 	private Navbar navbar;
 	private Mappa mappa;
 	private StopPanel stopPanel;
 	private LineaPanel lineaPanel;
+	private JButton btnAccedi, btnRegistrati, btnConfermaLogin, btnConfermaRegistr, btnBack, btnToggleFermate, btnToggleLinee;
+	private JLabel titolo, lblNome, lblCognome, lblUsername, lblPassword, lblConfermaPassword,
+	               erroreNome, erroreCognome, erroreUsername, errorePassword, erroreConfermaPassword, registrazioneEffettuata;
+	private JTextField inputNome, inputCognome, inputUsername;
+	private JPasswordField inputPassword, inputConfermaPassword;
+	private JPanel panelLineePreferite, panelFermatePreferite;
+	private JScrollPane fermateScrollPane, lineeScrollPane;
+
 
 	
 	// Metodo utilizzato per nascondere tutti i componenti del pannello al momento di eventuali variazioni
@@ -63,6 +65,8 @@ public class UserPanel extends JPanel {
 		this.mappa = mappa;
 		this.stopPanel = stopPanel;
 		this.lineaPanel = lineaPanel;
+		
+		utente.setObserver(this);
 		
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);
@@ -507,190 +511,13 @@ public class UserPanel extends JPanel {
 		            if (resoconto.equals("Verificata.")) {
 		            	
 		            	nascondiTutto();
+		            	
+		            	UserPanel.this.aggiornaPreferiti();
+		            	UserPanel.this.repaint();
 		                
 		                titolo.setText(utente.getUsername());
 		                titolo.setBounds(0, 120, 350, 50);
-		                titolo.setVisible(true);
-
-		                // Recupero delle linee e delle fermate preferite dell'utente 
-		                List<String> lineePreferite = utente.getLineePreferite();
-		                List<String> fermatePreferite = utente.getFermatePreferite();
-
-		                // Creazioe del pannello per le linee preferite
-		                panelLineePreferite = new JPanel();
-		                panelLineePreferite.setLayout(null);
-		                panelLineePreferite.setPreferredSize(new Dimension(350, Math.max(100, lineePreferite.size() * 60)));
-		                panelLineePreferite.setBackground(new Color(130, 36, 51));
-
-		                // Creazione del pannello per le fermate preferite
-		                panelFermatePreferite = new JPanel();
-		                panelFermatePreferite.setLayout(null);
-		                panelFermatePreferite.setPreferredSize(new Dimension(350, Math.max(100, fermatePreferite.size() * 60)));
-		                panelFermatePreferite.setBackground(new Color(130, 36, 51));
-
-		                // Linee preferite
-		                for (int i = 0; i < lineePreferite.size(); i++) {
-		                	
-		                	String routeId = lineePreferite.get(i);
-		                    int y = i * 60;
-
-		                    JButton lineaBtn = new JButton(routeId);
-		                    
-		                    lineaBtn.setBounds(25, y, 50, 50);
-		                    lineaBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
-		                    lineaBtn.setBackground(Color.WHITE); 
-		                    lineaBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		                    lineaBtn.setBorder(BorderFactory.createEmptyBorder());
-
-		                    // Usa un array per "contenere" la variabile linea
-		                    final Route[] lineaArray = new Route[1];    // Array finale per linea
-		                    lineaArray[0] = dati.cercaRoute(routeId);
-		                    
-		                    for (ActionListener a : lineaBtn.getActionListeners()) {
-		                    	lineaBtn.removeActionListener(a);
-		            		}
-
-		                    // Aggiungi l'ActionListener
-		                    lineaBtn.addActionListener(new ActionListener() {
-		                    	public void actionPerformed(ActionEvent e) {
-		                    		if (lineaArray[0] != null) {
-		                    			lineaPanel.creaPannelloLinea(lineaArray[0], dati);
-		                                LineaPainter.costruisciLineaDaDisegnare(lineaArray[0], mappa, dati);
-		                                stopPanel.setVisible(false);
-		                            } else {
-		                                System.out.println("Linea non trovata");
-		                            }
-		                        }
-		                    });
-
-		                    // Nome della linea o messaggio di errore
-		                    JLabel nomeLinea = new JLabel(lineaArray[0] != null ? lineaArray[0].getAgency().getName() + " - " + lineaArray[0].getShortName() : "Dati non disponibili");
-		                    
-		                    nomeLinea.setFont(new Font("Arial Nova", Font.PLAIN, 16));
-		                    nomeLinea.setForeground(Color.WHITE);
-		                    nomeLinea.setBounds(85, y + 15, 250, 20);
-
-		                    // Aggiungi il pulsante e l'etichetta al pannello
-		                    panelLineePreferite.add(lineaBtn);
-		                    panelLineePreferite.add(nomeLinea);
-		                }
-
-
-		            // Fermate preferite
-		            for (int i = 0; i < fermatePreferite.size(); i++) {
-		            	String stopId = fermatePreferite.get(i);
-		                int y = i * 60;
-
-		                JButton stopBtn = new JButton(stopId);
-		                 
-		                stopBtn.setBounds(25, y, 50, 50);
-		                stopBtn.setFocusable(false);
-		                stopBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
-		                stopBtn.setBackground(Color.WHITE); 
-		                stopBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		                stopBtn.setBorder(BorderFactory.createEmptyBorder());
-
-		                // Trova la fermata corrispondente a stopId
-		                final Stop[] fermata = new Stop[1]; // Usa un array per rendere la variabile finale
-		                fermata[0] = dati.cercaFermata(stopId);
-
-		                // Aggiungi l'ActionListener
-		                stopBtn.addActionListener(new ActionListener() {
-		                	public void actionPerformed(ActionEvent e) {
-		                		if (fermata[0] != null) {
-		                			stopPanel.creaPannelloFermata(fermata[0]);
-		                            mappa.centraMappa(fermata[0].getLon(), fermata[0].getLat(), 2);
-		                            lineaPanel.setVisible(false);
-		                        } else {
-		                            System.out.println("Fermata non trovata");
-		                        }
-		                    }
-		                });
-
-		                // Nome della fermata o messaggio di errore
-		                JLabel nomeFermata = new JLabel(fermata[0] != null ? fermata[0].getName() : "Dati non disponibili");
-		                 
-		                nomeFermata.setFont(new Font("Arial Nova", Font.PLAIN, 16));
-		                nomeFermata.setForeground(Color.WHITE);
-		                nomeFermata.setBounds(85, y + 15, 250, 20);
-
-		                // Aggiungi il pulsante e l'etichetta al pannello
-		                panelFermatePreferite.add(stopBtn);
-		                panelFermatePreferite.add(nomeFermata);
-		            }
-
-		                
-		            // JScrollPane che contiene le linee preferite dell'utente
-		            lineeScrollPane = new JScrollPane(panelLineePreferite);
-		            
-		            lineeScrollPane.setBorder(null);
-		            lineeScrollPane.setBounds(0, 250, 350, 250);
-		            lineeScrollPane.getVerticalScrollBar().setUnitIncrement(12);
-		            lineeScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		            lineeScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-		            
-		            // JScrollPane che contiene le fermate preferite dell'utente
-		            fermateScrollPane = new JScrollPane(panelFermatePreferite);
-		            
-		            fermateScrollPane.setBorder(null);
-		            fermateScrollPane.setBounds(0, 300, 350, 250);
-		            fermateScrollPane.getVerticalScrollBar().setUnitIncrement(12);
-		            fermateScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		            fermateScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-		            
-		            // Bottoni toggle per mostrare/nascondere i pannelli
-		            btnToggleLinee = new JButton("Linee preferite: ▲");
-		            
-		            btnToggleLinee.setBounds(25, 200, 300, 30);
-		            btnToggleLinee.setFocusPainted(false);
-		            btnToggleLinee.setBackground(Color.WHITE);
-
-		            btnToggleFermate = new JButton("Fermate preferite: ▲");
-		            
-		            btnToggleFermate.setBounds(25, 250, 300, 30);
-		            btnToggleFermate.setFocusPainted(false);
-		            btnToggleFermate.setBackground(Color.WHITE);
-
-		            UserPanel.this.add(btnToggleLinee);
-		            UserPanel.this.add(btnToggleFermate);
-
-		            UserPanel.this.add(lineeScrollPane);
-		            UserPanel.this.add(fermateScrollPane);
-
-		            
-		            // Inizialmente nascosti
-		            lineeScrollPane.setVisible(false);
-		            fermateScrollPane.setVisible(false);
-
-		            // Variabili di stato
-		            final boolean[] mostraLinee = {false};
-		            final boolean[] mostraFermate = {false};
-
-		            // Listener toggle
-		            btnToggleLinee.addActionListener(ev -> {
-		            	mostraLinee[0] = !mostraLinee[0];
-		                    lineeScrollPane.setVisible(mostraLinee[0]);
-		                    btnToggleLinee.setText("Linee preferite: " + (mostraLinee[0] ? "▼" : "▲"));
-		                    
-		                    if (mostraLinee[0]) {
-		                    	fermateScrollPane.setBounds(0, 580, 350, 250);
-		                    	btnToggleFermate.setBounds(25, 530, 300, 30);
-		                    } else {
-		                    	fermateScrollPane.setBounds(0, 300, 350, 250);
-		                    	btnToggleFermate.setBounds(25, 250, 300, 30);
-		                    }
-		                    
-		                    UserPanel.this.repaint();
-		                });
-
-		                btnToggleFermate.addActionListener(ev -> {
-		                    mostraFermate[0] = !mostraFermate[0];
-		                    fermateScrollPane.setVisible(mostraFermate[0]);
-		                    btnToggleFermate.setText("Fermate preferite: " + (mostraFermate[0] ? "▼" : "▲"));
-		                    UserPanel.this.repaint();
-		                });		                
+		                titolo.setVisible(true);        
 
 		            } else {
 		                errorePassword.setVisible(true);
@@ -719,5 +546,260 @@ public class UserPanel extends JPanel {
 		        }
 		    }
 		});
+		
+		
+	}
+	
+	public void onPreferitiChanged()
+	{
+		this.aggiornaPreferiti();
+	}
+	
+	private void aggiornaPreferiti()
+	{	
+		boolean statoLineeVisible = false;
+		boolean statoFermateVisible = false;
+		
+		if (lineeScrollPane != null) {
+			remove(lineeScrollPane);
+			statoLineeVisible = lineeScrollPane.isVisible();
+		}
+		if (fermateScrollPane != null) {
+			remove(fermateScrollPane);
+			statoFermateVisible = fermateScrollPane.isVisible();
+		}
+		if (btnToggleLinee != null) remove(btnToggleLinee);
+		if (btnToggleFermate != null) remove(btnToggleFermate);
+		
+		
+		// Recupero delle linee e delle fermate preferite dell'utente 
+        List<String> lineePreferite = utente.getLineePreferite();
+        List<String> fermatePreferite = utente.getFermatePreferite();
+        
+        // Creazioe del pannello per le linee preferite
+        panelLineePreferite = new JPanel();
+        panelLineePreferite.setLayout(null);
+        panelLineePreferite.setPreferredSize(new Dimension(350, Math.max(100, lineePreferite.size() * 60)));
+        panelLineePreferite.setBackground(new Color(130, 36, 51));
+
+        // Creazione del pannello per le fermate preferite
+        panelFermatePreferite = new JPanel();
+        panelFermatePreferite.setLayout(null);
+        panelFermatePreferite.setPreferredSize(new Dimension(350, Math.max(100, fermatePreferite.size() * 60)));
+        panelFermatePreferite.setBackground(new Color(130, 36, 51));
+        
+        if(!lineePreferite.toString().equals("[]"))
+        {
+
+            // Linee preferite
+            for (int i = 0; i < lineePreferite.size(); i++) {
+            	
+            	String routeId = lineePreferite.get(i);
+                int y = i * 60;
+
+                JButton lineaBtn = new JButton(routeId);
+                
+                lineaBtn.setBounds(25, y, 50, 50);
+                lineaBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
+                lineaBtn.setBackground(Color.WHITE); 
+                lineaBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                lineaBtn.setBorder(BorderFactory.createEmptyBorder());
+
+                // Usa un array per "contenere" la variabile linea
+                final Route[] lineaArray = new Route[1];    // Array finale per linea
+                lineaArray[0] = dati.cercaRoute(routeId);
+                
+                for (ActionListener a : lineaBtn.getActionListeners()) {
+                	lineaBtn.removeActionListener(a);
+        		}
+
+                // Aggiungi l'ActionListener
+                lineaBtn.addActionListener(new ActionListener() {
+                	public void actionPerformed(ActionEvent e) {
+                		if (lineaArray[0] != null) {
+                			lineaPanel.creaPannelloLinea(lineaArray[0], dati);
+                            LineaPainter.costruisciLineaDaDisegnare(lineaArray[0], mappa, dati);
+                            stopPanel.setVisible(false);
+                        } else {
+                            System.out.println("Linea non trovata");
+                        }
+                    }
+                });
+
+                // Nome della linea o messaggio di errore
+                JLabel nomeLinea = new JLabel(lineaArray[0] != null ? lineaArray[0].getAgency().getName() + " - " + lineaArray[0].getShortName() : "Dati non disponibili");
+                
+                nomeLinea.setFont(new Font("Arial Nova", Font.PLAIN, 16));
+                nomeLinea.setForeground(Color.WHITE);
+                nomeLinea.setBounds(85, y + 15, 250, 20);
+
+                // Aggiungi il pulsante e l'etichetta al pannello
+                panelLineePreferite.add(lineaBtn);
+                panelLineePreferite.add(nomeLinea);
+            }
+        } else {
+        	JLabel lineeVuote = new JLabel("Nessuna linea preferita.");
+        	lineeVuote.setFont(new Font("Arial Nova", Font.PLAIN, 16));
+        	lineeVuote.setForeground(Color.WHITE);
+        	lineeVuote.setBounds(25, 0, 250, 20);
+        	
+        	panelLineePreferite.setPreferredSize(new Dimension(350, 100));
+        	
+        	panelLineePreferite.add(lineeVuote);
+        }
+
+        
+    if(!lineePreferite.toString().equals("[]")) {
+    	// Fermate preferite
+        for (int i = 0; i < fermatePreferite.size(); i++) {
+        	String stopId = fermatePreferite.get(i);
+            int y = i * 60;
+
+            JButton stopBtn = new JButton(stopId);
+             
+            stopBtn.setBounds(25, y, 50, 50);
+            stopBtn.setFocusable(false);
+            stopBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
+            stopBtn.setBackground(Color.WHITE); 
+            stopBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            stopBtn.setBorder(BorderFactory.createEmptyBorder());
+
+            // Trova la fermata corrispondente a stopId
+            final Stop[] fermata = new Stop[1]; // Usa un array per rendere la variabile finale
+            fermata[0] = dati.cercaFermata(stopId);
+
+            // Aggiungi l'ActionListener
+            stopBtn.addActionListener(new ActionListener() {
+            	public void actionPerformed(ActionEvent e) {
+            		if (fermata[0] != null) {
+            			stopPanel.creaPannelloFermata(fermata[0]);
+                        mappa.centraMappa(fermata[0].getLon(), fermata[0].getLat(), 2);
+                        lineaPanel.setVisible(false);
+                    } else {
+                        System.out.println("Fermata non trovata");
+                    }
+                }
+            });
+
+            // Nome della fermata o messaggio di errore
+            JLabel nomeFermata = new JLabel(fermata[0] != null ? fermata[0].getName() : "Dati non disponibili");
+             
+            nomeFermata.setFont(new Font("Arial Nova", Font.PLAIN, 16));
+            nomeFermata.setForeground(Color.WHITE);
+            nomeFermata.setBounds(85, y + 15, 250, 20);
+
+            // Aggiungi il pulsante e l'etichetta al pannello
+            panelFermatePreferite.add(stopBtn);
+            panelFermatePreferite.add(nomeFermata);
+        }
+    } else {
+    	JLabel fermateVuote = new JLabel("Nessuna fermata preferita.");
+    	fermateVuote.setFont(new Font("Arial Nova", Font.PLAIN, 16));
+    	fermateVuote.setForeground(Color.WHITE);
+    	fermateVuote.setBounds(25, 0, 250, 20);
+    	
+    	panelFermatePreferite.setPreferredSize(new Dimension(350, 100));
+    	
+    	panelFermatePreferite.add(fermateVuote);
+    }
+
+
+    
+
+        
+    // JScrollPane che contiene le linee preferite dell'utente
+    lineeScrollPane = new JScrollPane(panelLineePreferite);
+    
+    lineeScrollPane.setBorder(null);
+    if(lineePreferite.toString().equals("[]"))
+    	lineeScrollPane.setBounds(0, 250, 350, 50);
+    else
+    	lineeScrollPane.setBounds(0, 250, 350, 250);
+    	
+    lineeScrollPane.getVerticalScrollBar().setUnitIncrement(12);
+    lineeScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+    lineeScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+    
+    // JScrollPane che contiene le fermate preferite dell'utente
+    fermateScrollPane = new JScrollPane(panelFermatePreferite);
+    
+    fermateScrollPane.setBorder(null);
+    fermateScrollPane.setBounds(0, 300, 350, 250);
+    fermateScrollPane.getVerticalScrollBar().setUnitIncrement(12);
+    fermateScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+    fermateScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+    
+    // Bottoni toggle per mostrare/nascondere i pannelli
+    btnToggleLinee = new JButton("Linee preferite: ▲");
+    
+    btnToggleLinee.setBounds(25, 200, 300, 30);
+    btnToggleLinee.setFocusPainted(false);
+    btnToggleLinee.setBackground(Color.WHITE);
+
+    btnToggleFermate = new JButton("Fermate preferite: ▲");
+    
+    btnToggleFermate.setBounds(25, 250, 300, 30);
+    btnToggleFermate.setFocusPainted(false);
+    btnToggleFermate.setBackground(Color.WHITE);
+
+    UserPanel.this.add(btnToggleLinee);
+    UserPanel.this.add(btnToggleFermate);
+
+    UserPanel.this.add(lineeScrollPane);
+    UserPanel.this.add(fermateScrollPane);
+
+    
+    // Ripristina la visibilità dei pannelli in base allo stato salvato
+    lineeScrollPane.setVisible(statoLineeVisible);
+    fermateScrollPane.setVisible(statoFermateVisible);
+
+    // Imposta il testo dei bottoni in base allo stato
+    btnToggleLinee.setText("Linee preferite: " + (statoLineeVisible ? "▼" : "▲"));
+    btnToggleFermate.setText("Fermate preferite: " + (statoFermateVisible ? "▼" : "▲"));
+
+    // Inizialmente li impostiamo come invisibili, se necessario li renderemo visibili al toggle
+    if (!statoLineeVisible) {
+        lineeScrollPane.setVisible(false);
+    }
+    if (!statoFermateVisible) {
+        fermateScrollPane.setVisible(false);
+    }
+
+    // Variabili di stato
+    final boolean[] mostraLinee = {false};
+    final boolean[] mostraFermate = {false};
+
+    // Listener toggle
+    btnToggleLinee.addActionListener(ev -> {
+    	mostraLinee[0] = !mostraLinee[0];
+            lineeScrollPane.setVisible(mostraLinee[0]);
+            btnToggleLinee.setText("Linee preferite: " + (mostraLinee[0] ? "▼" : "▲"));
+            
+            if (mostraLinee[0]) {
+            	if(lineePreferite.toString().equals("[]")) {
+            		fermateScrollPane.setBounds(0, 340, 350, 250);
+                	btnToggleFermate.setBounds(25, 290, 300, 30);
+            	} else {
+            		fermateScrollPane.setBounds(0, 580, 350, 250);
+                	btnToggleFermate.setBounds(25, 530, 300, 30);
+            	}
+            	
+            } else {
+            	fermateScrollPane.setBounds(0, 300, 350, 250);
+            	btnToggleFermate.setBounds(25, 250, 300, 30);
+            }
+            
+            UserPanel.this.repaint();
+        });
+
+        btnToggleFermate.addActionListener(ev -> {
+            mostraFermate[0] = !mostraFermate[0];
+            fermateScrollPane.setVisible(mostraFermate[0]);
+            btnToggleFermate.setText("Fermate preferite: " + (mostraFermate[0] ? "▼" : "▲"));
+            UserPanel.this.repaint();
+        });
+        this.repaint();
 	}
 }

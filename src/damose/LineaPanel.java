@@ -35,10 +35,17 @@ public class LineaPanel extends JPanel {
 	private JButton btnClose, btnAgency, btnFavorite, btnWebsite, btnRouteType;
 	private JPanel fermatePanel;
 	private JScrollPane fermateScrollPane;
-	private ImageIcon iconFermata, newIconFermata, iconInizio, newIconInizio, iconFine, newIconFine;
-	private Image scaledImageFermata, newImgFine, newImgInizio;
+	private ImageIcon iconFermata, newIconFermata, iconInizio, newIconInizio, iconFine, newIconFine,
+	                  iconFermataA, newIconFermataA, iconInizioA, newIconInizioA, iconFineA, newIconFineA,
+	                  iconFermataB, newIconFermataB, iconInizioB, newIconInizioB, iconFineB, newIconFineB,
+	                  iconFermataC, newIconFermataC, iconInizioC, newIconInizioC, iconFineC, newIconFineC;
+	private Image scaledImageFermata, newImgFine, newImgInizio,
+	              scaledImageFermataA, newImgInizioA, newImgFineA,
+	              scaledImageFermataB, newImgInizioB, newImgFineB,
+	              scaledImageFermataC, newImgInizioC, newImgFineC;
 	private Utente utente;
 	private DatiGTFS dati;
+
 
 	
 	// Costruttore del lineaPanel
@@ -179,7 +186,7 @@ public class LineaPanel extends JPanel {
 		btnWebsite.setBackground(new Color(130, 36, 51));
 		
 		btnWebsite.setPreferredSize(new Dimension(20, 20));
-		btnWebsite.setBounds(0, 160, 120, 20);
+		btnWebsite.setBounds(3, 160, 120, 20);
 		
 		ImageIcon iconWebsite = new ImageIcon("src/resources/mondo.png");
         Image scaledImageWebsite = iconWebsite.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
@@ -224,6 +231,54 @@ public class LineaPanel extends JPanel {
         iconFine = new ImageIcon("src/resources/linea-fine.png");
         newImgFine = iconFine.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         newIconFine = new ImageIcon(newImgFine);
+        
+        // Icona intermezzo lineaA
+        iconFermataA = new ImageIcon("src/resources/lineaA.png");
+        scaledImageFermataA = iconFermataA.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        newIconFermataA = new ImageIcon(scaledImageFermataA);
+
+        // Icona inizio lineaA
+        iconInizioA = new ImageIcon("src/resources/lineaA-inizio.png");
+        newImgInizioA = iconInizioA.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        newIconInizioA = new ImageIcon(newImgInizioA);
+
+        // Icona fine lineaA
+        iconFineA = new ImageIcon("src/resources/lineaA-fine.png");
+        newImgFineA = iconFineA.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        newIconFineA = new ImageIcon(newImgFineA);
+        
+        // Icona intermezzo lineaB
+        iconFermataB = new ImageIcon("src/resources/lineaB.png");
+        scaledImageFermataB = iconFermataB.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        newIconFermataB = new ImageIcon(scaledImageFermataB);
+
+        // Icona inizio lineaB
+        iconInizioB = new ImageIcon("src/resources/lineaB-inizio.png");
+        newImgInizioB = iconInizioB.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        newIconInizioB = new ImageIcon(newImgInizioB);
+
+        // Icona fine lineaB
+        iconFineB = new ImageIcon("src/resources/lineaB-fine.png");
+        newImgFineB = iconFineB.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        newIconFineB = new ImageIcon(newImgFineB);
+        
+        // Icona intermezzo lineaC
+        iconFermataC = new ImageIcon("src/resources/lineaC.png");
+        scaledImageFermataC = iconFermataC.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        newIconFermataC = new ImageIcon(scaledImageFermataC);
+
+        // Icona inizio lineaC
+        iconInizioC = new ImageIcon("src/resources/lineaC-inizio.png");
+        newImgInizioC = iconInizioC.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        newIconInizioC = new ImageIcon(newImgInizioC);
+
+        // Icona fine lineaC
+        iconFineC = new ImageIcon("src/resources/lineaC-fine.png");
+        newImgFineC = iconFineC.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        newIconFineC = new ImageIcon(newImgFineC);
+
+
+
 
 	}
 	
@@ -298,12 +353,14 @@ public class LineaPanel extends JPanel {
 		String url = linea.getUrl();
 		int routeType = linea.getType();
 		
+		btnAgency.setVisible(true);
 		switch (agencyName) {
 			case "Atac":
 				ImageIcon iconAtac = new ImageIcon("src/resources/atac-logo.png");
-		        Image scaledImageAtac = iconAtac.getImage().getScaledInstance(60, 41, Image.SCALE_SMOOTH);
+		        Image scaledImageAtac = iconAtac.getImage().getScaledInstance(65, 45, Image.SCALE_SMOOTH);
 		        ImageIcon newIconAtac = new ImageIcon(scaledImageAtac);
 		        btnAgency.setIcon(newIconAtac);
+		        codiceLinea.setBounds(80, 70, 180, 50);
 		        
 		        break;
 		    
@@ -312,10 +369,13 @@ public class LineaPanel extends JPanel {
 		        Image scaledImageTroiani = iconTroiani.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 		        ImageIcon newIconTroiani = new ImageIcon(scaledImageTroiani);
 		        btnAgency.setIcon(newIconTroiani);
+		        codiceLinea.setBounds(80, 70, 180, 50);
 		        
 		        break;
 		    
 			default:
+				btnAgency.setVisible(false);
+				codiceLinea.setBounds(12, 70, 180, 50);
 				break;
 		}
 		
@@ -353,13 +413,51 @@ public class LineaPanel extends JPanel {
             stopBtn.setBorder(BorderFactory.createEmptyBorder());
             stopBtn.setHorizontalAlignment(SwingConstants.LEADING);
             
-            if (i == 0) {
-        		stopBtn.setIcon(newIconInizio); // Icona inizio
-        	} else if (i == fermate.size() - 1) {
-        		stopBtn.setIcon(newIconFine);  // Icona fine
-        	} else {
-        		stopBtn.setIcon(newIconFermata); // Icona normale
-        	}
+            switch (shortName) {
+        	case "MEA":
+        		if (i == 0) {
+	        		stopBtn.setIcon(newIconInizioA); 
+	        	} else if (i == fermate.size() - 1) {
+	        		stopBtn.setIcon(newIconFineA); 
+	        	} else {
+	        		stopBtn.setIcon(newIconFermataA); 
+	        	}
+		        break;
+		    
+		        
+        	case "MEB", "MEB1":
+        		if (i == 0) {
+	        		stopBtn.setIcon(newIconInizioB); 
+	        	} else if (i == fermate.size() - 1) {
+	        		stopBtn.setIcon(newIconFineB); 
+	        	} else {
+	        		stopBtn.setIcon(newIconFermataB); 
+	        	}
+		        break;
+		        
+        	case "MEC":
+        		if (i == 0) {
+	        		stopBtn.setIcon(newIconInizioC); 
+	        	} else if (i == fermate.size() - 1) {
+	        		stopBtn.setIcon(newIconFineC); 
+	        	} else {
+	        		stopBtn.setIcon(newIconFermataC); 
+	        	}
+		        
+		        break;
+		        
+		    default:
+		    	if (i == 0) {
+	        		stopBtn.setIcon(newIconInizio); // Icona inizio
+	        	} else if (i == fermate.size() - 1) {
+	        		stopBtn.setIcon(newIconFine);  // Icona fine
+	        	} else {
+	        		stopBtn.setIcon(newIconFermata); // Icona normale
+	        	}
+		    	break;
+        }
+            
+            
             
 	        fermatePanel.add(stopBtn);
             
@@ -422,7 +520,7 @@ public class LineaPanel extends JPanel {
 				        
 				        break;
 				    
-		        	case "MEB", "MEB1":
+		        	case "MEB":
 		        		ImageIcon iconMetroB = new ImageIcon("src/resources/metro-b-logo-withborder.png");
 				        Image scaledImageMetroB = iconMetroB.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 				        ImageIcon newIconMetroB = new ImageIcon(scaledImageMetroB);
@@ -431,7 +529,16 @@ public class LineaPanel extends JPanel {
 				        codiceLinea.setText(" Metro B");
 				        
 				        break;
-				    
+				        
+		        	case "MEB1":
+		        		ImageIcon iconMetroB1 = new ImageIcon("src/resources/metro-b-logo-withborder.png");
+				        Image scaledImageMetroB1 = iconMetroB1.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+				        ImageIcon newIconMetroB1 = new ImageIcon(scaledImageMetroB1);
+				        btnAgency.setIcon(newIconMetroB1);
+				        
+				        codiceLinea.setText(" Metro B1");
+				        break;
+				        
 		        	case "MEC":
 		        		ImageIcon iconMetroC = new ImageIcon("src/resources/metro-c-logo-withborder.png");
 				        Image scaledImageMetroC = iconMetroC.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);

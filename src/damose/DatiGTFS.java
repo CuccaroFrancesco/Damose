@@ -23,6 +23,9 @@ import java.awt.Shape;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.onebusaway.gtfs.impl.GtfsRelationalDaoImpl;
 import org.onebusaway.gtfs.model.*;
@@ -57,12 +60,40 @@ public class DatiGTFS {
 	
 	
 	// Metodo che permette di caricare dei dati GTFS real-time da file .pb contenuti in un determinato URL
-	public void caricaDatiRealTimeGTFS(String urlGTFS) throws Exception {
+	public void caricaDatiRealTimeGTFS() throws Exception {
 			
-		URL url = new URL(urlGTFS);
+		URL url = new URL("https://romamobilita.it/sites/default/files/rome_rtgtfs_trip_updates_feed.pb");
 			
 		FeedMessage feed = FeedMessage.parseFrom(url.openStream());
 		this.datiRealTime = feed;
+	}
+	
+	//Metodo generico per caricare i dati
+	public void caricaDati() throws Exception
+	{
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        
+        try {
+        	
+        	this.caricaDatiStaticiGTFS("staticGTFS", false);
+        	
+        	Future<?> caricamentoInBackground = executor.submit(() -> {
+        		
+        		try {
+        			this.caricaDatiStaticiGTFS("staticGTFS", true);
+        			this.caricaDatiRealTimeGTFS();
+        		} catch (Exception e) {
+        			e.printStackTrace();
+        		}
+        	});
+        	
+        } catch (Exception e) {
+        	e.printStackTrace();
+        } finally {
+        	executor.shutdown();
+        }
+        
+        
 	}
 
 // ---------------------------------------------------------------------------------------------
@@ -124,11 +155,14 @@ public class DatiGTFS {
 	public List<Stop> getFermatePerLinea(Route linea) {
 		String idLinea = linea.getId().getId();
 		Trip viaggio = this.datiStatici.getTripsForRoute(linea).getFirst();
+		
 		List<StopTime> stopTimes = this.datiStatici.getStopTimesForTrip(viaggio);
 		List<Stop> listaFermate = new ArrayList<>();
+		
 		for (StopTime stopTime: stopTimes) {
 			listaFermate.add((Stop) stopTime.getStop());
 		}
+		
 		return listaFermate;
 	}
 	
