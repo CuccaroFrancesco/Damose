@@ -6,6 +6,8 @@ import java.awt.event.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.jxmapviewer.painter.*;
 import org.jxmapviewer.*;
@@ -59,11 +61,17 @@ public class Main extends JFrame {
         stopPanel.setBounds(0, 70, 350, screenSize.height - 70);
         layeredPane.add(stopPanel, Integer.valueOf(101));
         
+        // Aggiunta del pannello di ricerca
+        Ricerca ricerca = new Ricerca(dati, stopPanel, lineaPanel, mapPanel);
+        layeredPane.add(ricerca, Integer.valueOf(103));
+        
+        
         // Aggiunta della navbar alla finestra principale
-        Navbar navbar = new Navbar(mapPanel, dati, stopPanel, lineaPanel);
+        Navbar navbar = new Navbar(mapPanel, dati, stopPanel, lineaPanel, ricerca);
         
         navbar.setBounds(0, 0, screenSize.width, 70);
-        layeredPane.add(navbar, JLayeredPane.PALETTE_LAYER);
+        layeredPane.add(navbar, Integer.valueOf(102));
+        
         
         // Aggiunta del pannello utente (inizialmente invisibile)
         UserPanel userPanel = new UserPanel(utente, dati, navbar, mapPanel, stopPanel, lineaPanel);
@@ -72,16 +80,36 @@ public class Main extends JFrame {
         userPanel.setVisible(false);
         layeredPane.add(userPanel, Integer.valueOf(101));
         
+        // Chiusura automatica della ricerca se si perde il focus
+        Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
+            @Override
+            public void eventDispatched(AWTEvent event) {
+                if (event instanceof MouseEvent && ((MouseEvent) event).getID() == MouseEvent.MOUSE_PRESSED) {
+                    MouseEvent me = (MouseEvent) event;
+                    Component clickedComponent = SwingUtilities.getDeepestComponentAt(Main.this, me.getXOnScreen(), me.getYOnScreen());
+
+                    // Controlla se il click è dentro Ricerca o SearchBar
+                    boolean inRicerca = SwingUtilities.isDescendingFrom(clickedComponent, ricerca);
+                    boolean inSearchBar = SwingUtilities.isDescendingFrom(clickedComponent, navbar.getSearchBar());
+
+                    if (!inRicerca && !inSearchBar) {
+                        SwingUtilities.invokeLater(() -> ricerca.setVisible(false));
+                    }
+                }
+            }
+        }, AWTEvent.MOUSE_EVENT_MASK);
+
+
+
+        
         
         // Adattamento dinamico delle dimensioni della navbar e delle sue componenti
-        this.addComponentListener(new ComponentAdapter() {
-        	
-        	@Override
-            public void componentResized(ComponentEvent e) {
-        		
-        		calibra(navbar, userPanel, mapPanel);
-            }
-        });
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(() -> {
+            // Esegui la funzione calibra nel background
+            calibra(navbar, userPanel, mapPanel, ricerca);
+        }, 0, 300, TimeUnit.MILLISECONDS);
+        
 
         
         // Gestione del click sul pulsante di login per mostrare/nascondere il pannello utente
@@ -94,14 +122,14 @@ public class Main extends JFrame {
         			// Pannello invisibile e mappa scoperta
         			userPanel.setVisible(false);
                     mapPanel.setBounds(0, 70, screenSize.width, screenSize.height - 70);
-                    calibra(navbar, userPanel, mapPanel);
+                    calibra(navbar, userPanel, mapPanel, ricerca);
                     
         		} else {
         			
         			// Pannello visibile e mappa coperta
         			userPanel.setVisible(true);
         			mapPanel.setBounds(0, 70, screenSize.width - 350, screenSize.height - 70);
-        			calibra(navbar, userPanel, mapPanel);
+        			calibra(navbar, userPanel, mapPanel, ricerca);
         		}
         	}
         });
@@ -109,7 +137,7 @@ public class Main extends JFrame {
 	
 	
     // Metodo che gestisce l'adattamento dinamico delle dimensioni della navbar e delle sue componenti
-    public void calibra(Navbar navbar, UserPanel userPanel, Mappa mapPanel) {
+    public void calibra(Navbar navbar, UserPanel userPanel, Mappa mapPanel, Ricerca ricerca) {
     	
     	int newWidth = getWidth();              // Nuova larghezza della finestra
     	int newHeight = getHeight();            // Nuova altezza della finestra
@@ -138,6 +166,10 @@ public class Main extends JFrame {
     	}
 		
 		navbar.getBtnRicerca().setBounds(460, 8, 30, 25);
+		if(ricerca.getLineeScrollPane() == null) 
+			ricerca.setBounds(navbar.getSearchBar().getX(), 55, navbar.getSearchBar().getWidth(), 60);
+		else
+			ricerca.setBounds(navbar.getSearchBar().getX(), 55, navbar.getSearchBar().getWidth(), ricerca.getLineeScrollPane().getHeight());
     }
     
     

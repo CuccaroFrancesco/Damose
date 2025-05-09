@@ -18,6 +18,9 @@ package damose;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
@@ -40,15 +43,17 @@ public class Navbar extends JPanel {
     private DatiGTFS dati;
     private StopPanel stopPanel;
     private LineaPanel lineaPanel;
+    private Ricerca ricerca;
 
     
-    public Navbar(Mappa mapPanel, DatiGTFS dati, StopPanel stopPanel, LineaPanel lineaPanel) {
+    public Navbar(Mappa mapPanel, DatiGTFS dati, StopPanel stopPanel, LineaPanel lineaPanel, Ricerca ricerca) {
     	
     	// Assegnamento della mappa all'istanza
         this.mapPanel = mapPanel;
         this.dati = dati;
         this.stopPanel = stopPanel;
         this.lineaPanel = lineaPanel;
+        this.ricerca = ricerca;
 
         
         // Gestione delle caratteristiche della navbar
@@ -220,6 +225,27 @@ public class Navbar extends JPanel {
         	}
         });
         
+        // Aggiungi un listener per monitorare l'input nella searchBar
+        searchBar.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (searchBar.getText().length() > 2) {
+                    ricerca();  // Chiamata alla funzione di ricerca
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                if (searchBar.getText().length() > 2) {
+                    ricerca();  // Chiamata alla funzione di ricerca
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Niente
+            }
+        });
         
         
         // Pulsante per la sezione utente e il login
@@ -268,9 +294,7 @@ public class Navbar extends JPanel {
     public void ricerca()
     {
     	String lineaDaCercare = searchBar.getText();
-		Ricerca ricerca = new Ricerca();
-		ricerca.effettuaRicerca(lineaDaCercare, dati, stopPanel, lineaPanel, mapPanel);
-		searchBar.setText("  Cerca linea o fermata...");
-		Navbar.this.requestFocusInWindow();
+    	ricerca.mostraRisultatiRicerca(lineaDaCercare, this);
+    	searchBar.requestFocusInWindow();
     }
 }

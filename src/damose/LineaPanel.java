@@ -348,7 +348,7 @@ public class LineaPanel extends JPanel {
 		});
 		
 		String agencyName = linea.getAgency().getName();
-		String longName = linea.getLongName();
+		String longName =  linea.getLongName();
 		String shortName = linea.getShortName();
 		String url = linea.getUrl();
 		int routeType = linea.getType();
@@ -401,13 +401,13 @@ public class LineaPanel extends JPanel {
 			
 			JButton stopBtn = new JButton();
             
-            stopBtn.setBounds(10, y, 290, 40);
+            stopBtn.setBounds(10, y, 290, 60);
             stopBtn.setFocusable(false);
             stopBtn.setContentAreaFilled(false);
             stopBtn.setFocusPainted(false);
             stopBtn.setBorderPainted(false);
             stopBtn.setFont(new Font("Arial Nova", Font.BOLD, 12));
-            stopBtn.setText("   " + fermata.getName());
+            stopBtn.setText("<html><div style='width: 205px;'>  " + fermata.getName() + "</div></html");
             stopBtn.setForeground(new Color(255, 255, 255));
             stopBtn.setBackground(new Color(130, 36, 51));
             stopBtn.setBorder(BorderFactory.createEmptyBorder());

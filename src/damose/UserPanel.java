@@ -550,13 +550,11 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		
 	}
 	
-	public void onPreferitiChanged()
-	{
+	public void onPreferitiChanged() {
 		this.aggiornaPreferiti();
 	}
 	
-	private void aggiornaPreferiti()
-	{
+	private void aggiornaPreferiti() {
 		if (lineeScrollPane != null) remove(lineeScrollPane);
 		if (fermateScrollPane != null) remove(fermateScrollPane);
 		if (btnToggleLinee != null) remove(btnToggleLinee);
@@ -598,7 +596,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 
                 // Usa un array per "contenere" la variabile linea
                 final Route[] lineaArray = new Route[1];    // Array finale per linea
-                lineaArray[0] = dati.cercaRoute(routeId);
+                lineaArray[0] = dati.cercaLineaByID(routeId);
                 
                 for (ActionListener a : lineaBtn.getActionListeners()) {
                 	lineaBtn.removeActionListener(a);
@@ -657,7 +655,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 
             // Trova la fermata corrispondente a stopId
             final Stop[] fermata = new Stop[1]; // Usa un array per rendere la variabile finale
-            fermata[0] = dati.cercaFermata(stopId);
+            fermata[0] = dati.cercaFermataByID(stopId);
 
             // Aggiungi l'ActionListener
             stopBtn.addActionListener(new ActionListener() {

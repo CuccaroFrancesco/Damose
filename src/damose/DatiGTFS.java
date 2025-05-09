@@ -69,8 +69,7 @@ public class DatiGTFS {
 	}
 	
 	//Metodo generico per caricare i dati
-	public void caricaDati() throws Exception
-	{
+	public void caricaDati() throws Exception {
         ExecutorService executor = Executors.newFixedThreadPool(2);
         
         try {
@@ -128,20 +127,46 @@ public class DatiGTFS {
 	}
 	
 	
-	// Metodo che cerca e ritorna una linea in base al suo ID
-	public Route cercaRoute(String routeId) {
-		for (Route route : this.getLinee()) {
-            if (route.getId().getId().equals(routeId)) {
-                return route;
-            }
-        }
-		
-		return null;
+	// Metodo che cerca e ritorna le linee
+	public List<Route> cercaLinee(String input) {
+	    List<Route> linee = new ArrayList<>();
+	    String normalizedInput = input.toLowerCase();
+
+	    for (Route route : this.getLinee()) {
+	        String routeId = route.getId().getId().toLowerCase();
+	        String longName = route.getLongName() != null ? route.getLongName().toLowerCase() : "";
+
+	        if (routeId.contains(normalizedInput) || longName.contains(normalizedInput)) {
+	            linee.add(route);
+	        }
+	    }
+
+	    return linee;
 	}
+
+	
+	
+	// Metodo che cerca e ritorna le fermata 
+	public List<Stop> cercaFermate(String input) {
+	    List<Stop> fermate = new ArrayList<>();
+	    String normalizedInput = input.toLowerCase();
+
+	    for (Stop stop : this.getFermate()) {
+	        String stopId = stop.getId().getId().toLowerCase();
+	        String stopName = stop.getName() != null ? stop.getName().toLowerCase() : "";
+
+	        if (stopId.contains(normalizedInput) || stopName.contains(normalizedInput)) {
+	            fermate.add(stop);
+	        }
+	    }
+
+	    return fermate;
+	}
+
 	
 	
 	// Metodo che cerca e ritorna una fermata in base al suo ID
-	public Stop cercaFermata(String stopId) {
+	public Stop cercaFermataByID(String stopId) {
 		for (Stop stop : this.getFermate()) {
             if (stop.getId().getId().equals(stopId)) {
                 return stop;
@@ -150,6 +175,20 @@ public class DatiGTFS {
 		
 		return null;
 	}
+	
+	
+	// Metodo che cerca e ritorna una linea in base al suo ID
+	public Route cercaLineaByID(String lineaID) {
+		for (Route linea : this.getLinee()) {
+            if (linea.getId().getId().equals(lineaID)) {
+                return linea;
+            }
+        }
+		
+		return null;
+	}
+	
+	
 	
 	// Metodo che restituisce tutte le fermate partendo da una linea
 	public List<Stop> getFermatePerLinea(Route linea) {
