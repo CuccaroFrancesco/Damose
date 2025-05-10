@@ -31,14 +31,14 @@ public class Ricerca extends JPanel{
 	
 	private DatiGTFS dati;
 	private StopPanel stopPanel;
-    private LineaPanel lineaPanel;
+    private RoutePanel lineaPanel;
     private Mappa mappa;
     private JPanel panelRisultati;
     private JScrollPane risultatiScrollPane;
 	
     
     // Costruttore dell'oggetto Ricerca
-	public Ricerca(DatiGTFS dati, StopPanel stopPanel, LineaPanel lineaPanel, Mappa mappa) {
+	public Ricerca(DatiGTFS dati, StopPanel stopPanel, RoutePanel lineaPanel, Mappa mappa) {
 		
 		this.dati = dati;
 		this.stopPanel = stopPanel;

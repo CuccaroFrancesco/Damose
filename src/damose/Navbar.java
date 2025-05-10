@@ -42,11 +42,11 @@ public class Navbar extends JPanel {
     private JButton mappaNormale, mappaSatellitare, mappaMista, btnLogin, btnRicerca;
     private DatiGTFS dati;
     private StopPanel stopPanel;
-    private LineaPanel lineaPanel;
+    private RoutePanel lineaPanel;
     private Ricerca ricerca;
 
     
-    public Navbar(Mappa mapPanel, DatiGTFS dati, StopPanel stopPanel, LineaPanel lineaPanel, Ricerca ricerca) {
+    public Navbar(Mappa mapPanel, DatiGTFS dati, StopPanel stopPanel, RoutePanel lineaPanel, Ricerca ricerca) {
     	
     	// Assegnamento della mappa all'istanza
         this.mapPanel = mapPanel;

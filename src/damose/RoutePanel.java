@@ -29,7 +29,9 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-public class LineaPanel extends JPanel {
+
+
+public class RoutePanel extends JPanel {
 	
 	private JLabel codiceLinea, agenziaENomeLinea, lblFermate, lblMezzi;
 	private JButton btnClose, btnAgency, btnFavorite, btnWebsite, btnRouteType;
@@ -47,9 +49,8 @@ public class LineaPanel extends JPanel {
 	private DatiGTFS dati;
 
 
-	
-	// Costruttore del lineaPanel
-	public LineaPanel(Utente utente, DatiGTFS dati) {
+	// Costruttore del pannello routePanel
+	public RoutePanel(Utente utente, DatiGTFS dati) {
 		
 		this.utente = utente;
 		this.dati = dati;
@@ -128,7 +129,7 @@ public class LineaPanel extends JPanel {
         
         btnClose.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		LineaPanel.this.setVisible(false);
+        		RoutePanel.this.setVisible(false);
         	}
         });
         
@@ -151,7 +152,7 @@ public class LineaPanel extends JPanel {
 		this.add(btnAgency);
         
         
-        // Pulsante per l'aggiunta o la rimozione della linea ai preferiti dell'utente
+        // Pulsante per l'aggiunta o la rimozione della linea dai preferiti dell'utente
         btnFavorite = new JButton();
         
         btnFavorite.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

@@ -50,10 +50,10 @@ public class Main extends JFrame {
 
         
         // Aggiunta del pannello delle linee 
-        LineaPanel lineaPanel = new LineaPanel(utente, dati);
+        RoutePanel routePanel = new RoutePanel(utente, dati);
         
-        lineaPanel.setBounds(0, 70, 350, screenSize.height - 70);
-        layeredPane.add(lineaPanel, Integer.valueOf(101));
+        routePanel.setBounds(0, 70, 350, screenSize.height - 70);
+        layeredPane.add(routePanel, Integer.valueOf(101));
         
         // Aggiunta del pannello delle fermate 
         StopPanel stopPanel = new StopPanel(utente, dati);
@@ -62,12 +62,12 @@ public class Main extends JFrame {
         layeredPane.add(stopPanel, Integer.valueOf(101));
         
         // Aggiunta del pannello di ricerca
-        Ricerca ricerca = new Ricerca(dati, stopPanel, lineaPanel, mapPanel);
+        Ricerca ricerca = new Ricerca(dati, stopPanel, routePanel, mapPanel);
         layeredPane.add(ricerca, Integer.valueOf(103));
         
         
         // Aggiunta della navbar alla finestra principale
-        Navbar navbar = new Navbar(mapPanel, dati, stopPanel, lineaPanel, ricerca);
+        Navbar navbar = new Navbar(mapPanel, dati, stopPanel, routePanel, ricerca);
         
         navbar.setBounds(0, 0, screenSize.width, 70);
         layeredPane.add(navbar, Integer.valueOf(102));
@@ -94,7 +94,7 @@ public class Main extends JFrame {
         
         
         // Aggiunta del pannello utente (inizialmente invisibile) alla finestra principale
-        UserPanel userPanel = new UserPanel(utente, dati, navbar, mapPanel, stopPanel, lineaPanel);
+        UserPanel userPanel = new UserPanel(utente, dati, navbar, mapPanel, stopPanel, routePanel);
         
         userPanel.setBounds(screenSize.width - 350, 70, 350, screenSize.height - 70);
         userPanel.setVisible(false);
@@ -163,10 +163,9 @@ public class Main extends JFrame {
     	}
 		
 		navbar.getBtnRicerca().setBounds(460, 8, 30, 25);
-		if(ricerca.getRisultatiScrollPane() == null) 
-			ricerca.setBounds(navbar.getSearchBar().getX(), 55, navbar.getSearchBar().getWidth(), 60);
-		else
-			ricerca.setBounds(navbar.getSearchBar().getX(), 55, navbar.getSearchBar().getWidth(), ricerca.getRisultatiScrollPane().getHeight());
+		
+		if (ricerca.getRisultatiScrollPane() == null) ricerca.setBounds(navbar.getSearchBar().getX(), 55, navbar.getSearchBar().getWidth(), 60);
+		else ricerca.setBounds(navbar.getSearchBar().getX(), 55, navbar.getSearchBar().getWidth(), ricerca.getRisultatiScrollPane().getHeight());
     }
     
     
