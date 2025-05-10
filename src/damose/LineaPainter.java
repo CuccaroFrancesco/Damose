@@ -10,6 +10,7 @@ package damose;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 
 import org.jxmapviewer.JXMapViewer;
@@ -99,42 +100,42 @@ public class LineaPainter implements Painter<JXMapViewer> {
 
 	 		
 	 	if (puntiDaDisegnare.isEmpty()) {
-    			
-    		System.out.println("Dati non ancora disponibili.");
-    		return;
-    		
-    	} else {
-    		
-    		switch (lineaTrovata.getType()) {
-    			case 0:
-    				mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, new Color(1, 140, 146));
-    				break;
-    			
-    			case 1:
-    				switch (lineaTrovata.getShortName()) {
-    					case "MEA":
-    						mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, new Color(242, 109, 27));
-    						break;
-    						
-    					case "MEB", "MEB1":
-    						mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, new Color(1, 112, 187));
-    						break;
-    						
-    					case "MEC":
-    						mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, new Color(1, 135, 81));
-    						break;
-    				}
-    				
-    				break;
-    				
-    			case 2:
-    				mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, new Color(30, 27, 9));
-    				break;
-    			
-    			case 3:
-    				mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, new Color(181, 1, 1));
-    				break;
-    		}
+	 	    System.out.println("Dati non ancora disponibili.");
+	 	    return;
+	 	}
+
+	 	Color colore = null;
+
+	 	switch (lineaTrovata.getType()) {
+	 	    case 0:
+	 	        colore = new Color(1, 140, 146);
+	 	        break;
+
+	 	    case 1:
+	 	        Map<String, Color> coloriLinea = Map.of(
+	 	            "MEA", new Color(242, 109, 27),
+	 	            "MEB", new Color(1, 112, 187),
+	 	            "MEB1", new Color(1, 112, 187),
+	 	            "MEC", new Color(1, 135, 81)
+	 	        );
+	 	        colore = coloriLinea.get(lineaTrovata.getShortName());
+	 	        break;
+
+	 	    case 2:
+	 	        colore = new Color(30, 27, 9);
+	 	        break;
+
+	 	    case 3:
+	 	        colore = new Color(181, 1, 1);
+	 	        break;
+	 	}
+
+	 	if (colore != null) {
+	 	    mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, colore);
+	 	} else {
+	 	    System.out.println("Colore non definito per la linea: " + lineaTrovata.getShortName());
+	 	}
+
     		
     		int centro = puntiDaDisegnare.size() / 2;
     		GeoPosition puntoCentrale = puntiDaDisegnare.get(centro);
@@ -142,7 +143,6 @@ public class LineaPainter implements Painter<JXMapViewer> {
     			
         	mapPanel.repaint();
     	}
-	}
 	
 	
 	// Metodo set per impostare la linea da disegnare
