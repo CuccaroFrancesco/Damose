@@ -68,8 +68,10 @@ public class DatiGTFS {
 		this.datiRealTime = feed;
 	}
 	
-	//Metodo generico per caricare i dati
+	
+	// Metodo generico che permette di caricare tutti i dati GTFS disponibili
 	public void caricaDati() throws Exception {
+		
         ExecutorService executor = Executors.newFixedThreadPool(2);
         
         try {
@@ -90,9 +92,7 @@ public class DatiGTFS {
         	e.printStackTrace();
         } finally {
         	executor.shutdown();
-        }
-        
-        
+        }  
 	}
 
 // ---------------------------------------------------------------------------------------------
@@ -127,8 +127,9 @@ public class DatiGTFS {
 	}
 	
 	
-	// Metodo che cerca e ritorna le linee
+	// Metodo che cerca e restituisce delle linee in base a una stringa di input
 	public List<Route> cercaLinee(String input) {
+		
 	    List<Route> linee = new ArrayList<>();
 	    String normalizedInput = input.toLowerCase();
 
@@ -145,9 +146,9 @@ public class DatiGTFS {
 	}
 
 	
-	
-	// Metodo che cerca e ritorna le fermata 
+	// Metodo che cerca e restituisce delle fermate in base a una stringa di input
 	public List<Stop> cercaFermate(String input) {
+		
 	    List<Stop> fermate = new ArrayList<>();
 	    String normalizedInput = input.toLowerCase();
 
@@ -164,9 +165,9 @@ public class DatiGTFS {
 	}
 
 	
-	
-	// Metodo che cerca e ritorna una fermata in base al suo ID
+	// Metodo che cerca e restituisce una fermata in base al suo ID
 	public Stop cercaFermataByID(String stopId) {
+		
 		for (Stop stop : this.getFermate()) {
             if (stop.getId().getId().equals(stopId)) {
                 return stop;
@@ -177,8 +178,9 @@ public class DatiGTFS {
 	}
 	
 	
-	// Metodo che cerca e ritorna una linea in base al suo ID
+	// Metodo che cerca e restituisce una linea in base al suo ID
 	public Route cercaLineaByID(String lineaID) {
+		
 		for (Route linea : this.getLinee()) {
             if (linea.getId().getId().equals(lineaID)) {
                 return linea;
@@ -189,9 +191,9 @@ public class DatiGTFS {
 	}
 	
 	
-	
-	// Metodo che restituisce tutte le fermate partendo da una linea
+	// Metodo che restituisce tutte le fermate appartenenti a una determinata linea
 	public List<Stop> getFermatePerLinea(Route linea) {
+		
 		String idLinea = linea.getId().getId();
 		Trip viaggio = this.datiStatici.getTripsForRoute(linea).getFirst();
 		

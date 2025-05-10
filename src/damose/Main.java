@@ -73,45 +73,42 @@ public class Main extends JFrame {
         layeredPane.add(navbar, Integer.valueOf(102));
         
         
-        // Aggiunta del pannello utente (inizialmente invisibile)
+        // Chiusura automatica della ricerca se si perde il focus
+        Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
+        	@Override
+        	public void eventDispatched(AWTEvent event) {
+        		if (event instanceof MouseEvent && ((MouseEvent) event).getID() == MouseEvent.MOUSE_PRESSED) {
+        			MouseEvent me = (MouseEvent) event;
+        			Component clickedComponent = SwingUtilities.getDeepestComponentAt(Main.this, me.getXOnScreen(), me.getYOnScreen());
+        			
+        			// Controlla se il click è dentro Ricerca o SearchBar
+        			boolean inRicerca = SwingUtilities.isDescendingFrom(clickedComponent, ricerca);
+        			boolean inSearchBar = SwingUtilities.isDescendingFrom(clickedComponent, navbar.getSearchBar());
+        			
+        			if (!inRicerca && !inSearchBar) {
+        				SwingUtilities.invokeLater(() -> ricerca.setVisible(false));
+        			}
+        		}
+        	}
+        }, AWTEvent.MOUSE_EVENT_MASK);
+        
+        
+        // Aggiunta del pannello utente (inizialmente invisibile) alla finestra principale
         UserPanel userPanel = new UserPanel(utente, dati, navbar, mapPanel, stopPanel, lineaPanel);
         
         userPanel.setBounds(screenSize.width - 350, 70, 350, screenSize.height - 70);
         userPanel.setVisible(false);
         layeredPane.add(userPanel, Integer.valueOf(101));
         
-        // Chiusura automatica della ricerca se si perde il focus
-        Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
-            @Override
-            public void eventDispatched(AWTEvent event) {
-                if (event instanceof MouseEvent && ((MouseEvent) event).getID() == MouseEvent.MOUSE_PRESSED) {
-                    MouseEvent me = (MouseEvent) event;
-                    Component clickedComponent = SwingUtilities.getDeepestComponentAt(Main.this, me.getXOnScreen(), me.getYOnScreen());
-
-                    // Controlla se il click è dentro Ricerca o SearchBar
-                    boolean inRicerca = SwingUtilities.isDescendingFrom(clickedComponent, ricerca);
-                    boolean inSearchBar = SwingUtilities.isDescendingFrom(clickedComponent, navbar.getSearchBar());
-
-                    if (!inRicerca && !inSearchBar) {
-                        SwingUtilities.invokeLater(() -> ricerca.setVisible(false));
-                    }
-                }
-            }
-        }, AWTEvent.MOUSE_EVENT_MASK);
-
-
-
-        
         
         // Adattamento dinamico delle dimensioni della navbar e delle sue componenti
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        
         scheduler.scheduleAtFixedRate(() -> {
-            // Esegui la funzione calibra nel background
-            calibra(navbar, userPanel, mapPanel, ricerca);
+            calibra(navbar, userPanel, mapPanel, ricerca);  
         }, 0, 300, TimeUnit.MILLISECONDS);
         
 
-        
         // Gestione del click sul pulsante di login per mostrare/nascondere il pannello utente
         navbar.getBtnLogin().addActionListener(new ActionListener() {
         	
@@ -137,7 +134,7 @@ public class Main extends JFrame {
 	
 	
     // Metodo che gestisce l'adattamento dinamico delle dimensioni della navbar e delle sue componenti
-    public void calibra(Navbar navbar, UserPanel userPanel, Mappa mapPanel, Ricerca ricerca) {
+    private void calibra(Navbar navbar, UserPanel userPanel, Mappa mapPanel, Ricerca ricerca) {
     	
     	int newWidth = getWidth();              // Nuova larghezza della finestra
     	int newHeight = getHeight();            // Nuova altezza della finestra
@@ -166,10 +163,10 @@ public class Main extends JFrame {
     	}
 		
 		navbar.getBtnRicerca().setBounds(460, 8, 30, 25);
-		if(ricerca.getLineeScrollPane() == null) 
+		if(ricerca.getRisultatiScrollPane() == null) 
 			ricerca.setBounds(navbar.getSearchBar().getX(), 55, navbar.getSearchBar().getWidth(), 60);
 		else
-			ricerca.setBounds(navbar.getSearchBar().getX(), 55, navbar.getSearchBar().getWidth(), ricerca.getLineeScrollPane().getHeight());
+			ricerca.setBounds(navbar.getSearchBar().getX(), 55, navbar.getSearchBar().getWidth(), ricerca.getRisultatiScrollPane().getHeight());
     }
     
     

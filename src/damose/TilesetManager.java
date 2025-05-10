@@ -14,6 +14,7 @@ package damose;
 import org.jxmapviewer.VirtualEarthTileFactoryInfo;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.DefaultTileFactory;
+import org.jxmapviewer.viewer.*;
 
 
 

@@ -565,12 +565,14 @@ public class UserPanel extends JPanel implements PreferitiObserver {
         List<String> lineePreferite = utente.getLineePreferite();
         List<String> fermatePreferite = utente.getFermatePreferite();
         
-        // Creazioe del pannello per le linee preferite
+        
+        // Creazione del pannello per le linee preferite
         panelLineePreferite = new JPanel();
         panelLineePreferite.setLayout(null);
         panelLineePreferite.setPreferredSize(new Dimension(350, Math.max(100, lineePreferite.size() * 60)));
         panelLineePreferite.setBackground(new Color(130, 36, 51));
 
+        
         // Creazione del pannello per le fermate preferite
         panelFermatePreferite = new JPanel();
         panelFermatePreferite.setLayout(null);

@@ -76,7 +76,7 @@ public class LineaPainter implements Painter<JXMapViewer> {
 
         this.disegnaLinea(g, mappa);
 
-        g.setColor(Color.RED);
+        g.setColor(colore);
         g.setStroke(new BasicStroke(4));
 
         this.disegnaLinea(g, mappa);
@@ -86,40 +86,68 @@ public class LineaPainter implements Painter<JXMapViewer> {
 	
 	
 	// Metodo che restituisce la lista di GeoPosition corrispondenti alla shape di una determinata linea
-	 	public static void costruisciLineaDaDisegnare(Route lineaTrovata, Mappa mapPanel, DatiGTFS dati) {
+	public static void costruisciLineaDaDisegnare(Route lineaTrovata, Mappa mapPanel, DatiGTFS dati) {
 	 		
-	 		List<GeoPosition> puntiDaDisegnare = new ArrayList<>();
+		List<GeoPosition> puntiDaDisegnare = new ArrayList<>();
 	 		
-	 		for (Trip viaggio : dati.getDatiStatici().getTripsForRoute(lineaTrovata)) {
+	 	Trip viaggio = dati.getDatiStatici().getTripsForRoute(lineaTrovata).getFirst();
 	 			
-	 			List<ShapePoint> shapePoints = new ArrayList<>(dati.getDatiStatici().getShapePointsForShapeId(viaggio.getShapeId()));
-	 			for (ShapePoint sp : shapePoints) {
-	 				puntiDaDisegnare.add(new GeoPosition(sp.getLat(), sp.getLon()));
-	 			}
-	 			
-	 			break;
-	 		}
-	 		
-	 		if (puntiDaDisegnare.isEmpty()) {
-    			
-    			System.out.println("Dati non ancora disponibili.");
-    			return;
-    		
-    		} else {
-    			
-    			mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare);
-    			
-    			int centro = puntiDaDisegnare.size() / 2;
-    			GeoPosition puntoCentrale = puntiDaDisegnare.get(centro);
-    			mapPanel.centraMappa(puntoCentrale.getLongitude(), puntoCentrale.getLatitude(), 4);
-    			
-        		mapPanel.repaint();
-    		}
+	 	List<ShapePoint> shapePoints = new ArrayList<>(dati.getDatiStatici().getShapePointsForShapeId(viaggio.getShapeId()));
+	 	for (ShapePoint sp : shapePoints) {
+	 		puntiDaDisegnare.add(new GeoPosition(sp.getLat(), sp.getLon()));
 	 	}
+
+	 		
+	 	if (puntiDaDisegnare.isEmpty()) {
+    			
+    		System.out.println("Dati non ancora disponibili.");
+    		return;
+    		
+    	} else {
+    		
+    		switch (lineaTrovata.getType()) {
+    			case 0:
+    				mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, new Color(1, 140, 146));
+    				break;
+    			
+    			case 1:
+    				switch (lineaTrovata.getShortName()) {
+    					case "MEA":
+    						mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, new Color(242, 109, 27));
+    						break;
+    						
+    					case "MEB", "MEB1":
+    						mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, new Color(1, 112, 187));
+    						break;
+    						
+    					case "MEC":
+    						mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, new Color(1, 135, 81));
+    						break;
+    				}
+    				
+    				break;
+    				
+    			case 2:
+    				mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, new Color(30, 27, 9));
+    				break;
+    			
+    			case 3:
+    				mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, new Color(181, 1, 1));
+    				break;
+    		}
+    		
+    		int centro = puntiDaDisegnare.size() / 2;
+    		GeoPosition puntoCentrale = puntiDaDisegnare.get(centro);
+    		mapPanel.centraMappa(puntoCentrale.getLongitude(), puntoCentrale.getLatitude(), 4);
+    			
+        	mapPanel.repaint();
+    	}
+	}
 	
 	
 	// Metodo set per impostare la linea da disegnare
-	public void setLineaDaDisegnare(List<GeoPosition> linea) {
+	public void setLineaDaDisegnare(List<GeoPosition> linea, Color colore) {
 		this.linea = linea;
+		this.colore = colore;
 	}
 }
