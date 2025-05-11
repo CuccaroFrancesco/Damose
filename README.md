@@ -21,16 +21,9 @@ ___
 - Personalizzare l'aspetto dei waypoint (fermate di agenzie diverse, mezzi, ecc. ecc.)
 
 #### StopPanel:
-Alla selezione di una determinata fermata, dovrebbero diventare accessibili le seguenti informazioni:
-- informazioni identificative
-	- nome
-	- codice
-	- coordinate
-	- ID
-	- tipo 
-	- accessibilità
+Da implementare:
 - linee passanti per tale fermata
-- se presente, prossimi arrivi con linea di appartenenza e orario di arrivo e direzione
+- se presenti, prossimi arrivi con linea di appartenenza, orario di arrivo e direzione
 - ritardo tipico dei mezzi per tale fermata
 - (OPZIONALE MA SAREBBE BELLO) vicinanza a punti di interesse
 
@@ -62,9 +55,6 @@ Alla selezione di un determinato mezzo, dovrebbero diventare accessibili le segu
 - velocità del mezzo
 - eventuale ritardo del mezzo
 
-#### Navbar:
-- Aggiungere funzionalità per la barra di ricerca
-
 #### Ricerca:
 - Ricerca di una fermata per nome e codice
 - Ricerca di una linea per numero e nome
@@ -77,7 +67,7 @@ Alla selezione di un determinato mezzo, dovrebbero diventare accessibili le segu
 
 #### Utente:
 - Icona del profilo
-- Impostazioni di personalizzazione per l'utente:
+- Impostazioni per l'utente:
   - Cambiare tema
   - Liberare la cache
   - Visualizzare solo fermate e linee preferite

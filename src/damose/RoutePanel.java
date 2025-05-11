@@ -282,6 +282,7 @@ public class RoutePanel extends JPanel {
 	
 	// Metodo che "costruisce" concretamente il lineaPanel in base alla linea in questione
 	public void creaPannelloLinea(Route linea, DatiGTFS dati) {
+		
 		this.setVisible(true);
 		
 		if (fermateScrollPane != null) {
