@@ -6,14 +6,10 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
-import org.onebusaway.gtfs.model.Stop;
+import org.onebusaway.gtfs.model.*;
 
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
@@ -25,6 +21,8 @@ public class StopPanel extends JPanel {
 	
 	private JLabel nomeFermata, codiceFermata, lblArrivi, lblLineePassanti;
 	private JButton btnClose, btnStopIcon, btnFavorite, btnCoordinates;
+	private JPanel lineePassantiPanel;
+	private JScrollPane lineePassantiScrollPane;
 	private Utente utente;
 	private DatiGTFS dati;
 	
@@ -93,7 +91,7 @@ public class StopPanel extends JPanel {
 		
 
         // Pulsante per chiuderere lo stopPanel
-        btnClose = new JButton("Chiudi pannello");
+        btnClose = new JButton(" Chiudi pannello");
         
         btnClose.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         
@@ -107,7 +105,7 @@ public class StopPanel extends JPanel {
         btnClose.setBounds(-25, 5, 200, 30);
         
         ImageIcon iconClose = new ImageIcon("src/resources/close.png");
-        Image scaledImageClose = iconClose.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        Image scaledImageClose = iconClose.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon newIconClose = new ImageIcon(scaledImageClose);
         btnClose.setIcon(newIconClose);
         
@@ -192,6 +190,10 @@ public class StopPanel extends JPanel {
 		
 		this.setVisible(true);
 		
+		if (lineePassantiScrollPane != null) {
+		    this.remove(lineePassantiScrollPane);
+		}
+		
 		if (utente.getFermatePreferite() != null) {
 			btnFavorite.setEnabled(true);
 			btnFavorite.setVisible(true);
@@ -247,5 +249,49 @@ public class StopPanel extends JPanel {
 		nomeFermata.setText(fermata.getName());
 		codiceFermata.setText("ID: " + fermata.getCode());
 		btnCoordinates.setText(" " + Math.floor(fermata.getLat() * 100000) / 100000 + ", " + Math.floor(fermata.getLon() * 100000) / 100000);
+		
+		List<Route> lineePassanti = dati.getLineePassantiPerFermata(fermata);
+		
+		lineePassantiPanel = new JPanel();
+		lineePassantiPanel.setLayout(null);
+		lineePassantiPanel.setBackground(new Color(130, 36, 51));
+		lineePassantiPanel.setPreferredSize(new Dimension(350, Math.max(100, lineePassanti.size() * 40)));
+		
+		for (int i = 0; i < lineePassanti.size(); i++) {
+			
+			Route linea = lineePassanti.get(i);
+			int y = i * 40;
+			
+			JButton lineaBtn = new JButton();
+			
+			lineaBtn.setBounds(10, y, 290, 60);
+			
+			lineaBtn.setFocusable(false);
+            lineaBtn.setContentAreaFilled(false);
+            lineaBtn.setFocusPainted(false);
+            lineaBtn.setBorderPainted(false);
+            
+            lineaBtn.setFont(new Font("Arial Nova", Font.BOLD, 12));
+            lineaBtn.setText(linea.getShortName());
+            lineaBtn.setHorizontalAlignment(SwingConstants.LEADING);
+            
+            lineaBtn.setForeground(new Color(255, 255, 255));
+            lineaBtn.setBackground(new Color(130, 36, 51));
+            lineaBtn.setBorder(BorderFactory.createEmptyBorder());
+            
+            lineePassantiPanel.add(lineaBtn);
+		}
+		
+		lineePassantiScrollPane = new JScrollPane(lineePassantiPanel);
+        
+		lineePassantiScrollPane.setBorder(null);
+		lineePassantiScrollPane.setBounds(10, 430, 350, 200);
+        
+		lineePassantiScrollPane.getVerticalScrollBar().setUnitIncrement(12);
+		lineePassantiScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		lineePassantiScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        
+        this.add(lineePassantiScrollPane);
+        lineePassantiPanel.repaint();
 	}	
 }

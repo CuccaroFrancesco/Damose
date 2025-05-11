@@ -603,7 +603,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
                 lineaBtn.addActionListener(new ActionListener() {
                 	public void actionPerformed(ActionEvent e) {
                 		if (lineaArray[0] != null) {
-                			lineaPanel.creaPannelloLinea(lineaArray[0], dati);
+                			lineaPanel.creaPannelloLinea(lineaArray[0]);
                             LineaPainter.costruisciLineaDaDisegnare(lineaArray[0], mappa, dati);
                             stopPanel.setVisible(false);
                         } else {

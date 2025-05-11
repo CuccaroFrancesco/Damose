@@ -109,7 +109,7 @@ public class RoutePanel extends JPanel {
         
         
         // Pulsante per chiudere il lineaPanel
-        btnClose = new JButton("Chiudi pannello");
+        btnClose = new JButton(" Chiudi pannello");
         
         btnClose.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         
@@ -123,7 +123,7 @@ public class RoutePanel extends JPanel {
         btnClose.setBounds(-25, 5, 200, 30);
         
         ImageIcon iconClose = new ImageIcon("src/resources/close.png");
-        Image scaledImageClose = iconClose.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        Image scaledImageClose = iconClose.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon newIconClose = new ImageIcon(scaledImageClose);
         btnClose.setIcon(newIconClose);
         
@@ -281,7 +281,7 @@ public class RoutePanel extends JPanel {
 	
 	
 	// Metodo che "costruisce" concretamente il lineaPanel in base alla linea in questione
-	public void creaPannelloLinea(Route linea, DatiGTFS dati) {
+	public void creaPannelloLinea(Route linea) {
 		
 		this.setVisible(true);
 		
@@ -389,27 +389,30 @@ public class RoutePanel extends JPanel {
 		
 		fermatePanel = new JPanel();
 		fermatePanel.setLayout(null);
-		fermatePanel.setPreferredSize(new Dimension(350, Math.max(100, fermate.size() * 40)));
 		fermatePanel.setBackground(new Color(130, 36, 51));
+		fermatePanel.setPreferredSize(new Dimension(350, Math.max(100, fermate.size() * 40)));
 		
-		
-		for(int i = 0; i < fermate.size(); i++) {
+		for (int i = 0; i < fermate.size(); i++) {
+			
 			Stop fermata = fermate.get(i);
 			int y = i * 40;
 			
 			JButton stopBtn = new JButton();
             
             stopBtn.setBounds(10, y, 290, 60);
+            
             stopBtn.setFocusable(false);
             stopBtn.setContentAreaFilled(false);
             stopBtn.setFocusPainted(false);
             stopBtn.setBorderPainted(false);
+            
             stopBtn.setFont(new Font("Arial Nova", Font.BOLD, 12));
             stopBtn.setText("<html><div style='width: 205px;'>  " + fermata.getName() + "</div></html");
+            stopBtn.setHorizontalAlignment(SwingConstants.LEADING);
+            
             stopBtn.setForeground(new Color(255, 255, 255));
             stopBtn.setBackground(new Color(130, 36, 51));
             stopBtn.setBorder(BorderFactory.createEmptyBorder());
-            stopBtn.setHorizontalAlignment(SwingConstants.LEADING);
             
             switch (shortName) {
 	        	case "MEA":

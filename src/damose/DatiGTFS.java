@@ -194,7 +194,6 @@ public class DatiGTFS {
 	// Metodo che restituisce tutte le fermate appartenenti a una determinata linea
 	public List<Stop> getFermatePerLinea(Route linea) {
 		
-		String idLinea = linea.getId().getId();
 		Trip viaggio = this.datiStatici.getTripsForRoute(linea).getFirst();
 		
 		List<StopTime> stopTimes = this.datiStatici.getStopTimesForTrip(viaggio);
@@ -205,6 +204,29 @@ public class DatiGTFS {
 		}
 		
 		return listaFermate;
+	}
+	
+	
+	// Metodo che restituisce tutte le linee passanti per una determinata fermata
+	public List<Route> getLineePassantiPerFermata(Stop fermata) {
+		
+		List<Trip> viaggi = new ArrayList<>();
+		List<Route> lineePassanti = new ArrayList<>();
+		
+		for (StopTime stopTime : this.datiStatici.getStopTimesForStop(fermata)) {
+			if (!viaggi.contains(stopTime.getTrip())) {
+				viaggi.add(stopTime.getTrip());
+			}
+		}
+		
+		for (Trip viaggio : viaggi) {
+			if (!lineePassanti.contains(viaggio.getRoute())) {
+				lineePassanti.add(viaggio.getRoute());
+			}
+		}
+		
+		System.out.println(lineePassanti);
+		return lineePassanti;
 	}
 	
 // ---------------------------------------------------------------------------------------------
