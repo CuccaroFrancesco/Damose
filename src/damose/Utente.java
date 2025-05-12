@@ -160,6 +160,7 @@ public class Utente {
 		if (!tempFile.renameTo(inputFile)) {
 			throw new IOException("Impossibile rinominare il file temporaneo.");
 		}
+		
 		notificaObserver();
 	}
 
@@ -209,6 +210,7 @@ public class Utente {
 		if (!tempFile.renameTo(inputFile)) {
 			throw new IOException("Impossibile rinominare il file temporaneo.");
 		}
+		
 		notificaObserver();
 
 	}

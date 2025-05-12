@@ -25,7 +25,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	private Mappa mappa;
 	private StopPanel stopPanel;
 	private RoutePanel lineaPanel;
-	private JButton btnAccedi, btnRegistrati, btnConfermaLogin, btnConfermaRegistr, btnBack, btnToggleFermate, btnToggleLinee;
+	private JButton btnAccedi, btnRegistrati, btnConfermaLogin, btnConfermaRegistr, btnLogout, btnBack, btnToggleFermate, btnToggleLinee;
 	private JLabel titolo, lblNome, lblCognome, lblUsername, lblPassword, lblConfermaPassword,
 	               erroreNome, erroreCognome, erroreUsername, errorePassword, erroreConfermaPassword, registrazioneEffettuata;
 	private JTextField inputNome, inputCognome, inputUsername;
@@ -75,7 +75,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		// Scritta "Ospite"
 		titolo = new JLabel("Ospite");
 				
-		titolo.setForeground(new Color(255, 255, 255));
+		titolo.setForeground(Color.WHITE);
 		titolo.setFont(new Font("Arial Nova", Font.BOLD, 24));
 		titolo.setFocusable(false);
 				
@@ -295,6 +295,13 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		registrazioneEffettuata.setBounds(0, 220, 350, 50);
 		
 		this.add(registrazioneEffettuata);
+
+// ---------------------------------------------------------------------------------------------
+
+		// 
+		
+		
+		//
 		
 // ---------------------------------------------------------------------------------------------
 		
@@ -322,12 +329,12 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		// Pulsante per tornare indietro
 		btnBack = new JButton(" Torna indietro");
 			
-		btnBack.setBounds(0, 10, 160, 25);
+		btnBack.setBounds(-5, 5, 160, 25);
 		btnBack.setVisible(false);
 		btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			
 		btnBack.setFont(new Font("Arial Nova", Font.BOLD, 14));
-		btnBack.setForeground(new Color(255, 255, 255));
+		btnBack.setForeground(Color.WHITE);
 			
 		btnBack.setBorderPainted(false);
 		btnBack.setFocusPainted(false);
@@ -340,6 +347,28 @@ public class UserPanel extends JPanel implements PreferitiObserver {
         
 		this.add(btnBack);
 		
+		
+		// Pulsante per effettuare il logout
+		btnLogout = new JButton(" Logout");
+		
+		btnLogout.setBounds(220, 5, 120, 25);
+		btnLogout.setVisible(false);
+		btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
+		btnLogout.setFont(new Font("Arial Nova", Font.BOLD, 14));
+		btnLogout.setForeground(Color.WHITE);
+		
+		btnLogout.setBorderPainted(false);
+		btnLogout.setFocusPainted(false);
+		btnLogout.setContentAreaFilled(false);
+		
+		ImageIcon iconLogout = new ImageIcon("src/resources/logout.png");
+        Image scaledImageLogout = iconLogout.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        ImageIcon newIconLogout = new ImageIcon(scaledImageLogout);
+        btnLogout.setIcon(newIconLogout);
+        
+		this.add(btnLogout);
+
 // ---------------------------------------------------------------------------------------------
 		
 		// Funzionalità per il pulsante btnAccedi (rende visibile la schermata di login)
@@ -502,10 +531,12 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		// Funzionalità per il pulsante "Conferma Login"
 		btnConfermaLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				String username = inputUsername.getText().trim();
 				String password = inputPassword.getText().trim();
 		        
 		        try {
+		        	
 		        	String resoconto = utente.accedi(username, password);
 		            
 		            if (resoconto.equals("Verificata.")) {
@@ -517,9 +548,12 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		                
 		                titolo.setText(utente.getUsername());
 		                titolo.setBounds(0, 120, 350, 50);
-		                titolo.setVisible(true);        
+		                titolo.setVisible(true);
+		                
+		                btnLogout.setVisible(true);
 
 		            } else {
+		            	
 		                errorePassword.setVisible(true);
 		                inputPassword.setBorder(new LineBorder(Color.RED, 1));
 		                
@@ -548,6 +582,12 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		});
 		
 		
+		// Funzionalità per il pulsante "Logout"
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
+			}
+		});
 	}
 	
 	public void onPreferitiChanged() {
@@ -555,6 +595,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	}
 	
 	private void aggiornaPreferiti() {
+		
 		if (lineeScrollPane != null) remove(lineeScrollPane);
 		if (fermateScrollPane != null) remove(fermateScrollPane);
 		if (btnToggleLinee != null) remove(btnToggleLinee);

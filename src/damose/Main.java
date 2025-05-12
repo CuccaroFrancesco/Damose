@@ -189,6 +189,7 @@ public class Main extends JFrame {
     		else navbar.getSearchBar().setBounds(230, 15, 500, 40);
     		
     	} else {
+    		
     		navbar.getSearchBar().setBounds((navbar.getWidth() / 2) - 250, 15, 500, 40);
     	}
     	
