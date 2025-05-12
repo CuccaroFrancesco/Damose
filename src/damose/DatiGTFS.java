@@ -19,13 +19,11 @@ METODI:
 
 package damose;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Shape;
+import java.awt.*;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -35,6 +33,8 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 import org.onebusaway.gtfs.impl.GtfsRelationalDaoImpl;
 import org.onebusaway.gtfs.model.*;
@@ -48,49 +48,89 @@ public class DatiGTFS {
 	
 	private GtfsRelationalDaoImpl datiStatici;
 	private FeedMessage datiRealTime;
+	private JButton logoDamose;
 	private JProgressBar progressBar;
-	private JPanel caricamento;
+	private JPanel schermataCaricamento;
 	private JLabel logs;
 	
+	
+	// Metodo che crea e gestisce la schermata di caricamento iniziale dell'applicazione
 	public void creaCaricamento() throws Exception {
 		
-		caricamento = new JPanel();
-		caricamento.setBackground(new Color(130, 36, 51));
-		caricamento.setSize(new Dimension(1678, 715));
-		caricamento.setMinimumSize(new Dimension(1400, 720));
-		caricamento.setLayout(null);
+		// JPanel della schermata di caricamento, dove verranno aggiunti gli altri componenti
+		schermataCaricamento = new JPanel();
 		
+		schermataCaricamento.setLayout(null);
+		schermataCaricamento.setBackground(new Color(130, 36, 51));
+		schermataCaricamento.setBounds(0, 0, 1678, 715);
+		schermataCaricamento.setMinimumSize(new Dimension(1400, 720));
+		
+		
+		// Barra di caricamento per i dati GTFS
 		progressBar = new JProgressBar(0, 22);
+		
+		progressBar.setStringPainted(true);
 		progressBar.setBounds(200, 600, 1278, 20);
 		
+		
+		// Messaggi che informano l'utente su quali dati stanno venendo caricati
 		logs = new JLabel();
-		logs.setBounds(200, 615, 1278, 40);
+		
 		logs.setForeground(Color.LIGHT_GRAY);
 		logs.setFont(new Font("Arial Nova", Font.ITALIC, 16));
+		logs.setBounds(200, 615, 1278, 40);
 		
-		caricamento.add(logs);
-		caricamento.add(progressBar);
 		
+		// Logo dell'applicazione
+		logoDamose = new JButton();
+		
+		logoDamose.setPreferredSize(new Dimension(600, 600));
+		logoDamose.setFocusable(false);
+		logoDamose.setContentAreaFilled(false);
+		logoDamose.setBorderPainted(false);
+        logoDamose.setFocusPainted(false);
+		
+		ImageIcon iconDamose = new ImageIcon("src/resources/damose-logo.png");
+		Image scaledImageDamose = iconDamose.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
+		ImageIcon newIconDamose = new ImageIcon(scaledImageDamose);
+		logoDamose.setIcon(newIconDamose);
+		
+		logoDamose.setBounds(539, 0, 600, 600);
+		
+		
+		// Aggiunta dei vari componenti alla schermata di caricamento
+		schermataCaricamento.add(progressBar);
+		schermataCaricamento.add(logs);
+		schermataCaricamento.add(logoDamose);
 	}
 	
 	
-	
-	public JPanel getCaricamento() {
-		return this.caricamento;
+	// Metodo get per la schermata di caricamento
+	public JPanel getSchermataCaricamento() {
+		return this.schermataCaricamento;
 	}
 	
+	
+	// Metodo get per i messaggi riguardanti lo stato del caricamento
 	public JLabel getLogs() {
 		return this.logs;
 	}
 	
+	
+	// Metodo get per la barra di caricamento
 	public JProgressBar getProgressBar() {
 		return this.progressBar;
 	}
 	
+	
+	// Metodo set per il valore da mostrare sulla barra di caricamento
 	public void setProgress(int i, String nome) {
 		this.progressBar.setValue(i);
-		logs.setText("Loading " + nome + "...   (" + i +"/22)");
+		this.progressBar.setString("Loading " + nome + "...  (" + i +"/22)");
+		// logs.setText("Loading " + nome + "...  (" + i +"/22)");
 	}
+	
+// ---------------------------------------------------------------------------------------------
 	
 	// Metodo che permette di caricare dei dati GTFS statici da file di testo contenuti in una cartella
 	public void caricaDatiStaticiGTFS(String path) throws Exception {
@@ -128,13 +168,12 @@ public class DatiGTFS {
 
 		
 		for(int i=0; i<listaClassi.size(); i++) {
+			
 			Class<?> classe = listaClassi.get(i);
 			reader.readEntities(classe);
-			if(listaClassi.getLast().equals(classe)) {
-				this.setProgress(i+1, classe.getName());
-			} else {				
-				this.setProgress(i+1, listaClassi.get(i+1).getName());
-			}
+			
+			if (listaClassi.getLast().equals(classe)) this.setProgress(i + 1, classe.getName());
+			else this.setProgress(i + 1, listaClassi.get(i + 1).getName());
 		}
 			
 		this.datiStatici = dati;
@@ -148,33 +187,6 @@ public class DatiGTFS {
 			
 		FeedMessage feed = FeedMessage.parseFrom(url.openStream());
 		this.datiRealTime = feed;
-	}
-	
-	
-	// Metodo generico che permette di caricare tutti i dati GTFS disponibili
-	public void caricaDati() throws Exception {
-		
-//        ExecutorService executor = Executors.newFixedThreadPool(2);
-//        
-//        try {
-//        	
-//        	this.caricaDatiStaticiGTFS("staticGTFS", false);
-//        	
-//        	Future<?> caricamentoInBackground = executor.submit(() -> {
-//        		
-//        		try {
-//        			this.caricaDatiRealTimeGTFS();
-//        			this.caricaDatiStaticiGTFS("staticGTFS", true);
-//        		} catch (Exception e) {
-//        			e.printStackTrace();
-//        		}
-//        	});
-//        	
-//        } catch (Exception e) {
-//        	e.printStackTrace();
-//        } finally {
-//        	executor.shutdown();
-//        }  
 	}
 
 // ---------------------------------------------------------------------------------------------
