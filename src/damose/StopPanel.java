@@ -194,24 +194,12 @@ public class StopPanel extends JPanel {
 		    this.remove(lineePassantiScrollPane);
 		}
 		
-		if (utente.getFermatePreferite() != null) {
-			btnFavorite.setEnabled(true);
-			btnFavorite.setVisible(true);
-			
-		    boolean isPreferita = false;
-		    
-		    for (String fermataPreferita : utente.getFermatePreferite()) {
-		        if (fermataPreferita.equals(fermata.getId().getId())) {
-		            isPreferita = true;
-		            break;
-		        }
-		    }
-
-		    String iconCuorePath = isPreferita ? "src/resources/cuore.png" : "src/resources/cuore-vuoto.png";
-		    ImageIcon iconCuore = new ImageIcon(iconCuorePath);
-		    Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		    btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
-		}
+		String iconCuorePath = "src/resources/cuore-vuoto.png";
+		ImageIcon iconCuore = new ImageIcon(iconCuorePath);
+		Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
+		
+		this.controllaUtente(fermata);
 		
 		for (ActionListener a : btnFavorite.getActionListeners()) {
 		    btnFavorite.removeActionListener(a);
@@ -247,7 +235,7 @@ public class StopPanel extends JPanel {
 		});
 		
 		nomeFermata.setText(fermata.getName());
-		codiceFermata.setText("ID: " + fermata.getCode());
+		codiceFermata.setText("ID: " + fermata.getId().getId());
 		btnCoordinates.setText(" " + Math.floor(fermata.getLat() * 100000) / 100000 + ", " + Math.floor(fermata.getLon() * 100000) / 100000);
 		
 		List<Route> lineePassanti = dati.getLineePassantiPerFermata(fermata);
@@ -364,4 +352,51 @@ public class StopPanel extends JPanel {
         this.add(lineePassantiScrollPane);
         lineePassantiPanel.repaint();
 	}	
+	
+	public void controllaUtente(Stop fermata) {
+		if(fermata == null) {
+			btnFavorite.setEnabled(false);
+			btnFavorite.setVisible(false);
+		}
+		if (utente.isLogged()) {
+			btnFavorite.setEnabled(true);
+			btnFavorite.setVisible(true);
+			
+		    boolean isPreferita = false;
+		    
+		    for (String fermataPreferita : utente.getFermatePreferite()) {
+		        if (fermataPreferita.equals(fermata.getId().getId())) {
+		            isPreferita = true;
+		            break;
+		        }
+		    }
+
+		    String iconCuorePath = isPreferita ? "src/resources/cuore.png" : "src/resources/cuore-vuoto.png";
+		    ImageIcon iconCuore = new ImageIcon(iconCuorePath);
+		    Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		    btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
+		}
+	}
+	
+	public void controllaUtente(boolean isLogged) {
+		if(isLogged) {
+			btnFavorite.setEnabled(true);
+			btnFavorite.setVisible(true);
+			
+			boolean isPreferita = false;
+		    
+		    for (String fermataPreferita : utente.getFermatePreferite()) {
+		        if (fermataPreferita.equals(codiceFermata.getText().substring(4))) {
+		            isPreferita = true;
+		            break;
+		        }
+		    }
+
+		    String iconCuorePath = isPreferita ? "src/resources/cuore.png" : "src/resources/cuore-vuoto.png";
+		    ImageIcon iconCuore = new ImageIcon(iconCuorePath);
+		    Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		    btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
+		    btnFavorite.repaint();
+		}
+	}
 }

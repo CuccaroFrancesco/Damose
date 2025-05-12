@@ -551,7 +551,9 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		                titolo.setVisible(true);
 		                
 		                btnLogout.setVisible(true);
-
+		                
+		                stopPanel.controllaUtente(true);
+						lineaPanel.controllaUtente(true);
 		            } else {
 		            	
 		                errorePassword.setVisible(true);
@@ -585,7 +587,18 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		// Funzionalità per il pulsante "Logout"
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
+				utente.logout();
+				nascondiTutto();	
+				
+				titolo.setText("Ospite");
+				titolo.setBounds(0, 200, 350, 50);
+				titolo.setVisible(true);
+				
+				btnAccedi.setVisible(true);
+				btnRegistrati.setVisible(true);
+				
+				stopPanel.controllaUtente(null);
+				lineaPanel.controllaUtente(null);
 			}
 		});
 	}

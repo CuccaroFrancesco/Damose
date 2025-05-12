@@ -39,8 +39,23 @@ import java.util.List;
 public class Utente {
 	
 	private String nome, cognome, username, password;
+	private boolean isLogged;
 	private List<String> lineePreferite, fermatePreferite;
 	private PreferitiObserver observer;
+	
+	public void logout() {
+		this.nome = null;
+		this.cognome = null;
+		this.username = null;
+		this.password = null;
+		this.lineePreferite = new ArrayList<>();
+		this.fermatePreferite = new ArrayList<>();
+		this.isLogged = false;
+	}
+	
+	public boolean isLogged() {
+		return this.isLogged;
+	}
 
 	public void setObserver(PreferitiObserver observer) {
 	    this.observer = observer;
@@ -237,6 +252,7 @@ public class Utente {
             	
             	if(dati.get(3).trim().equals(password)) {  
             		
+            		this.isLogged = true;
             		this.setUsername(username.trim());
             		this.setNome(dati.get(1).trim());
             		this.setCognome(dati.get(2).trim());

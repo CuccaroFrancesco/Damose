@@ -289,24 +289,12 @@ public class RoutePanel extends JPanel {
 		    this.remove(fermateScrollPane);
 		}
 		
-		if (utente.getLineePreferite() != null) {
-			btnFavorite.setEnabled(true);
-			btnFavorite.setVisible(true);
-			
-		    boolean isPreferita = false;
-		    
-		    for (String lineaPreferita : utente.getLineePreferite()) {
-		        if (lineaPreferita.equals(linea.getId().getId())) {
-		            isPreferita = true;
-		            break;
-		        }
-		    }
+		String iconCuorePath = "src/resources/cuore-vuoto.png";
+		ImageIcon iconCuore = new ImageIcon(iconCuorePath);
+		Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
 
-		    String iconCuorePath = isPreferita ? "src/resources/cuore.png" : "src/resources/cuore-vuoto.png";
-		    ImageIcon iconCuore = new ImageIcon(iconCuorePath);
-		    Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		    btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
-		}
+		this.controllaUtente(linea);
 		
 		for (ActionListener a : btnFavorite.getActionListeners()) {
 			btnFavorite.removeActionListener(a);
@@ -562,5 +550,54 @@ public class RoutePanel extends JPanel {
 		
 		this.revalidate();
 		this.repaint();
+	}
+	
+	
+	public void controllaUtente(Route linea) {
+		if(linea == null)
+		{
+			btnFavorite.setEnabled(false);
+			btnFavorite.setVisible(false);
+			return;
+		}
+		if (utente.isLogged()) {
+			btnFavorite.setEnabled(true);
+			btnFavorite.setVisible(true);
+			
+		    boolean isPreferita = false;
+		    
+		    for (String lineaPreferita : utente.getLineePreferite()) {
+		        if (lineaPreferita.equals(linea.getId().getId())) {
+		            isPreferita = true;
+		            break;
+		        }
+		    }
+
+		    String iconCuorePath = isPreferita ? "src/resources/cuore.png" : "src/resources/cuore-vuoto.png";
+		    ImageIcon iconCuore = new ImageIcon(iconCuorePath);
+		    Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		    btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
+		}
+	}
+	
+	public void controllaUtente(boolean isLogged) {
+		if(isLogged) {
+			btnFavorite.setEnabled(true);
+			btnFavorite.setVisible(true);
+			
+			boolean isPreferita = false;
+			for (String lineaPreferita : utente.getLineePreferite()) {
+		        if (lineaPreferita.equals(codiceLinea.getText().trim())) {
+		            isPreferita = true;
+		            break;
+		        }
+		    }
+			
+			String iconCuorePath = isPreferita ? "src/resources/cuore.png" : "src/resources/cuore-vuoto.png";
+		    ImageIcon iconCuore = new ImageIcon(iconCuorePath);
+		    Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		    btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
+		    btnFavorite.repaint();
+		}
 	}
 }
