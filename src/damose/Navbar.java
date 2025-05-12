@@ -248,6 +248,35 @@ public class Navbar extends JPanel {
         });
         
         
+     // Chiusura automatica della ricerca se si perde il focus
+        Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
+        	@Override
+        	public void eventDispatched(AWTEvent event) {
+        		if (event instanceof MouseEvent && ((MouseEvent) event).getID() == MouseEvent.MOUSE_PRESSED) {
+        			MouseEvent me = (MouseEvent) event;
+        			
+        			int XCliccata = me.getXOnScreen();
+        			int YCliccata = me.getYOnScreen();
+        			
+        			boolean inRicerca = false;
+        			boolean inSearchBar = false;
+        			
+        			if(XCliccata <= getSearchBar().getX() + getSearchBar().getWidth() && XCliccata >= getSearchBar().getX()
+        					&& YCliccata >= getSearchBar().getY() && YCliccata <= getSearchBar().getY() + getSearchBar().getHeight())
+        				inSearchBar = true;
+        			
+        			if(XCliccata <= ricerca.getX() + ricerca.getWidth() && XCliccata >= ricerca.getX()
+        					&& YCliccata >= ricerca.getY() && YCliccata <= ricerca.getY() + ricerca.getHeight())
+        				inRicerca = true;
+        			
+        			if (!inRicerca && !inSearchBar) {
+        				SwingUtilities.invokeLater(() -> ricerca.setVisible(false));
+        			}
+        		}
+        	}
+        }, AWTEvent.MOUSE_EVENT_MASK);
+        
+        
         // Pulsante per la sezione utente e il login
         btnLogin = new JButton();
         
@@ -291,10 +320,8 @@ public class Navbar extends JPanel {
     }
     
     // Metodo per la ricerca
-    public void ricerca()
-    {
+    public void ricerca() {
     	String lineaDaCercare = searchBar.getText();
     	ricerca.mostraRisultatiRicerca(lineaDaCercare, this);
-    	searchBar.requestFocusInWindow();
     }
 }

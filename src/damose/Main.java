@@ -21,10 +21,11 @@ public class Main extends JFrame {
     	// Instanza dell'utente, dei dati GTFS statici e del CompoundPainter
     	Utente utente = new Utente();
     	DatiGTFS dati = new DatiGTFS();
-    	CompoundPainter<JXMapViewer> painterGroup = new CompoundPainter<JXMapViewer>();
+    	dati.creaCaricamento();
     	
-    	dati.caricaDati();
-
+    	
+    	
+    	CompoundPainter<JXMapViewer> painterGroup = new CompoundPainter<JXMapViewer>();
     	
     	// Costruzione e gestione della finestra principale
     	Dimension screenSize = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
@@ -40,96 +41,103 @@ public class Main extends JFrame {
         JLayeredPane layeredPane = new JLayeredPane();
         
         this.setContentPane(layeredPane);
+        layeredPane.add(dati.getCaricamento(), 104);
+        
+        SwingWorker<Void, Void> loader = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                // Caricamento lento qui (può essere anche spostato da sopra)
+                dati.caricaDatiStaticiGTFS("staticGTFS");
+                return null;
+            }
+
+            @Override
+            protected void done() {
+            	
+            	// Rimuove il pannello di loading
+                layeredPane.remove(dati.getCaricamento());
+                layeredPane.repaint();
+            	
+            	// Aggiunta della mappa alla finestra principale
+				try {
+					Mappa mapPanel = new Mappa(dati, painterGroup);
+					
+					mapPanel.setBounds(0, 70, screenSize.width, screenSize.height - 70);   // Dimensioni pari alle dimensioni dello schermo - altezza navbar
+	                layeredPane.add(mapPanel, JLayeredPane.DEFAULT_LAYER);
+
+	                
+	                // Aggiunta del pannello delle linee 
+	                RoutePanel routePanel = new RoutePanel(utente, dati);
+	                
+	                routePanel.setBounds(0, 70, 350, screenSize.height - 70);
+	                layeredPane.add(routePanel, Integer.valueOf(101));
+	                
+	                // Aggiunta del pannello delle fermate 
+	                StopPanel stopPanel = new StopPanel(utente, dati);
+	                
+	                stopPanel.setBounds(0, 70, 350, screenSize.height - 70);
+	                layeredPane.add(stopPanel, Integer.valueOf(101));
+	                
+	                // Aggiunta del pannello di ricerca
+	                Ricerca ricerca = new Ricerca(dati, stopPanel, routePanel, mapPanel);
+	                layeredPane.add(ricerca, Integer.valueOf(103));
+	                
+	                
+	                // Aggiunta della navbar alla finestra principale
+	                Navbar navbar = new Navbar(mapPanel, dati, stopPanel, routePanel, ricerca);
+	                
+	                navbar.setBounds(0, 0, screenSize.width, 70);
+	                layeredPane.add(navbar, Integer.valueOf(102));
+	                
+	                
+	                // Aggiunta del pannello utente (inizialmente invisibile) alla finestra principale
+	                UserPanel userPanel = new UserPanel(utente, dati, navbar, mapPanel, stopPanel, routePanel);
+	                
+	                userPanel.setBounds(screenSize.width - 350, 70, 350, screenSize.height - 70);
+	                userPanel.setVisible(false);
+	                layeredPane.add(userPanel, Integer.valueOf(101));
+	                
+	                
+	                // Adattamento dinamico delle dimensioni della navbar e delle sue componenti
+	                ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	                
+	                scheduler.scheduleAtFixedRate(() -> {
+	                    calibra(navbar, userPanel, mapPanel, ricerca);  
+	                }, 0, 150, TimeUnit.MILLISECONDS);
+	                
+
+	                // Gestione del click sul pulsante di login per mostrare/nascondere il pannello utente
+	                navbar.getBtnLogin().addActionListener(new ActionListener() {
+	                	
+	                	public void actionPerformed(ActionEvent e) {
+	                		
+	                		if (userPanel.isVisible()) {
+	                			
+	                			// Pannello invisibile e mappa scoperta
+	                			userPanel.setVisible(false);
+	                            mapPanel.setBounds(0, 70, screenSize.width, screenSize.height - 70);
+	                            calibra(navbar, userPanel, mapPanel, ricerca);
+	                            
+	                		} else {
+	                			
+	                			// Pannello visibile e mappa coperta
+	                			userPanel.setVisible(true);
+	                			mapPanel.setBounds(0, 70, screenSize.width - 350, screenSize.height - 70);
+	                			calibra(navbar, userPanel, mapPanel, ricerca);
+	                		}
+	                	}
+	                });
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            	
+            }
+        };
+        loader.execute();
 
         
-        // Aggiunta della mappa alla finestra principale
-        Mappa mapPanel = new Mappa(dati, painterGroup);
         
-        mapPanel.setBounds(0, 70, screenSize.width, screenSize.height - 70);   // Dimensioni pari alle dimensioni dello schermo - altezza navbar
-        layeredPane.add(mapPanel, JLayeredPane.DEFAULT_LAYER);
-
-        
-        // Aggiunta del pannello delle linee 
-        RoutePanel routePanel = new RoutePanel(utente, dati);
-        
-        routePanel.setBounds(0, 70, 350, screenSize.height - 70);
-        layeredPane.add(routePanel, Integer.valueOf(101));
-        
-        // Aggiunta del pannello delle fermate 
-        StopPanel stopPanel = new StopPanel(utente, dati);
-        
-        stopPanel.setBounds(0, 70, 350, screenSize.height - 70);
-        layeredPane.add(stopPanel, Integer.valueOf(101));
-        
-        // Aggiunta del pannello di ricerca
-        Ricerca ricerca = new Ricerca(dati, stopPanel, routePanel, mapPanel);
-        layeredPane.add(ricerca, Integer.valueOf(103));
-        
-        
-        // Aggiunta della navbar alla finestra principale
-        Navbar navbar = new Navbar(mapPanel, dati, stopPanel, routePanel, ricerca);
-        
-        navbar.setBounds(0, 0, screenSize.width, 70);
-        layeredPane.add(navbar, Integer.valueOf(102));
-        
-        
-        // Chiusura automatica della ricerca se si perde il focus
-        Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
-        	@Override
-        	public void eventDispatched(AWTEvent event) {
-        		if (event instanceof MouseEvent && ((MouseEvent) event).getID() == MouseEvent.MOUSE_PRESSED) {
-        			MouseEvent me = (MouseEvent) event;
-        			Component clickedComponent = SwingUtilities.getDeepestComponentAt(Main.this, me.getXOnScreen(), me.getYOnScreen());
-        			
-        			// Controlla se il click è dentro Ricerca o SearchBar
-        			boolean inRicerca = SwingUtilities.isDescendingFrom(clickedComponent, ricerca);
-        			boolean inSearchBar = SwingUtilities.isDescendingFrom(clickedComponent, navbar.getSearchBar());
-        			
-        			if (!inRicerca && !inSearchBar) {
-        				SwingUtilities.invokeLater(() -> ricerca.setVisible(false));
-        			}
-        		}
-        	}
-        }, AWTEvent.MOUSE_EVENT_MASK);
-        
-        
-        // Aggiunta del pannello utente (inizialmente invisibile) alla finestra principale
-        UserPanel userPanel = new UserPanel(utente, dati, navbar, mapPanel, stopPanel, routePanel);
-        
-        userPanel.setBounds(screenSize.width - 350, 70, 350, screenSize.height - 70);
-        userPanel.setVisible(false);
-        layeredPane.add(userPanel, Integer.valueOf(101));
-        
-        
-        // Adattamento dinamico delle dimensioni della navbar e delle sue componenti
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        
-        scheduler.scheduleAtFixedRate(() -> {
-            calibra(navbar, userPanel, mapPanel, ricerca);  
-        }, 0, 300, TimeUnit.MILLISECONDS);
-        
-
-        // Gestione del click sul pulsante di login per mostrare/nascondere il pannello utente
-        navbar.getBtnLogin().addActionListener(new ActionListener() {
-        	
-        	public void actionPerformed(ActionEvent e) {
-        		
-        		if (userPanel.isVisible()) {
-        			
-        			// Pannello invisibile e mappa scoperta
-        			userPanel.setVisible(false);
-                    mapPanel.setBounds(0, 70, screenSize.width, screenSize.height - 70);
-                    calibra(navbar, userPanel, mapPanel, ricerca);
-                    
-        		} else {
-        			
-        			// Pannello visibile e mappa coperta
-        			userPanel.setVisible(true);
-        			mapPanel.setBounds(0, 70, screenSize.width - 350, screenSize.height - 70);
-        			calibra(navbar, userPanel, mapPanel, ricerca);
-        		}
-        	}
-        });
 	}
 	
 	

@@ -19,6 +19,9 @@ METODI:
 
 package damose;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Shape;
 import java.io.File;
 import java.net.URL;
@@ -26,6 +29,12 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 
 import org.onebusaway.gtfs.impl.GtfsRelationalDaoImpl;
 import org.onebusaway.gtfs.model.*;
@@ -39,21 +48,94 @@ public class DatiGTFS {
 	
 	private GtfsRelationalDaoImpl datiStatici;
 	private FeedMessage datiRealTime;
+	private JProgressBar progressBar;
+	private JPanel caricamento;
+	private JLabel logs;
 	
+	public void creaCaricamento() throws Exception {
+		
+		caricamento = new JPanel();
+		caricamento.setBackground(new Color(130, 36, 51));
+		caricamento.setSize(new Dimension(1678, 715));
+		caricamento.setMinimumSize(new Dimension(1400, 720));
+		caricamento.setLayout(null);
+		
+		progressBar = new JProgressBar(0, 22);
+		progressBar.setBounds(200, 600, 1278, 20);
+		
+		logs = new JLabel();
+		logs.setBounds(200, 615, 1278, 40);
+		logs.setForeground(Color.LIGHT_GRAY);
+		logs.setFont(new Font("Arial Nova", Font.ITALIC, 16));
+		
+		caricamento.add(logs);
+		caricamento.add(progressBar);
+		
+	}
+	
+	
+	
+	public JPanel getCaricamento() {
+		return this.caricamento;
+	}
+	
+	public JLabel getLogs() {
+		return this.logs;
+	}
+	
+	public JProgressBar getProgressBar() {
+		return this.progressBar;
+	}
+	
+	public void setProgress(int i, String nome) {
+		this.progressBar.setValue(i);
+		logs.setText("Loading " + nome + "...   (" + i +"/22)");
+	}
 	
 	// Metodo che permette di caricare dei dati GTFS statici da file di testo contenuti in una cartella
-	public void caricaDatiStaticiGTFS(String path, boolean caricaStopTimes) throws Exception {
+	public void caricaDatiStaticiGTFS(String path) throws Exception {
 			
 		GtfsReader reader = new GtfsReader();
 		GtfsRelationalDaoImpl dati = new GtfsRelationalDaoImpl();
 			
 		reader.setInputLocation(new File(path));
-		if (!caricaStopTimes) {
-			reader.setEntityClasses(List.of(Agency.class, Calendar.class, Route.class, Shape.class, Stop.class, Trip.class));
-		}
-			
 		reader.setEntityStore(dati);
-		reader.run();
+		
+		List<Class<?>> listaClassi = List.of(
+			Agency.class,
+			Calendar.class,
+			Route.class,
+			Shape.class,
+			Stop.class,
+			Trip.class,
+			Block.class,
+			ShapePoint.class,
+			Area.class,
+			RouteStop.class,
+			RouteShape.class,
+			Location.class,
+			StopTime.class,
+			Frequency.class,
+			Pathway.class,
+			Transfer.class,
+		    FeedInfo.class,
+		    Vehicle.class,
+		    RouteNameException.class,
+		    DirectionNameException.class,
+		    DirectionEntry.class,
+		    AlternateStopNameException.class
+		);
+
+		
+		for(int i=0; i<listaClassi.size(); i++) {
+			Class<?> classe = listaClassi.get(i);
+			reader.readEntities(classe);
+			if(listaClassi.getLast().equals(classe)) {
+				this.setProgress(i+1, classe.getName());
+			} else {				
+				this.setProgress(i+1, listaClassi.get(i+1).getName());
+			}
+		}
 			
 		this.datiStatici = dati;
 	}
@@ -72,27 +154,27 @@ public class DatiGTFS {
 	// Metodo generico che permette di caricare tutti i dati GTFS disponibili
 	public void caricaDati() throws Exception {
 		
-        ExecutorService executor = Executors.newFixedThreadPool(2);
-        
-        try {
-        	
-        	this.caricaDatiStaticiGTFS("staticGTFS", false);
-        	
-        	Future<?> caricamentoInBackground = executor.submit(() -> {
-        		
-        		try {
-        			this.caricaDatiStaticiGTFS("staticGTFS", true);
-        			this.caricaDatiRealTimeGTFS();
-        		} catch (Exception e) {
-        			e.printStackTrace();
-        		}
-        	});
-        	
-        } catch (Exception e) {
-        	e.printStackTrace();
-        } finally {
-        	executor.shutdown();
-        }  
+//        ExecutorService executor = Executors.newFixedThreadPool(2);
+//        
+//        try {
+//        	
+//        	this.caricaDatiStaticiGTFS("staticGTFS", false);
+//        	
+//        	Future<?> caricamentoInBackground = executor.submit(() -> {
+//        		
+//        		try {
+//        			this.caricaDatiRealTimeGTFS();
+//        			this.caricaDatiStaticiGTFS("staticGTFS", true);
+//        		} catch (Exception e) {
+//        			e.printStackTrace();
+//        		}
+//        	});
+//        	
+//        } catch (Exception e) {
+//        	e.printStackTrace();
+//        } finally {
+//        	executor.shutdown();
+//        }  
 	}
 
 // ---------------------------------------------------------------------------------------------
@@ -225,7 +307,6 @@ public class DatiGTFS {
 			}
 		}
 		
-		System.out.println(lineePassanti);
 		return lineePassanti;
 	}
 	
