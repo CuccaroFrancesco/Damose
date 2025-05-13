@@ -47,6 +47,8 @@ public class Mappa extends JComponent {
     private LineaPainter painterLinea;
     private CompoundPainter<JXMapViewer> painterGroup;
 
+    
+    // Costruttore dell'oggetto Mappa
     public Mappa(DatiGTFS dati, CompoundPainter<JXMapViewer> painterGroup) throws Exception {
     	
     	// Assegnamento dei dati GTFS e del CompoundPainter all'istanza

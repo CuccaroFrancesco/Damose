@@ -34,28 +34,6 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	private JScrollPane fermateScrollPane, lineeScrollPane;
 
 
-	
-	// Metodo utilizzato per nascondere tutti i componenti del pannello al momento di eventuali variazioni
-	private void nascondiTutto() {
-		
-		inputNome.setText("");
-		inputCognome.setText("");
-		inputUsername.setText("");
-		inputPassword.setText("");
-		inputConfermaPassword.setText("");
-		
-		inputNome.setBorder(UIManager.getBorder("TextField.border"));
-	    inputCognome.setBorder(UIManager.getBorder("TextField.border"));
-	    inputUsername.setBorder(UIManager.getBorder("TextField.border"));
-	    inputPassword.setBorder(UIManager.getBorder("TextField.border"));
-	    inputConfermaPassword.setBorder(UIManager.getBorder("TextField.border"));
-	    
-	    for (Component c : this.getComponents()) {
-	        c.setVisible(false);
-	    }
-	}
-	
-	
 	// Costruzione del pannello utente (login, registrazione e profilo)
 	public UserPanel(Utente utente, DatiGTFS dati, Navbar navbar, Mappa mappa, StopPanel stopPanel, RoutePanel lineaPanel) {
 		
@@ -587,6 +565,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		// Funzionalità per il pulsante "Logout"
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				utente.logout();
 				nascondiTutto();	
 				
@@ -822,4 +801,25 @@ public class UserPanel extends JPanel implements PreferitiObserver {
         
         this.repaint();
 	}
+	
+	
+	// Metodo utilizzato per nascondere tutti i componenti del pannello al momento di eventuali variazioni
+	private void nascondiTutto() {
+			
+		inputNome.setText("");
+		inputCognome.setText("");
+		inputUsername.setText("");
+		inputPassword.setText("");
+		inputConfermaPassword.setText("");
+			
+		inputNome.setBorder(UIManager.getBorder("TextField.border"));
+		inputCognome.setBorder(UIManager.getBorder("TextField.border"));
+		inputUsername.setBorder(UIManager.getBorder("TextField.border"));
+		inputPassword.setBorder(UIManager.getBorder("TextField.border"));
+		inputConfermaPassword.setBorder(UIManager.getBorder("TextField.border"));
+		    
+		for (Component c : this.getComponents()) {
+		    c.setVisible(false);
+		}
+	}	
 }

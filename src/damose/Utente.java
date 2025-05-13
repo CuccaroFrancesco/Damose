@@ -43,29 +43,6 @@ public class Utente {
 	private List<String> lineePreferite, fermatePreferite;
 	private PreferitiObserver observer;
 	
-	public void logout() {
-		this.nome = null;
-		this.cognome = null;
-		this.username = null;
-		this.password = null;
-		this.lineePreferite = new ArrayList<>();
-		this.fermatePreferite = new ArrayList<>();
-		this.isLogged = false;
-	}
-	
-	public boolean isLogged() {
-		return this.isLogged;
-	}
-
-	public void setObserver(PreferitiObserver observer) {
-	    this.observer = observer;
-	}
-	
-	private void notificaObserver() {
-	    if (observer != null) {
-	        observer.onPreferitiChanged();
-	    }
-	}
 	
 	// Metodi get e set per il nome associato all'utente
 	public String getNome() {
@@ -127,8 +104,31 @@ public class Utente {
 	}
 	
 	
+	// Metodo get per ottenere lo stato (loggato o non loggato) dell'utente
+	public boolean getIsLogged() {
+		return this.isLogged;
+	}
+
+// ---------------------------------------------------------------------------------------------
+
+	// Metodo set per l'observer dei preferiti dell'utente
+	public void setObserver(PreferitiObserver observer) {
+		this.observer = observer;
+	}
+		
+		
+	// Metodo che notifica l'observer di un determinato cambiamento nei preferiti
+	private void notificaObserver() {
+		if (observer != null) {
+		    observer.onPreferitiChanged();
+		}
+	}
+		
+// ---------------------------------------------------------------------------------------------
+	
 	// Metodo per modificare le linee preferite (sia attributo che nel file di testo) dell'utente loggato
 	public void cambiaLineePreferite(List<String> lineePreferite) throws IOException {
+		
 		this.setLineePreferite(lineePreferite);
 		
 		File inputFile = new File("files/utenti.txt");
@@ -182,6 +182,7 @@ public class Utente {
 	
 	// Metodo per modificare le fermate preferite (sia attributo che nel file di testo) dell'utente loggato
 	public void cambiaFermatePreferite(List<String> fermatePreferite) throws IOException {
+		
 		this.setFermatePreferite(fermatePreferite);
 		
 		File inputFile = new File("files/utenti.txt");
@@ -227,9 +228,9 @@ public class Utente {
 		}
 		
 		notificaObserver();
-
 	}
 	
+// ---------------------------------------------------------------------------------------------
 	
 	// Metodo che gestisce l'accesso a un utente già esistente
 	public String accedi(String username, String password) throws IOException {
@@ -271,5 +272,17 @@ public class Utente {
 		reader.close();
 		
 		return "Utente non esistente.";
+	}
+	
+	
+	// Metodo che gestisce l'eventuale logout di un utente
+	public void logout() {
+		this.nome = null;
+		this.cognome = null;
+		this.username = null;
+		this.password = null;
+		this.lineePreferite = new ArrayList<>();
+		this.fermatePreferite = new ArrayList<>();
+		this.isLogged = false;
 	}
 }

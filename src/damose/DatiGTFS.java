@@ -24,11 +24,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -62,7 +57,7 @@ public class DatiGTFS {
 		
 		schermataCaricamento.setLayout(null);
 		schermataCaricamento.setBackground(new Color(130, 36, 51));
-		schermataCaricamento.setBounds(0, 0, 1678, 715);
+		schermataCaricamento.setBounds(0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
 		schermataCaricamento.setMinimumSize(new Dimension(1400, 720));
 		
 		
@@ -167,7 +162,7 @@ public class DatiGTFS {
 		);
 
 		
-		for(int i=0; i<listaClassi.size(); i++) {
+		for (int i = 0; i < listaClassi.size(); i++) {
 			
 			Class<?> classe = listaClassi.get(i);
 			reader.readEntities(classe);

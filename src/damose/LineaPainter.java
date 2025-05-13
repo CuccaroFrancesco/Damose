@@ -31,7 +31,6 @@ public class LineaPainter implements Painter<JXMapViewer> {
 	
 	// Costruttore dell'istanza della classe LineaPainter
 	public LineaPainter(List<GeoPosition> linea) {
-		
 		this.linea = new ArrayList<GeoPosition>(linea);
 	}
 	
@@ -47,11 +46,8 @@ public class LineaPainter implements Painter<JXMapViewer> {
         	
             Point2D punto = mappa.getTileFactory().geoToPixel(gp, mappa.getZoom());
 
-            if (isPrimo) {
-                isPrimo = false;
-            } else {
-                g.drawLine(precedenteX, precedenteY, (int) punto.getX(), (int) punto.getY());
-            }
+            if (isPrimo) isPrimo = false;
+            else g.drawLine(precedenteX, precedenteY, (int) punto.getX(), (int) punto.getY());
 
             precedenteX = (int) punto.getX();
             precedenteY = (int) punto.getY();
@@ -98,7 +94,6 @@ public class LineaPainter implements Painter<JXMapViewer> {
 	 		puntiDaDisegnare.add(new GeoPosition(sp.getLat(), sp.getLon()));
 	 	}
 
-	 		
 	 	if (puntiDaDisegnare.isEmpty()) {
 	 	    System.out.println("Dati non ancora disponibili.");
 	 	    return;
@@ -118,6 +113,7 @@ public class LineaPainter implements Painter<JXMapViewer> {
 	 	            "MEB1", new Color(1, 112, 187),
 	 	            "MEC", new Color(1, 135, 81)
 	 	        );
+	 	        
 	 	        colore = coloriLinea.get(lineaTrovata.getShortName());
 	 	        break;
 
@@ -130,19 +126,15 @@ public class LineaPainter implements Painter<JXMapViewer> {
 	 	        break;
 	 	}
 
-	 	if (colore != null) {
-	 	    mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, colore);
-	 	} else {
-	 	    System.out.println("Colore non definito per la linea: " + lineaTrovata.getShortName());
-	 	}
-
-    		
-    		int centro = puntiDaDisegnare.size() / 2;
-    		GeoPosition puntoCentrale = puntiDaDisegnare.get(centro);
-    		mapPanel.centraMappa(puntoCentrale.getLongitude(), puntoCentrale.getLatitude(), 4);
+	 	if (colore != null) mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, colore);
+	 	else System.out.println("Colore non definito per la linea: " + lineaTrovata.getShortName());
+	
+    	int centro = puntiDaDisegnare.size() / 2;
+    	GeoPosition puntoCentrale = puntiDaDisegnare.get(centro);
+    	mapPanel.centraMappa(puntoCentrale.getLongitude(), puntoCentrale.getLatitude(), 4);
     			
-        	mapPanel.repaint();
-    	}
+        mapPanel.repaint();
+    }
 	
 	
 	// Metodo set per impostare la linea da disegnare

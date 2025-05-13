@@ -183,7 +183,8 @@ public class StopPanel extends JPanel {
         
         this.add(btnCoordinates);
 	}
-	
+
+// ---------------------------------------------------------------------------------------------
 	
 	// Metodo che gestisce la creazione dello stopPanel
 	public void creaPannelloFermata(Stop fermata) {
@@ -351,14 +352,19 @@ public class StopPanel extends JPanel {
         
         this.add(lineePassantiScrollPane);
         lineePassantiPanel.repaint();
-	}	
+	}
+
+// ---------------------------------------------------------------------------------------------
 	
+	// Metodo che gestisce il comportamento del pulsante dei preferiti in base allo stato (logged o non logged) dell'utente
 	public void controllaUtente(Stop fermata) {
-		if(fermata == null) {
+		
+		if (fermata == null) {
 			btnFavorite.setEnabled(false);
 			btnFavorite.setVisible(false);
 		}
-		if (utente.isLogged()) {
+		
+		if (utente.getIsLogged()) {
 			btnFavorite.setEnabled(true);
 			btnFavorite.setVisible(true);
 			
@@ -375,10 +381,13 @@ public class StopPanel extends JPanel {
 		    ImageIcon iconCuore = new ImageIcon(iconCuorePath);
 		    Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		    btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
+		    
+		    btnFavorite.repaint();
 		}
 	}
 	
 	public void controllaUtente(boolean isLogged) {
+		
 		if(isLogged) {
 			btnFavorite.setEnabled(true);
 			btnFavorite.setVisible(true);
@@ -396,6 +405,7 @@ public class StopPanel extends JPanel {
 		    ImageIcon iconCuore = new ImageIcon(iconCuorePath);
 		    Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		    btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
+		    
 		    btnFavorite.repaint();
 		}
 	}

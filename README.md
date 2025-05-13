@@ -14,15 +14,12 @@ ___
 - Visualizzare messaggio di avviso se i dati real-time non sono disponibili (errori o mancanza di rete)
 
 #### Estetica:
-- Creare un logo per l'applicazione
-- Creare una schermata di caricamento all'avvio (guadagnerebbe tempo per il caricamento dei dati)
 - Inserire animazioni per i vari pannelli pop-up (scorrimento o fade)
 - Inserire un frame di transizione (cuore bianco leggermente più grande) tra cuore pieno e cuore vuoto nel btnPreferiti
 - Personalizzare l'aspetto dei waypoint (fermate di agenzie diverse, mezzi, ecc. ecc.)
 
 #### StopPanel:
 Da implementare:
-- linee passanti per tale fermata
 - se presenti, prossimi arrivi con linea di appartenenza, orario di arrivo e direzione
 - ritardo tipico dei mezzi per tale fermata
 - (OPZIONALE MA SAREBBE BELLO) vicinanza a punti di interesse
@@ -55,10 +52,6 @@ Alla selezione di un determinato mezzo, dovrebbero diventare accessibili le segu
 - velocità del mezzo
 - eventuale ritardo del mezzo
 
-#### Ricerca:
-- Ricerca di una fermata per nome e codice
-- Ricerca di una linea per numero e nome
-
 #### Statistiche:
 - Percentuale di corse in ritardo per linea
 - Percentuale di corse puntuali per linea
@@ -71,7 +64,6 @@ Alla selezione di un determinato mezzo, dovrebbero diventare accessibili le segu
   - Cambiare tema
   - Liberare la cache
   - Visualizzare solo fermate e linee preferite
-- Pulsante di logout
 ___
 
 ## TESTING UNITARIO

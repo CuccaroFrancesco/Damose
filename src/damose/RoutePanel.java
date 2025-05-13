@@ -278,7 +278,8 @@ public class RoutePanel extends JPanel {
         scaledImageFineMetroC = iconFineMetroC.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         newIconFineMetroC = new ImageIcon(scaledImageFineMetroC);
 	}
-	
+
+// ---------------------------------------------------------------------------------------------
 	
 	// Metodo che "costruisce" concretamente il lineaPanel in base alla linea in questione
 	public void creaPannelloLinea(Route linea) {
@@ -552,15 +553,18 @@ public class RoutePanel extends JPanel {
 		this.repaint();
 	}
 	
-	
+// ---------------------------------------------------------------------------------------------
+
+	// Metodo che gestisce il comportamento del pulsante dei preferiti in base allo stato (logged o non logged) dell'utente
 	public void controllaUtente(Route linea) {
-		if(linea == null)
-		{
+		
+		if (linea == null) {
 			btnFavorite.setEnabled(false);
 			btnFavorite.setVisible(false);
 			return;
 		}
-		if (utente.isLogged()) {
+		
+		if (utente.getIsLogged()) {
 			btnFavorite.setEnabled(true);
 			btnFavorite.setVisible(true);
 			
@@ -577,15 +581,19 @@ public class RoutePanel extends JPanel {
 		    ImageIcon iconCuore = new ImageIcon(iconCuorePath);
 		    Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		    btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
+		    
+		    btnFavorite.repaint();
 		}
 	}
 	
 	public void controllaUtente(boolean isLogged) {
-		if(isLogged) {
+		
+		if (isLogged) {
 			btnFavorite.setEnabled(true);
 			btnFavorite.setVisible(true);
 			
 			boolean isPreferita = false;
+			
 			for (String lineaPreferita : utente.getLineePreferite()) {
 		        if (lineaPreferita.equals(codiceLinea.getText().trim())) {
 		            isPreferita = true;
@@ -597,6 +605,7 @@ public class RoutePanel extends JPanel {
 		    ImageIcon iconCuore = new ImageIcon(iconCuorePath);
 		    Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		    btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
+		    
 		    btnFavorite.repaint();
 		}
 	}

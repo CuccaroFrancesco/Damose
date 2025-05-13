@@ -25,23 +25,15 @@ public class Registrazione {
 	
 	// Metodo che controlla la validità del nome inserito
 	public static String checkNome(String newName) {
-		
-		if (!newName.isBlank()) {
-			return "Verificata.";
-		} else {
-			return "Nome non inserito.";
-		}
+		if (!newName.isBlank()) return "Verificata.";
+		else return "Nome non inserito.";
 	}
 	
 	
 	// Metodo che controlla la validità del cognome inserito
-	public static String checkCognome(String newSurname) {
-			
-		if (!newSurname.isBlank()) {
-			return "Verificata.";
-		} else {
-			return "Cognome non inserito.";
-		}
+	public static String checkCognome(String newSurname) {	
+		if (!newSurname.isBlank()) return "Verificata.";
+		else return "Cognome non inserito.";
 	}
 	
 	
@@ -66,6 +58,7 @@ public class Registrazione {
         }
 
 		reader.close();
+		
         return "Verificata.";
 	}
 	
@@ -79,42 +72,21 @@ public class Registrazione {
 	    boolean haSimbolo = false;
 	    String simboli = "/*-+!£$%&=?€";
 	    
-	    if (newPass.isBlank()) {
-        	return "Password non inserita.";
-	    }
-	    
-	    if (newPass.length() < 8) {
-	        return "Lunghezza minima: 8 caratteri.";
-	    }
+	    if (newPass.isBlank()) return "Password non inserita.";
+	    if (newPass.length() < 8) return "Lunghezza minima: 8 caratteri.";
 	    
 	    for (char c : newPass.toCharArray()) {
 	        
-	    	if (Character.isUpperCase(c)) {
-	        	haMaiuscola = true;
-	        } else if (Character.isLowerCase(c)) {
-	        	haMinuscola = true;
-	        } else if (Character.isDigit(c)) {
-	        	haNumero = true;
-	        } else if (simboli.indexOf(c) >= 0) {
-	        	haSimbolo = true; 
-	        }
+	    	if (Character.isUpperCase(c)) haMaiuscola = true;
+	        else if (Character.isLowerCase(c)) haMinuscola = true;
+	        else if (Character.isDigit(c)) haNumero = true;
+	        else if (simboli.indexOf(c) >= 0) haSimbolo = true;
 	    }
 	    
-	    if (!haMaiuscola) {
-	        return "Inserire almeno una lettera maiuscola.";
-	    }
-	    
-	    if (!haMinuscola) {
-	        return "Inserire almeno una lettera minuscola.";
-	    }
-	    
-	    if (!haNumero) {
-	        return "Inserire almeno un numero.";
-	    }
-	    
-	    if (!haSimbolo) {
-	        return "Inserire almeno un simbolo: /*-+!£$%&=?€";
-	    }
+	    if (!haMaiuscola) return "Inserire almeno una lettera maiuscola.";
+	    if (!haMinuscola) return "Inserire almeno una lettera minuscola.";
+	    if (!haNumero) return "Inserire almeno un numero.";
+	    if (!haSimbolo) return "Inserire almeno un simbolo: /*-+!£$%&=?€";
 	    
 	    return "Verificata.";
 	}
@@ -123,17 +95,13 @@ public class Registrazione {
 	// Metodo che controlla la validità della conferma della password
 	public static String checkConfermaPassword(String newPass, String confirmPass) {
 		
-		if (confirmPass.isBlank()) {
-        	return "Confermare la password.";
-	    }
-	    
-	    if (!newPass.equals(confirmPass)) {
-	    	return "Password non corrispondenti.";
-	    }
+		if (confirmPass.isBlank()) return "Confermare la password.";
+	    if (!newPass.equals(confirmPass)) return "Password non corrispondenti.";
 	    
 	    return "Verificata.";
 	}
 
+// ---------------------------------------------------------------------------------------------
 	
 	// Metodo che gestisce l'aggiunta di nuovi user al file di testo che svolge il ruolo di "database"
 	public static String addUser(String nome, String cognome, String username, String password, String confirmPass) throws IOException {

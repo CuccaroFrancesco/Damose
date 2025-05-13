@@ -46,10 +46,10 @@ public class Navbar extends JPanel {
     private Ricerca ricerca;
 
     
+    // Costruttore dell'oggetto Navbar
     public Navbar(Mappa mapPanel, DatiGTFS dati, StopPanel stopPanel, RoutePanel lineaPanel, Ricerca ricerca) {
     	
-    	// Assegnamento della mappa all'istanza
-        this.mapPanel = mapPanel;
+    	this.mapPanel = mapPanel;
         this.dati = dati;
         this.stopPanel = stopPanel;
         this.lineaPanel = lineaPanel;
@@ -148,11 +148,6 @@ public class Navbar extends JPanel {
         this.add(mapButtonGroup);
         
         
-        ImageIcon iconRicerca = new ImageIcon("src/resources/ricerca.png");
-        Image scaledImageRicerca = iconRicerca.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
-        ImageIcon newIconRicerca = new ImageIcon(scaledImageRicerca);
-        
-        
         // Barra di ricerca, con annessa gestione del testo placeholder
         searchBar = new JTextField("  Cerca linea o fermata...");
         
@@ -169,7 +164,8 @@ public class Navbar extends JPanel {
         searchLayeredPane.setLayout(null);
         searchLayeredPane.setOpaque(false);
         
-        searchBar.setBounds(0, 0, 500, 40); // relativo al layered pane
+        searchBar.setBounds(0, 0, 500, 40);  // relativamente al searchLayeredPane
+        
         
         // Pulsante per la barra di ricerca
         btnRicerca = new JButton();
@@ -182,6 +178,10 @@ public class Navbar extends JPanel {
         btnRicerca.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         
         btnRicerca.setPreferredSize(new Dimension(30, 25));
+        
+        ImageIcon iconRicerca = new ImageIcon("src/resources/ricerca.png");
+        Image scaledImageRicerca = iconRicerca.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+        ImageIcon newIconRicerca = new ImageIcon(scaledImageRicerca);
         btnRicerca.setIcon(newIconRicerca);
         
         searchLayeredPane.add(btnRicerca, 100);  
@@ -218,12 +218,14 @@ public class Navbar extends JPanel {
         	}
         });
         
+        
         // Funzionalità di ricerca di una linea per la searchBar 
         searchBar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		ricerca();
         	}
         });
+        
         
         // Aggiungi un listener per monitorare l'input nella searchBar
         searchBar.getDocument().addDocumentListener(new DocumentListener() {
@@ -248,7 +250,7 @@ public class Navbar extends JPanel {
         });
         
         
-     // Chiusura automatica della ricerca se si perde il focus
+        // Chiusura automatica della ricerca se si perde il focus
         Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
         	@Override
         	public void eventDispatched(AWTEvent event) {
