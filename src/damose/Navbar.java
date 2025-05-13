@@ -35,28 +35,20 @@ import org.jxmapviewer.viewer.*;
 
 public class Navbar extends JPanel {
 
-	private Mappa mapPanel;
+	private Frame frame;
+	
     private JTextField searchBar;
     private JPanel mapButtonGroup;
     private JLayeredPane searchLayeredPane;
     private JButton mappaNormale, mappaSatellitare, mappaMista, btnLogin, btnRicerca;
-    private DatiGTFS dati;
-    private StopPanel stopPanel;
-    private RoutePanel lineaPanel;
-    private Ricerca ricerca;
 
     
     // Costruttore dell'oggetto Navbar
     public Navbar(Frame frame) {
     	
-    	this.mapPanel = frame.getMappa();
-        this.dati = frame.getDati();
-        this.stopPanel = frame.getStopPanel();
-        this.lineaPanel = frame.getRoutePanel();
-        this.ricerca = frame.getRicerca();
-
-        
-        // Gestione delle caratteristiche della navbar
+    	this.frame = frame;
+    	
+    	// Gestione delle caratteristiche della navbar
         this.setOpaque(true);
         this.setBackground(new Color(130, 36, 51));
         this.setLayout(null);
@@ -106,7 +98,7 @@ public class Navbar extends JPanel {
         // Funzionalità per i pulsanti mappaNormale, mappaSatellitare e mappaMista
         mappaNormale.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		TilesetManager.updateMap(mapPanel, 0);
+        		TilesetManager.updateMap(frame.getMappa(), 0);
         		mappaNormale.setEnabled(false);
         		mappaSatellitare.setEnabled(true);
         		mappaMista.setEnabled(true);
@@ -116,7 +108,7 @@ public class Navbar extends JPanel {
         
         mappaSatellitare.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		TilesetManager.updateMap(mapPanel, 1);
+        		TilesetManager.updateMap(frame.getMappa(), 1);
         		mappaNormale.setEnabled(true);
         		mappaSatellitare.setEnabled(false);
         		mappaMista.setEnabled(true);
@@ -126,7 +118,7 @@ public class Navbar extends JPanel {
         
         mappaMista.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		TilesetManager.updateMap(mapPanel, 2);
+        		TilesetManager.updateMap(frame.getMappa(), 2);
         		mappaNormale.setEnabled(true);
         		mappaSatellitare.setEnabled(true);
         		mappaMista.setEnabled(false);
@@ -267,12 +259,12 @@ public class Navbar extends JPanel {
         					&& YCliccata >= getSearchBar().getY() && YCliccata <= getSearchBar().getY() + getSearchBar().getHeight())
         				inSearchBar = true;
         			
-        			if(XCliccata <= ricerca.getX() + ricerca.getWidth() && XCliccata >= ricerca.getX()
-        					&& YCliccata >= ricerca.getY() && YCliccata <= ricerca.getY() + ricerca.getHeight())
+        			if(XCliccata <= frame.getRicerca().getX() + frame.getRicerca().getWidth() && XCliccata >= frame.getRicerca().getX()
+        					&& YCliccata >= frame.getRicerca().getY() && YCliccata <= frame.getRicerca().getY() + frame.getRicerca().getHeight())
         				inRicerca = true;
         			
         			if (!inRicerca && !inSearchBar) {
-        				SwingUtilities.invokeLater(() -> ricerca.setVisible(false));
+        				SwingUtilities.invokeLater(() -> frame.getRicerca().setVisible(false));
         			}
         		}
         	}
@@ -324,6 +316,6 @@ public class Navbar extends JPanel {
     // Metodo per la ricerca
     public void ricerca() {
     	String lineaDaCercare = searchBar.getText();
-    	ricerca.mostraRisultatiRicerca(lineaDaCercare, this);
+    	frame.getRicerca().mostraRisultatiRicerca(lineaDaCercare, this);
     }
 }

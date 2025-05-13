@@ -19,19 +19,18 @@ import java.awt.event.ActionEvent;
 
 public class StopPanel extends JPanel {
 	
+	private Frame frame;
+	
 	private JLabel nomeFermata, codiceFermata, lblArrivi, lblLineePassanti;
 	private JButton btnClose, btnStopIcon, btnFavorite, btnCoordinates;
 	private JPanel lineePassantiPanel;
 	private JScrollPane lineePassantiScrollPane;
-	private Utente utente;
-	private DatiGTFS dati;
 	
 	
 	// Costruttore del pannello stopPanel
 	public StopPanel(Frame frame) {
 		
-		this.utente = frame.getUtente();
-		this.dati = frame.getDati();
+		this.frame = frame;
 		
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);
@@ -209,7 +208,7 @@ public class StopPanel extends JPanel {
 		btnFavorite.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        
-		        List<String> fermatePreferite = utente.getFermatePreferite();
+		        List<String> fermatePreferite = frame.getUtente().getFermatePreferite();
 		        String idFermata = fermata.getId().getId();
 		        
 		        boolean isOraPreferita;
@@ -223,7 +222,7 @@ public class StopPanel extends JPanel {
 		        }
 		        
 		        try {
-					utente.cambiaFermatePreferite(fermatePreferite);
+		        	frame.getUtente().cambiaFermatePreferite(fermatePreferite);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -239,7 +238,7 @@ public class StopPanel extends JPanel {
 		codiceFermata.setText("ID: " + fermata.getId().getId());
 		btnCoordinates.setText(" " + Math.floor(fermata.getLat() * 100000) / 100000 + ", " + Math.floor(fermata.getLon() * 100000) / 100000);
 		
-		List<Route> lineePassanti = dati.getLineePassantiPerFermata(fermata);
+		List<Route> lineePassanti = frame.getDati().getLineePassantiPerFermata(fermata);
 		
 		lineePassantiPanel = new JPanel();
 		lineePassantiPanel.setLayout(null);
@@ -364,13 +363,13 @@ public class StopPanel extends JPanel {
 			btnFavorite.setVisible(false);
 		}
 		
-		if (utente.getIsLogged()) {
+		if (frame.getUtente().getIsLogged()) {
 			btnFavorite.setEnabled(true);
 			btnFavorite.setVisible(true);
 			
 		    boolean isPreferita = false;
 		    
-		    for (String fermataPreferita : utente.getFermatePreferite()) {
+		    for (String fermataPreferita : frame.getUtente().getFermatePreferite()) {
 		        if (fermataPreferita.equals(fermata.getId().getId())) {
 		            isPreferita = true;
 		            break;
@@ -394,7 +393,7 @@ public class StopPanel extends JPanel {
 			
 			boolean isPreferita = false;
 		    
-		    for (String fermataPreferita : utente.getFermatePreferite()) {
+		    for (String fermataPreferita : frame.getUtente().getFermatePreferite()) {
 		        if (fermataPreferita.equals(codiceFermata.getText().substring(4))) {
 		            isPreferita = true;
 		            break;

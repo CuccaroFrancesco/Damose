@@ -19,6 +19,8 @@ import javax.swing.SwingWorker;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.painter.CompoundPainter;
 
+
+
 public class Frame extends JFrame {
 	
 	private Utente utente;
@@ -32,42 +34,8 @@ public class Frame extends JFrame {
 	private Ricerca ricerca;
 	private CompoundPainter<JXMapViewer> painterGroup;
 	
-	public DatiGTFS getDati() {
-		return this.dati;
-	}
 	
-	public Utente getUtente() {
-		return this.utente;
-	}
-	
-	public Mappa getMappa() {
-		return this.mapPanel;
-	}
-	
-	public RoutePanel getRoutePanel() {
-		return this.routePanel;
-	}
-	
-	public StopPanel getStopPanel() {
-		return this.stopPanel;
-	}
-	
-	public UserPanel getUserPanel() {
-		return this.userPanel;
-	}
-	
-	public Navbar getNavbar() {
-		return this.navbar;
-	}
-	
-	public Ricerca getRicerca() {
-		return this.ricerca;
-	}
-	
-	public CompoundPainter<JXMapViewer> getPainterGroup() {
-		return this.painterGroup;
-	}
-	
+	// Costruttore dell'oggetto Frame
 	public Frame() throws Exception {
     	
     	// Instanza dell'utente, dei dati GTFS statici e del CompoundPainter
@@ -209,8 +177,64 @@ public class Frame extends JFrame {
         loader.execute();
 	}
 
+// ---------------------------------------------------------------------------------------------
 
-	//Metodo che gestisce l'adattamento dinamico delle dimensioni della navbar e delle sue componenti
+	// Metodo get per i dati GTFS assegnati all'istanza
+	public DatiGTFS getDati() {
+		return this.dati;
+	}
+	
+	
+	// Metodo get per l'utente assegnato all'istanza
+	public Utente getUtente() {
+		return this.utente;
+	}
+	
+	
+	// Metodo get per la mappa assegnata all'istanza
+	public Mappa getMappa() {
+		return this.mapPanel;
+	}
+	
+	
+	// Metodo get per il routePanel assegnato all'istanza
+	public RoutePanel getRoutePanel() {
+		return this.routePanel;
+	}
+	
+	
+	// Metodo get per lo stopPanel assegnato all'istanza
+	public StopPanel getStopPanel() {
+		return this.stopPanel;
+	}
+	
+	
+	// Metodo get per lo userPanel assegnato all'istanza
+	public UserPanel getUserPanel() {
+		return this.userPanel;
+	}
+	
+	
+	// Metodo get per la navbar assegnata all'istanza
+	public Navbar getNavbar() {
+		return this.navbar;
+	}
+	
+	
+	// Metodo get per l'oggetto Ricerca assegnato all'istanza
+	public Ricerca getRicerca() {
+		return this.ricerca;
+	}
+	
+	
+	// Metodo get per il CompoundPainter assegnato all'istanza
+	public CompoundPainter<JXMapViewer> getPainterGroup() {
+		return this.painterGroup;
+	}
+
+// ---------------------------------------------------------------------------------------------
+
+	// Metodo che gestisce l'adattamento dinamico delle dimensioni della navbar e delle sue componenti
 	private void calibra() {
 		
 		int newWidth = getWidth();              // Nuova larghezza della finestra

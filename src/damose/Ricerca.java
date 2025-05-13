@@ -29,21 +29,16 @@ import java.awt.event.ActionListener;
 
 public class Ricerca extends JPanel{
 	
-	private DatiGTFS dati;
-	private StopPanel stopPanel;
-    private RoutePanel lineaPanel;
-    private Mappa mappa;
-    private JPanel panelRisultati;
+	private Frame frame;
+	
+	private JPanel panelRisultati;
     private JScrollPane risultatiScrollPane;
 	
     
     // Costruttore dell'oggetto Ricerca
 	public Ricerca(Frame frame) {
 		
-		this.dati = frame.getDati();
-		this.stopPanel = frame.getStopPanel();
-		this.lineaPanel = frame.getRoutePanel();
-		this.mappa = frame.getMappa();
+		this.frame = frame;
 		
 		this.setLayout(null);
 		this.setVisible(false);
@@ -61,8 +56,8 @@ public class Ricerca extends JPanel{
 		
 		this.setVisible(true);
 		
-		List<Route> lineeTrovate = dati.cercaLinee(input);
-		List<Stop> fermateTrovate = dati.cercaFermate(input);
+		List<Route> lineeTrovate = frame.getDati().cercaLinee(input);
+		List<Stop> fermateTrovate = frame.getDati().cercaFermate(input);
 		
 		panelRisultati = new JPanel();
         
@@ -104,10 +99,10 @@ public class Ricerca extends JPanel{
 	        }
 	        
 	        btnLinea.addActionListener(e -> {
-        		lineaPanel.creaPannelloLinea(linea);
-        		stopPanel.setVisible(false);
+	        	frame.getRoutePanel().creaPannelloLinea(linea);
+        		frame.getStopPanel().setVisible(false);
         		
-        		LineaPainter.costruisciLineaDaDisegnare(linea, mappa, dati);
+        		LineaPainter.costruisciLineaDaDisegnare(linea, frame.getMappa(), frame.getDati());
         		
 	        	Ricerca.this.setVisible(false);
 	        });
@@ -216,10 +211,10 @@ public class Ricerca extends JPanel{
 	        }
 	        
 	        btnFermata.addActionListener(e -> {
-	            stopPanel.creaPannelloFermata(fermata);
-	            lineaPanel.setVisible(false);
+	        	frame.getStopPanel().creaPannelloFermata(fermata);
+	        	frame.getRoutePanel().setVisible(false);
 	            
-	        	mappa.centraMappa(fermata.getLon(), fermata.getLat(), 2);
+	        	frame.getMappa().centraMappa(fermata.getLon(), fermata.getLat(), 2);
 	        	
 	        	Ricerca.this.setVisible(false);
 	        });

@@ -40,20 +40,18 @@ import org.onebusaway.gtfs.model.Stop;
 
 public class Mappa extends JComponent {
 
+	private Frame frame;
+	
     private JXMapViewer mapViewer;
     private FileBasedLocalCache localCache;
-    private DatiGTFS dati;
     private WaypointPainter<Waypoint> painterFermate;
     private LineaPainter painterLinea;
-    private CompoundPainter<JXMapViewer> painterGroup;
 
     
     // Costruttore dell'oggetto Mappa
     public Mappa(Frame frame) throws Exception {
     	
-    	// Assegnamento dei dati GTFS e del CompoundPainter all'istanza
-    	this.dati = frame.getDati();
-    	this.painterGroup = frame.getPainterGroup();
+    	this.frame = frame;
     	
     	
     	// Impostazione iniziale della mappa
@@ -68,7 +66,7 @@ public class Mappa extends JComponent {
         mapViewer.setBounds(0, 0, screenSize.width, screenSize.height);  // Posizione e dimensione
         mapViewer.setTileFactory(tileFactory);
         
-        mapViewer.setOverlayPainter(painterGroup);
+        mapViewer.setOverlayPainter(frame.getPainterGroup());
         
         
         // Selezione del numero di thread per il rendering, destinazione di una cache
@@ -86,8 +84,8 @@ public class Mappa extends JComponent {
         painterLinea = new LineaPainter(new ArrayList<>());
         this.painterLinea = painterLinea;
         
-        this.painterGroup.addPainter(painterLinea);
-        this.painterGroup.addPainter(painterFermate);
+        this.frame.getPainterGroup().addPainter(painterLinea);
+        this.frame.getPainterGroup().addPainter(painterFermate);
 
         
         // Impostazione della posizione e dello zoom iniziale
@@ -129,7 +127,7 @@ public class Mappa extends JComponent {
     
     // Metodo get per il painterGroup, ossia il gruppo ordinato di painter che disegna sulla mappa
     public CompoundPainter<JXMapViewer> getPainterGroup() {
-    	return this.painterGroup;
+    	return this.frame.getPainterGroup();
     }
     
     
@@ -183,7 +181,7 @@ public class Mappa extends JComponent {
     	double sud = bottomRight.getLatitude();
     	double est = bottomRight.getLongitude();
     	
-    	List<Stop> fermateVisibili = dati.getFermate().stream()
+    	List<Stop> fermateVisibili = frame.getDati().getFermate().stream()
     			.filter(stop -> stop.getLat() >= Math.min(nord, sud) && stop.getLat() <= Math.max(nord, sud))
     	        .filter(stop -> stop.getLon() >= Math.min(ovest, est) && stop.getLon() <= Math.max(ovest, est))
     	        .collect(Collectors.toList());

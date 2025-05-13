@@ -33,6 +33,8 @@ import javax.swing.JButton;
 
 public class RoutePanel extends JPanel {
 	
+	private Frame frame;
+	
 	private JLabel codiceLinea, agenziaENomeLinea, lblFermate, lblMezzi;
 	private JButton btnClose, btnAgency, btnFavorite, btnWebsite, btnRouteType;
 	private JPanel fermatePanel;
@@ -45,15 +47,15 @@ public class RoutePanel extends JPanel {
 	              scaledImageIntermezzoMetroA, scaledImageInizioMetroA, scaledImageFineMetroA,
 	              scaledImageIntermezzoMetroB, scaledImageInizioMetroB, scaledImageFineMetroB,
 	              scaledImageIntermezzoMetroC, scaledImageInizioMetroC, scaledImageFineMetroC;
-	private Utente utente;
-	private DatiGTFS dati;
 
 
 	// Costruttore del pannello routePanel
 	public RoutePanel(Frame frame) {
 		
-		this.utente = frame.getUtente();
-		this.dati = frame.getDati();
+		this.frame = frame;
+		
+//		this.utente = frame.getUtente();
+//		this.dati = frame.getDati();
 		
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);
@@ -308,7 +310,7 @@ public class RoutePanel extends JPanel {
 		btnFavorite.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        
-		        List<String> lineePreferite = utente.getLineePreferite();
+		        List<String> lineePreferite = frame.getUtente().getLineePreferite();
 		        String idLinea = linea.getId().getId();
 		        
 		        boolean isOraPreferita;
@@ -322,7 +324,7 @@ public class RoutePanel extends JPanel {
 		        }
 		        
 		        try {
-					utente.cambiaLineePreferite(lineePreferite);
+		        	frame.getUtente().cambiaLineePreferite(lineePreferite);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -374,7 +376,7 @@ public class RoutePanel extends JPanel {
 			agenziaENomeLinea.setText(agencyName + "  -  " + longName);
 		}
 		
-		List<Stop> fermate = dati.getFermatePerLinea(linea);
+		List<Stop> fermate = frame.getDati().getFermatePerLinea(linea);
 		
 		fermatePanel = new JPanel();
 		fermatePanel.setLayout(null);
@@ -564,13 +566,13 @@ public class RoutePanel extends JPanel {
 			return;
 		}
 		
-		if (utente.getIsLogged()) {
+		if (frame.getUtente().getIsLogged()) {
 			btnFavorite.setEnabled(true);
 			btnFavorite.setVisible(true);
 			
 		    boolean isPreferita = false;
 		    
-		    for (String lineaPreferita : utente.getLineePreferite()) {
+		    for (String lineaPreferita : frame.getUtente().getLineePreferite()) {
 		        if (lineaPreferita.equals(linea.getId().getId())) {
 		            isPreferita = true;
 		            break;
@@ -594,7 +596,7 @@ public class RoutePanel extends JPanel {
 			
 			boolean isPreferita = false;
 			
-			for (String lineaPreferita : utente.getLineePreferite()) {
+			for (String lineaPreferita : frame.getUtente().getLineePreferite()) {
 		        if (lineaPreferita.equals(codiceLinea.getText().trim())) {
 		            isPreferita = true;
 		            break;

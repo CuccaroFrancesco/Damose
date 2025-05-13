@@ -19,12 +19,8 @@ import java.util.List;
 
 public class UserPanel extends JPanel implements PreferitiObserver {
 	
-	private Utente utente;
-	private DatiGTFS dati;
-	private Navbar navbar;
-	private Mappa mappa;
-	private StopPanel stopPanel;
-	private RoutePanel lineaPanel;
+	private Frame frame;
+	
 	private JButton btnAccedi, btnRegistrati, btnConfermaLogin, btnConfermaRegistr, btnLogout, btnBack, btnToggleFermate, btnToggleLinee;
 	private JLabel titolo, lblNome, lblCognome, lblUsername, lblPassword, lblConfermaPassword,
 	               erroreNome, erroreCognome, erroreUsername, errorePassword, erroreConfermaPassword, registrazioneEffettuata;
@@ -37,14 +33,9 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	// Costruzione del pannello utente (login, registrazione e profilo)
 	public UserPanel(Frame frame) {
 		
-		this.dati = frame.getDati();
-		this.utente = frame.getUtente();
-		this.navbar = frame.getNavbar();
-		this.mappa = frame.getMappa();
-		this.stopPanel = frame.getStopPanel();
-		this.lineaPanel = frame.getRoutePanel();
+		this.frame = frame;
 		
-		utente.setObserver(this);
+		frame.getUtente().setObserver(this);
 		
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);
@@ -515,7 +506,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		        
 		        try {
 		        	
-		        	String resoconto = utente.accedi(username, password);
+		        	String resoconto = frame.getUtente().accedi(username, password);
 		            
 		            if (resoconto.equals("Verificata.")) {
 		            	
@@ -524,14 +515,14 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		            	UserPanel.this.aggiornaPreferiti();
 		            	UserPanel.this.repaint();
 		                
-		                titolo.setText(utente.getUsername());
+		                titolo.setText(frame.getUtente().getUsername());
 		                titolo.setBounds(0, 120, 350, 50);
 		                titolo.setVisible(true);
 		                
 		                btnLogout.setVisible(true);
 		                
-		                stopPanel.controllaUtente(true);
-						lineaPanel.controllaUtente(true);
+		                frame.getStopPanel().controllaUtente(true);
+		                frame.getRoutePanel().controllaUtente(true);
 		            } else {
 		            	
 		                errorePassword.setVisible(true);
@@ -566,7 +557,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				utente.logout();
+				frame.getUtente().logout();
 				nascondiTutto();	
 				
 				titolo.setText("Ospite");
@@ -576,8 +567,8 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 				btnAccedi.setVisible(true);
 				btnRegistrati.setVisible(true);
 				
-				stopPanel.controllaUtente(null);
-				lineaPanel.controllaUtente(null);
+				frame.getStopPanel().controllaUtente(null);
+				frame.getRoutePanel().controllaUtente(null);
 			}
 		});
 	}
@@ -594,8 +585,8 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		if (btnToggleFermate != null) remove(btnToggleFermate);
 		
 		// Recupero delle linee e delle fermate preferite dell'utente 
-        List<String> lineePreferite = utente.getLineePreferite();
-        List<String> fermatePreferite = utente.getFermatePreferite();
+        List<String> lineePreferite = frame.getUtente().getLineePreferite();
+        List<String> fermatePreferite = frame.getUtente().getFermatePreferite();
         
         // Creazione del pannello per le linee preferite
         panelLineePreferite = new JPanel();
@@ -627,7 +618,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
                 lineaBtn.setBorder(BorderFactory.createEmptyBorder());
 
                 final Route[] lineaArray = new Route[1];    // Array finale per linea
-                lineaArray[0] = dati.cercaLineaByID(routeId);
+                lineaArray[0] = frame.getDati().cercaLineaByID(routeId);
                 
                 for (ActionListener a : lineaBtn.getActionListeners()) {
                 	lineaBtn.removeActionListener(a);
@@ -636,9 +627,9 @@ public class UserPanel extends JPanel implements PreferitiObserver {
                 lineaBtn.addActionListener(new ActionListener() {
                 	public void actionPerformed(ActionEvent e) {
                 		if (lineaArray[0] != null) {
-                			lineaPanel.creaPannelloLinea(lineaArray[0]);
-                            LineaPainter.costruisciLineaDaDisegnare(lineaArray[0], mappa, dati);
-                            stopPanel.setVisible(false);
+                			frame.getRoutePanel().creaPannelloLinea(lineaArray[0]);
+                            LineaPainter.costruisciLineaDaDisegnare(lineaArray[0], frame.getMappa(), frame.getDati());
+                            frame.getStopPanel().setVisible(false);
                         } else {
                             System.out.println("Linea non trovata");
                         }
@@ -685,14 +676,14 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	            stopBtn.setBorder(BorderFactory.createEmptyBorder());
 	
 	            final Stop[] fermata = new Stop[1]; // Usa un array per rendere la variabile finale
-	            fermata[0] = dati.cercaFermataByID(stopId);
+	            fermata[0] = frame.getDati().cercaFermataByID(stopId);
 	
 	            stopBtn.addActionListener(new ActionListener() {
 	            	public void actionPerformed(ActionEvent e) {
 	            		if (fermata[0] != null) {
-	            			stopPanel.creaPannelloFermata(fermata[0]);
-	                        mappa.centraMappa(fermata[0].getLon(), fermata[0].getLat(), 2);
-	                        lineaPanel.setVisible(false);
+	            			frame.getStopPanel().creaPannelloFermata(fermata[0]);
+	            			frame.getMappa().centraMappa(fermata[0].getLon(), fermata[0].getLat(), 2);
+	            			frame.getRoutePanel().setVisible(false);
 	                    } else {
 	                        System.out.println("Fermata non trovata");
 	                    }
