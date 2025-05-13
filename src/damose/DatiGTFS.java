@@ -121,8 +121,7 @@ public class DatiGTFS {
 	// Metodo set per il valore da mostrare sulla barra di caricamento
 	public void setProgress(int i, String nome) {
 		this.progressBar.setValue(i);
-		this.progressBar.setString("Loading " + nome + "...  (" + i +"/22)");
-		// logs.setText("Loading " + nome + "...  (" + i +"/22)");
+		logs.setText("Loading " + nome + "...  (" + i +"/22)");
 	}
 	
 // ---------------------------------------------------------------------------------------------

@@ -50,10 +50,10 @@ public class RoutePanel extends JPanel {
 
 
 	// Costruttore del pannello routePanel
-	public RoutePanel(Utente utente, DatiGTFS dati) {
+	public RoutePanel(Frame frame) {
 		
-		this.utente = utente;
-		this.dati = dati;
+		this.utente = frame.getUtente();
+		this.dati = frame.getDati();
 		
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);

@@ -35,14 +35,14 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 
 
 	// Costruzione del pannello utente (login, registrazione e profilo)
-	public UserPanel(Utente utente, DatiGTFS dati, Navbar navbar, Mappa mappa, StopPanel stopPanel, RoutePanel lineaPanel) {
+	public UserPanel(Frame frame) {
 		
-		this.dati = dati;
-		this.utente = utente;
-		this.navbar = navbar;
-		this.mappa = mappa;
-		this.stopPanel = stopPanel;
-		this.lineaPanel = lineaPanel;
+		this.dati = frame.getDati();
+		this.utente = frame.getUtente();
+		this.navbar = frame.getNavbar();
+		this.mappa = frame.getMappa();
+		this.stopPanel = frame.getStopPanel();
+		this.lineaPanel = frame.getRoutePanel();
 		
 		utente.setObserver(this);
 		

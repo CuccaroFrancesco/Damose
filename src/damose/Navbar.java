@@ -47,13 +47,13 @@ public class Navbar extends JPanel {
 
     
     // Costruttore dell'oggetto Navbar
-    public Navbar(Mappa mapPanel, DatiGTFS dati, StopPanel stopPanel, RoutePanel lineaPanel, Ricerca ricerca) {
+    public Navbar(Frame frame) {
     	
-    	this.mapPanel = mapPanel;
-        this.dati = dati;
-        this.stopPanel = stopPanel;
-        this.lineaPanel = lineaPanel;
-        this.ricerca = ricerca;
+    	this.mapPanel = frame.getMappa();
+        this.dati = frame.getDati();
+        this.stopPanel = frame.getStopPanel();
+        this.lineaPanel = frame.getRoutePanel();
+        this.ricerca = frame.getRicerca();
 
         
         // Gestione delle caratteristiche della navbar

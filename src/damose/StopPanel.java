@@ -28,10 +28,10 @@ public class StopPanel extends JPanel {
 	
 	
 	// Costruttore del pannello stopPanel
-	public StopPanel(Utente utente, DatiGTFS dati) {
+	public StopPanel(Frame frame) {
 		
-		this.utente = utente;
-		this.dati = dati;
+		this.utente = frame.getUtente();
+		this.dati = frame.getDati();
 		
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);

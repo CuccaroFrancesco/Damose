@@ -49,11 +49,11 @@ public class Mappa extends JComponent {
 
     
     // Costruttore dell'oggetto Mappa
-    public Mappa(DatiGTFS dati, CompoundPainter<JXMapViewer> painterGroup) throws Exception {
+    public Mappa(Frame frame) throws Exception {
     	
     	// Assegnamento dei dati GTFS e del CompoundPainter all'istanza
-    	this.dati = dati;
-    	this.painterGroup = painterGroup;
+    	this.dati = frame.getDati();
+    	this.painterGroup = frame.getPainterGroup();
     	
     	
     	// Impostazione iniziale della mappa

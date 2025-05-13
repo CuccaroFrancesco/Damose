@@ -38,12 +38,12 @@ public class Ricerca extends JPanel{
 	
     
     // Costruttore dell'oggetto Ricerca
-	public Ricerca(DatiGTFS dati, StopPanel stopPanel, RoutePanel lineaPanel, Mappa mappa) {
+	public Ricerca(Frame frame) {
 		
-		this.dati = dati;
-		this.stopPanel = stopPanel;
-		this.lineaPanel = lineaPanel;
-		this.mappa = mappa;
+		this.dati = frame.getDati();
+		this.stopPanel = frame.getStopPanel();
+		this.lineaPanel = frame.getRoutePanel();
+		this.mappa = frame.getMappa();
 		
 		this.setLayout(null);
 		this.setVisible(false);
