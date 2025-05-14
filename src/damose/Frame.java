@@ -234,7 +234,7 @@ public class Frame extends JFrame {
 
 // ---------------------------------------------------------------------------------------------
 
-	// Metodo che gestisce l'adattamento dinamico delle dimensioni della navbar e delle sue componenti
+	// Metodo che gestisce l'adattamento dinamico delle componenti del frame
 	private void calibra() {
 		
 		int newWidth = getWidth();              // Nuova larghezza della finestra

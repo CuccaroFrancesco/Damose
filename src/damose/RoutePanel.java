@@ -54,9 +54,6 @@ public class RoutePanel extends JPanel {
 		
 		this.frame = frame;
 		
-//		this.utente = frame.getUtente();
-//		this.dati = frame.getDati();
-		
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);
 		this.setVisible(false);
@@ -132,6 +129,7 @@ public class RoutePanel extends JPanel {
         btnClose.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		RoutePanel.this.setVisible(false);
+        		RoutePanel.this.frame.getMappa().getPainterLinea().setLineaDaDisegnare(new ArrayList<>(), null);
         	}
         });
         
@@ -287,6 +285,7 @@ public class RoutePanel extends JPanel {
 	public void creaPannelloLinea(Route linea) {
 		
 		this.setVisible(true);
+		frame.getStopPanel().setVisible(false);
 		
 		if (fermateScrollPane != null) {
 		    this.remove(fermateScrollPane);
@@ -325,7 +324,7 @@ public class RoutePanel extends JPanel {
 		        
 		        try {
 		        	frame.getUtente().cambiaLineePreferite(lineePreferite);
-				} catch (IOException e1) {
+				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 		        

@@ -127,7 +127,7 @@ public class Utente {
 // ---------------------------------------------------------------------------------------------
 	
 	// Metodo per modificare le linee preferite (sia attributo che nel file di testo) dell'utente loggato
-	public void cambiaLineePreferite(List<String> lineePreferite) throws IOException {
+	public void cambiaLineePreferite(List<String> lineePreferite) throws Exception {
 		
 		this.setLineePreferite(lineePreferite);
 		
@@ -164,16 +164,11 @@ public class Utente {
 			reader.close();
 			writer.close();
 			
-		} catch(IOException e) {
+			inputFile.delete();
+			tempFile.renameTo(inputFile);
+			
+		} catch(Exception e) {
 			e.printStackTrace();
-		}
-		    
-		if (!inputFile.delete()) {
-			throw new IOException("Impossibile eliminare il file originale.");
-		}
-		
-		if (!tempFile.renameTo(inputFile)) {
-			throw new IOException("Impossibile rinominare il file temporaneo.");
 		}
 		
 		notificaObserver();
@@ -181,7 +176,7 @@ public class Utente {
 
 	
 	// Metodo per modificare le fermate preferite (sia attributo che nel file di testo) dell'utente loggato
-	public void cambiaFermatePreferite(List<String> fermatePreferite) throws IOException {
+	public void cambiaFermatePreferite(List<String> fermatePreferite) throws Exception {
 		
 		this.setFermatePreferite(fermatePreferite);
 		
@@ -212,19 +207,14 @@ public class Utente {
 			    writer.newLine();
 			}
 
-			reader.close();
 			writer.close();
-			
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
+			reader.close();
 		    
-		if (!inputFile.delete()) {
-			throw new IOException("Impossibile eliminare il file originale.");
-		}
-		
-		if (!tempFile.renameTo(inputFile)) {
-			throw new IOException("Impossibile rinominare il file temporaneo.");
+			inputFile.delete();
+			tempFile.renameTo(inputFile);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 		
 		notificaObserver();

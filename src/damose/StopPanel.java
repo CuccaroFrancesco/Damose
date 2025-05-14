@@ -12,6 +12,7 @@ import org.onebusaway.gtfs.model.*;
 
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
@@ -189,6 +190,8 @@ public class StopPanel extends JPanel {
 	public void creaPannelloFermata(Stop fermata) {
 		
 		this.setVisible(true);
+		frame.getMappa().getPainterLinea().setLineaDaDisegnare(new ArrayList<>(), null);
+		frame.getRoutePanel().setVisible(false);
 		
 		if (lineePassantiScrollPane != null) {
 		    this.remove(lineePassantiScrollPane);
@@ -223,7 +226,7 @@ public class StopPanel extends JPanel {
 		        
 		        try {
 		        	frame.getUtente().cambiaFermatePreferite(fermatePreferite);
-				} catch (IOException e1) {
+				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 		        
@@ -387,14 +390,14 @@ public class StopPanel extends JPanel {
 	
 	public void controllaUtente(boolean isLogged) {
 		
-		if(isLogged) {
+		if (isLogged) {
 			btnFavorite.setEnabled(true);
 			btnFavorite.setVisible(true);
 			
 			boolean isPreferita = false;
 		    
 		    for (String fermataPreferita : frame.getUtente().getFermatePreferite()) {
-		        if (fermataPreferita.equals(codiceFermata.getText().substring(4))) {
+		        if (fermataPreferita.equals(codiceFermata.getText().substring(4).trim())) {
 		            isPreferita = true;
 		            break;
 		        }

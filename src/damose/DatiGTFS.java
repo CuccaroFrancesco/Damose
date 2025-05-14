@@ -42,7 +42,7 @@ import com.google.transit.realtime.GtfsRealtime.FeedMessage;
 public class DatiGTFS {
 	
 	private GtfsRelationalDaoImpl datiStatici;
-	private FeedMessage datiRealTime;
+	private FeedMessage tripUpdates, vehiclePositions, alert;
 	private JButton logoDamose;
 	private JProgressBar progressBar;
 	private JPanel schermataCaricamento;
@@ -124,6 +124,12 @@ public class DatiGTFS {
 		logs.setText("Loading " + nome + "...  (" + i +"/22)");
 	}
 	
+	
+	// Metodo che gestisce l'adattamento dinamico della schermata di caricamento
+	private void calibraCaricamento() {
+		
+	}
+	
 // ---------------------------------------------------------------------------------------------
 	
 	// Metodo che permette di caricare dei dati GTFS statici da file di testo contenuti in una cartella
@@ -174,13 +180,31 @@ public class DatiGTFS {
 	}
 	
 	
-	// Metodo che permette di caricare dei dati GTFS real-time da file .pb contenuti in un determinato URL
-	public void caricaDatiRealTimeGTFS() throws Exception {
+	// Metodo che permette di caricare dei dati GTFS real-time "TripUpdates" da file .pb
+	public void caricaTripUpdatesGTFS() throws Exception {
 			
 		URL url = new URL("https://romamobilita.it/sites/default/files/rome_rtgtfs_trip_updates_feed.pb");
 			
 		FeedMessage feed = FeedMessage.parseFrom(url.openStream());
-		this.datiRealTime = feed;
+		this.tripUpdates = feed;
+	}
+	
+	// Metodo che permette di caricare dei dati GTFS real-time "VehiclePositions" da file .pb
+	public void caricaVehiclePositionsGTFS() throws Exception {
+				
+		URL url = new URL("https://romamobilita.it/sites/default/files/rome_rtgtfs_vehicle_positions_feed.pb");
+				
+		FeedMessage feed = FeedMessage.parseFrom(url.openStream());
+		this.vehiclePositions = feed;
+	}
+	
+	// Metodo che permette di caricare dei dati GTFS real-time "Alert" da file .pb
+	public void caricaAlertGTFS() throws Exception {
+				
+		URL url = new URL("https://romamobilita.it/sites/default/files/rome_rtgtfs_service_alerts_feed.pb");
+				
+		FeedMessage feed = FeedMessage.parseFrom(url.openStream());
+		this.alert = feed;
 	}
 
 // ---------------------------------------------------------------------------------------------
@@ -318,8 +342,20 @@ public class DatiGTFS {
 	
 // ---------------------------------------------------------------------------------------------
 
-	// Metodo get per i dati real-time GTFS dell'istanza
-	public FeedMessage getDatiRealTime() {
-		return this.datiRealTime;
+	// Metodo get per i tripUpdates dell'istanza
+	public FeedMessage getTripUpdates() {
+		return this.tripUpdates;
+	}
+	
+	
+	// Metodo get per i vehiclePositions dell'istanza
+	public FeedMessage getVehiclePositions() {
+		return this.vehiclePositions;
+	}
+	
+	
+	// Metodo get per gli alert dell'istanza
+	public FeedMessage getAlert() {
+		return this.alert;
 	}
 }

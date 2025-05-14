@@ -266,13 +266,6 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		this.add(registrazioneEffettuata);
 
 // ---------------------------------------------------------------------------------------------
-
-		// 
-		
-		
-		//
-		
-// ---------------------------------------------------------------------------------------------
 		
 		// Pulsante per confermare le credenziali di login
 		btnConfermaLogin = new JButton("Conferma");
@@ -281,7 +274,19 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		btnConfermaLogin.setVisible(false);
 		btnConfermaLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
-		this.add(btnConfermaLogin);
+		Action pressedConfermaLogin = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				btnConfermaLogin.doClick();
+			}
+		};
+		
+		InputMap inputMapLogin = btnConfermaLogin.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMapLogin = btnConfermaLogin.getActionMap();
+        
+        inputMapLogin.put(KeyStroke.getKeyStroke("ENTER"), "pressed");
+        actionMapLogin.put("pressed", pressedConfermaLogin);
+        
+        this.add(btnConfermaLogin);
 		
 		
 		// Pulsante per confermare i dati della registrazione
@@ -291,7 +296,20 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		btnConfermaRegistr.setVisible(false);
 		btnConfermaRegistr.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 				
-		this.add(btnConfermaRegistr);
+		
+		Action pressedConfermaRegistr = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				btnConfermaRegistr.doClick();
+			}
+		};
+		
+		InputMap inputMapRegistr = btnConfermaRegistr.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMapRegistr = btnConfermaRegistr.getActionMap();
+        
+        inputMapRegistr.put(KeyStroke.getKeyStroke("ENTER"), "pressed");
+        actionMapRegistr.put("pressed", pressedConfermaRegistr);
+        
+        this.add(btnConfermaRegistr);
 		
 // ---------------------------------------------------------------------------------------------
 		
@@ -358,6 +376,8 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 				lblPassword.setVisible(true);
 					
 				btnConfermaLogin.setVisible(true);
+				
+				inputUsername.requestFocus();
 			}
 		});
 		
@@ -629,7 +649,6 @@ public class UserPanel extends JPanel implements PreferitiObserver {
                 		if (lineaArray[0] != null) {
                 			frame.getRoutePanel().creaPannelloLinea(lineaArray[0]);
                             LineaPainter.costruisciLineaDaDisegnare(lineaArray[0], frame.getMappa(), frame.getDati());
-                            frame.getStopPanel().setVisible(false);
                         } else {
                             System.out.println("Linea non trovata");
                         }
@@ -683,7 +702,6 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	            		if (fermata[0] != null) {
 	            			frame.getStopPanel().creaPannelloFermata(fermata[0]);
 	            			frame.getMappa().centraMappa(fermata[0].getLon(), fermata[0].getLat(), 2);
-	            			frame.getRoutePanel().setVisible(false);
 	                    } else {
 	                        System.out.println("Fermata non trovata");
 	                    }
