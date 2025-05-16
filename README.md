@@ -69,3 +69,11 @@ ___
 ## TESTING UNITARIO
 ...
 ___
+
+## BUG E MIGLIORAMENTI
+- Aggiungere un metodo calibraCaricamento per la schermata di caricamento
+- Creare un WaypointPainter personalizzato, per distinguere tra fermate generiche, fermate preferite (giallo) e fermate selezionate in un determinato momento
+- Eliminare l'observer (non più necessario)
+- Rendere interattivi i waypoint delle fermate (se premuto, creare lo stopPanel corrispondente)
+- Se le lineePreferite iniziano con "-" in utenti.txt, viene creato un lineaBtn vuoto all'inizio
+- Trovare un modo, quando il lineaPanel è visibile, di disegnare solo le fermate appartenenti a tale linea

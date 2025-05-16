@@ -253,6 +253,9 @@ public class DatiGTFS {
 	            linee.add(route);
 	        }
 	    }
+	    
+	    linee.sort((l1, l2) -> l1.getShortName().compareTo(l2.getShortName()));
+	    linee.sort((l1, l2) -> Integer.compare(l1.getType(), l2.getType()));
 
 	    return linee;
 	}
@@ -272,6 +275,8 @@ public class DatiGTFS {
 	            fermate.add(stop);
 	        }
 	    }
+	    
+	    fermate.sort((f1, f2) -> f1.getId().getId().compareTo(f2.getId().getId()));
 
 	    return fermate;
 	}
