@@ -12,22 +12,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
-import org.onebusaway.gtfs.model.Route;
-import org.onebusaway.gtfs.model.Stop;
+import org.onebusaway.gtfs.model.*;
 
 import java.util.List;
 
-import javax.swing.JLabel;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
+import java.time.*;
+import java.time.format.*;
 
 
 
@@ -35,8 +28,8 @@ public class RoutePanel extends JPanel {
 	
 	private Frame frame;
 	
-	private JLabel codiceLinea, agenziaENomeLinea, lblFermate, lblMezzi;
-	private JButton btnClose, btnAgency, btnFavorite, btnWebsite, btnRouteType;
+	private JLabel codiceLinea, agenziaENomeLinea, lblFermate, lblViaggi, lblMezzi;
+	private JButton btnClose, btnRefresh, btnAgency, btnFavorite, btnWebsite, btnRouteType;
 	private JPanel fermatePanel;
 	private JScrollPane fermateScrollPane;
 	private ImageIcon iconIntermezzo, newIconIntermezzo, iconInizio, newIconInizio, iconFine, newIconFine,
@@ -83,16 +76,28 @@ public class RoutePanel extends JPanel {
         this.add(agenziaENomeLinea);
         
         
-        // JLabel per il testo "Fermate:"
-        lblFermate = new JLabel("Fermate:");
+//        // JLabel per il testo "Fermate:"
+//        lblFermate = new JLabel("Fermate:");
+//        
+//        lblFermate.setForeground(Color.WHITE);
+//        lblFermate.setFont(new Font("Arial Nova", Font.BOLD, 24));
+//        lblFermate.setFocusable(false);
+//        
+//        lblFermate.setBounds(20, 200, 150, 50);
+//        
+//        this.add(lblFermate);
         
-        lblFermate.setForeground(Color.WHITE);
-        lblFermate.setFont(new Font("Arial Nova", Font.BOLD, 24));
-        lblFermate.setFocusable(false);
         
-        lblFermate.setBounds(20, 200, 150, 50);
+        // JLabel per il testo "Prossimi viaggi:"
+        lblViaggi = new JLabel("Prossimi viaggi:");
         
-        this.add(lblFermate);
+        lblViaggi.setForeground(Color.WHITE);
+        lblViaggi.setFont(new Font("Arial Nova", Font.BOLD, 24));
+        lblViaggi.setFocusable(false);
+        
+        lblViaggi.setBounds(20, 200, 200, 50);
+        
+        this.add(lblViaggi);
         
         
         // JLabel per il testo "Mezzi:"
@@ -113,7 +118,7 @@ public class RoutePanel extends JPanel {
         btnClose.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         
         btnClose.setFont(new Font("Arial Nova", Font.BOLD, 14));
-        btnClose.setForeground(new Color(255, 255, 255));
+        btnClose.setForeground(Color.WHITE);
         
         btnClose.setBorderPainted(false);
         btnClose.setFocusPainted(false);
@@ -134,6 +139,32 @@ public class RoutePanel extends JPanel {
         });
         
         this.add(btnClose);
+        
+        
+        // Pulsante per aggiornare i dati visualizzati in base all'orario di visualizzazione
+        btnRefresh = new JButton();
+        
+        btnRefresh.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnRefresh.setForeground(Color.WHITE);
+        
+        btnRefresh.setBorderPainted(false);
+        btnRefresh.setFocusPainted(false);
+        btnRefresh.setContentAreaFilled(false);
+        
+        btnRefresh.setBounds(313, 4, 30, 30);
+        
+        ImageIcon iconRefresh = new ImageIcon("src/resources/refresh.png");
+        Image scaledImageRefresh = iconRefresh.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        ImageIcon newIconRefresh = new ImageIcon(scaledImageRefresh);
+        btnRefresh.setIcon(newIconRefresh);
+        
+        btnRefresh.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+        	}
+        });
+        
+        this.add(btnRefresh);
         
         
         // Pulsante per il logo dell'agenzia di trasporti che gestisce la linea (non interattivo, serve solo a visualizzare comodamente il logo)
@@ -338,8 +369,6 @@ public class RoutePanel extends JPanel {
 		String agencyName = linea.getAgency().getName();
 		String longName =  linea.getLongName();
 		String shortName = linea.getShortName();
-		String url = linea.getUrl();
-		int routeType = linea.getType();
 		
 		btnAgency.setVisible(true);
 		switch (agencyName) {
@@ -375,83 +404,8 @@ public class RoutePanel extends JPanel {
 			agenziaENomeLinea.setText(agencyName + "  -  " + longName);
 		}
 		
-		List<Stop> fermate = frame.getDati().getFermatePerLinea(linea);
-		
-		fermatePanel = new JPanel();
-		fermatePanel.setLayout(null);
-		fermatePanel.setBackground(new Color(130, 36, 51));
-		fermatePanel.setPreferredSize(new Dimension(350, Math.max(100, fermate.size() * 40)));
-		
-		for (int i = 0; i < fermate.size(); i++) {
-			
-			Stop fermata = fermate.get(i);
-			int y = i * 40;
-			
-			JButton stopBtn = new JButton();
-            
-            stopBtn.setBounds(10, y, 290, 60);
-            
-            stopBtn.setFocusable(false);
-            stopBtn.setContentAreaFilled(false);
-            stopBtn.setFocusPainted(false);
-            stopBtn.setBorderPainted(false);
-            
-            stopBtn.setFont(new Font("Arial Nova", Font.BOLD, 12));
-            stopBtn.setText("<html><div style='width: 205px;'>  " + fermata.getName() + "</div></html");
-            stopBtn.setHorizontalAlignment(SwingConstants.LEADING);
-            
-            stopBtn.setForeground(new Color(255, 255, 255));
-            stopBtn.setBackground(new Color(130, 36, 51));
-            stopBtn.setBorder(BorderFactory.createEmptyBorder());
-            
-            switch (shortName) {
-	        	case "MEA":
-	        		
-	        		if (i == 0) stopBtn.setIcon(newIconInizioMetroA);
-		        	else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroA); 
-		        	else stopBtn.setIcon(newIconIntermezzoMetroA); 
-	        		
-			        break;
-			    
-	        	case "MEB", "MEB1":
-	        		
-	        		if (i == 0) stopBtn.setIcon(newIconInizioMetroB);
-		        	else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroB); 
-		        	else stopBtn.setIcon(newIconIntermezzoMetroB); 
-	        	
-			        break;
-			        
-	        	case "MEC":
-	        		
-	        		if (i == 0) stopBtn.setIcon(newIconInizioMetroC);
-		        	else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroC); 
-		        	else stopBtn.setIcon(newIconIntermezzoMetroC); 
-			        
-			        break;
-			        
-			    default:
-			    	
-			    	if (i == 0) stopBtn.setIcon(newIconInizio);
-		        	else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFine); 
-		        	else stopBtn.setIcon(newIconIntermezzo); 
-			    	
-			    	break;
-            }
-            
-	        fermatePanel.add(stopBtn);
-		}
-		
-		fermateScrollPane = new JScrollPane(fermatePanel);
         
-        fermateScrollPane.setBorder(null);
-        fermateScrollPane.setBounds(0, 250, 350, 200);
-        
-        fermateScrollPane.getVerticalScrollBar().setUnitIncrement(12);
-        fermateScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        fermateScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        
-        this.add(fermateScrollPane);
-        fermatePanel.repaint();
+		String url = linea.getUrl();
 		
 		btnWebsite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -469,6 +423,8 @@ public class RoutePanel extends JPanel {
                 }
 			}
 		});
+		
+		int routeType = linea.getType();
 		
 		switch (routeType) {
 			case 0:
@@ -549,6 +505,121 @@ public class RoutePanel extends JPanel {
 		        btnRouteType.setText(" Autobus");
 		        break;
 		}
+		
+		List<Stop> fermate = frame.getDati().getFermatePerLinea(linea);
+		
+		fermatePanel = new JPanel();
+		fermatePanel.setLayout(null);
+		fermatePanel.setBackground(new Color(130, 36, 51));
+		fermatePanel.setPreferredSize(new Dimension(350, Math.max(100, fermate.size() * 40)));
+		
+		for (int i = 0; i < fermate.size(); i++) {
+			
+			Stop fermata = fermate.get(i);
+			int y = i * 40;
+			
+			JButton stopBtn = new JButton();
+			
+			stopBtn.setBounds(10, y, 290, 60);
+			
+			stopBtn.setFocusable(false);
+			stopBtn.setContentAreaFilled(false);
+			stopBtn.setFocusPainted(false);
+			stopBtn.setBorderPainted(false);
+			
+			stopBtn.setFont(new Font("Arial Nova", Font.BOLD, 12));
+			stopBtn.setText("<html><div style='width: 205px;'>  " + fermata.getName() + "</div></html");
+			stopBtn.setHorizontalAlignment(SwingConstants.LEADING);
+			
+			stopBtn.setForeground(new Color(255, 255, 255));
+			stopBtn.setBackground(new Color(130, 36, 51));
+			stopBtn.setBorder(BorderFactory.createEmptyBorder());
+			
+			switch (shortName) {
+				case "MEA":
+					if (i == 0) stopBtn.setIcon(newIconInizioMetroA);
+					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroA); 
+					else stopBtn.setIcon(newIconIntermezzoMetroA); 
+					
+					break;
+					
+				case "MEB", "MEB1":
+					if (i == 0) stopBtn.setIcon(newIconInizioMetroB);
+					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroB); 
+					else stopBtn.setIcon(newIconIntermezzoMetroB); 
+				
+					break;
+				
+				case "MEC":
+					if (i == 0) stopBtn.setIcon(newIconInizioMetroC);
+					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroC); 
+					else stopBtn.setIcon(newIconIntermezzoMetroC); 
+					
+					break;
+					
+				default:
+					if (i == 0) stopBtn.setIcon(newIconInizio);
+					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFine); 
+					else stopBtn.setIcon(newIconIntermezzo); 
+					
+					break;
+			}
+			
+			fermatePanel.add(stopBtn);
+		}
+		
+		fermateScrollPane = new JScrollPane(fermatePanel);
+		
+		fermateScrollPane.setBorder(null);
+		fermateScrollPane.setBounds(0, 250, 350, 200);
+		
+		fermateScrollPane.getVerticalScrollBar().setUnitIncrement(12);
+		fermateScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		fermateScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		this.add(fermateScrollPane);
+		fermatePanel.repaint();
+		
+		LocalTime timeNow = LocalTime.now();
+		
+		List<Trip> listaViaggi = this.frame.getDati().getDatiStatici().getTripsForRoute(linea);
+		List<Trip> listaViaggiCopy = new ArrayList<>(listaViaggi);
+		listaViaggiCopy.sort((t1, t2) -> Integer.compare(RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(t1).getFirst().getDepartureTime(), 
+														 RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(t2).getFirst().getDepartureTime()));
+		
+		List<Trip> listaViaggiDaVisualizzare = new ArrayList<>();
+		
+		for (int i = 0; i < listaViaggiCopy.size(); i++) {
+			
+			Trip viaggio = listaViaggiCopy.get(i);
+			
+			StopTime primaFermata = this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggio).getFirst();
+			LocalTime orarioPrimaFermata = LocalTime.ofSecondOfDay(primaFermata.getDepartureTime());
+			
+			if (orarioPrimaFermata.isAfter(timeNow)) {
+				
+				if (i > 0) {
+					
+					listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i - 1));
+					listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i));
+					
+					if (i + 1 < listaViaggiCopy.size()) listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i + 1));
+					
+					break;
+					
+				} else {
+					
+					listaViaggiDaVisualizzare.add(listaViaggi.get(i));
+					
+					if (i + 1 < listaViaggiCopy.size()) listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i + 1));
+					if (i + 2 < listaViaggiCopy.size()) listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i + 2));
+					
+					break;
+				}
+			}
+		}
+		
+		System.out.println(listaViaggiDaVisualizzare);
 		
 		this.revalidate();
 		this.repaint();
