@@ -188,7 +188,7 @@ public class Mappa extends JComponent {
     	for (Stop fermata : fermateVisibili) {
     		
     		if (this.frame.getRoutePanel().isVisible()) {
-    			if (this.frame.getDati().getFermatePerLinea(this.frame.getDati().cercaLineaByID(this.frame.getRoutePanel().getIDLinea().trim())).contains(fermata)) {
+    			if (this.frame.getDati().getFermatePerLinea(this.frame.getDati().cercaLineaByID(this.frame.getRoutePanel().getCodiceLinea().trim())).contains(fermata)) {
     				puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
     			}
     		} else {

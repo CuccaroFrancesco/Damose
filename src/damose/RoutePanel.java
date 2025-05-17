@@ -627,8 +627,8 @@ public class RoutePanel extends JPanel {
 
 // ---------------------------------------------------------------------------------------------
 
-	// Metodo get per l'ID (short name) della linea
-	public String getIDLinea() {
+	// Metodo get per il codice (short name) della linea
+	public String getCodiceLinea() {
 		return this.codiceLinea.getText();
 	}
 	
