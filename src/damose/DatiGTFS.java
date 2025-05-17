@@ -58,7 +58,7 @@ public class DatiGTFS {
 		schermataCaricamento.setLayout(null);
 		schermataCaricamento.setBackground(new Color(130, 36, 51));
 		schermataCaricamento.setBounds(0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
-		schermataCaricamento.setMinimumSize(new Dimension(1400, 720));
+		schermataCaricamento.setMinimumSize(new Dimension(1678, 715));
 		
 		
 		// Barra di caricamento per i dati GTFS
@@ -79,18 +79,18 @@ public class DatiGTFS {
 		// Logo dell'applicazione
 		logoDamose = new JButton();
 		
-		logoDamose.setPreferredSize(new Dimension(600, 600));
+		logoDamose.setPreferredSize(new Dimension(700, 700));
 		logoDamose.setFocusable(false);
 		logoDamose.setContentAreaFilled(false);
 		logoDamose.setBorderPainted(false);
         logoDamose.setFocusPainted(false);
 		
 		ImageIcon iconDamose = new ImageIcon("src/resources/damose-logo.png");
-		Image scaledImageDamose = iconDamose.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
+		Image scaledImageDamose = iconDamose.getImage().getScaledInstance(700, 700, Image.SCALE_SMOOTH);
 		ImageIcon newIconDamose = new ImageIcon(scaledImageDamose);
 		logoDamose.setIcon(newIconDamose);
 		
-		logoDamose.setBounds(539, 0, 600, 600);
+		logoDamose.setBounds(489, -50, 700, 700);
 		
 		
 		// Aggiunta dei vari componenti alla schermata di caricamento
@@ -122,12 +122,6 @@ public class DatiGTFS {
 	public void setProgress(int i, String nome) {
 		this.progressBar.setValue(i);
 		logs.setText("Loading " + nome + "...  (" + i +"/22)");
-	}
-	
-	
-	// Metodo che gestisce l'adattamento dinamico della schermata di caricamento
-	private void calibraCaricamento() {
-		
 	}
 	
 // ---------------------------------------------------------------------------------------------

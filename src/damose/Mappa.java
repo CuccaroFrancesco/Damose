@@ -78,11 +78,8 @@ public class Mappa extends JComponent {
         
         
         // Creazione dei vari painter e aggiunta al painterGroup della mappa
-        painterFermate = new WaypointPainter<Waypoint>();
-        this.painterFermate = painterFermate;
-        
-        painterLinea = new LineaPainter(new ArrayList<>());
-        this.painterLinea = painterLinea;
+        this.painterFermate = new WaypointPainter<Waypoint>();
+        this.painterLinea = new LineaPainter(new ArrayList<>());
         
         this.frame.getPainterGroup().addPainter(painterLinea);
         this.frame.getPainterGroup().addPainter(painterFermate);
@@ -171,6 +168,8 @@ public class Mappa extends JComponent {
     		return;
     	}
     	
+    	Set<Waypoint> puntatoriFermate = new HashSet<>();
+    	
     	Rectangle mappaVisibile = mapViewer.getViewportBounds();
     	TileFactory tileFactory = mapViewer.getTileFactory();
     	
@@ -186,9 +185,15 @@ public class Mappa extends JComponent {
     	        .filter(stop -> stop.getLon() >= Math.min(ovest, est) && stop.getLon() <= Math.max(ovest, est))
     	        .collect(Collectors.toList());
     	
-    	Set<Waypoint> puntatoriFermate = new HashSet<>();
     	for (Stop fermata : fermateVisibili) {
-    		puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
+    		
+    		if (this.frame.getRoutePanel().isVisible()) {
+    			if (this.frame.getDati().getFermatePerLinea(this.frame.getDati().cercaLineaByID(this.frame.getRoutePanel().getIDLinea().trim())).contains(fermata)) {
+    				puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
+    			}
+    		} else {
+    			puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
+    		}
     	}
     	
     	painterFermate.setWaypoints(puntatoriFermate);

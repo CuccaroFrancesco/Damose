@@ -52,7 +52,7 @@ public class Frame extends JFrame {
     	
         this.setTitle("Damose");
         this.setSize(new Dimension(1678, 715));
-        this.setMinimumSize(new Dimension(1400, 720));
+        this.setMinimumSize(new Dimension(1678, 715));
         this.setMaximumSize(screenSize);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
@@ -76,6 +76,12 @@ public class Frame extends JFrame {
         this.setContentPane(layeredPane);
         
         layeredPane.add(dati.getSchermataCaricamento(), Integer.valueOf(104));
+        
+        ScheduledExecutorService schedulerCalibraCaricamento = Executors.newScheduledThreadPool(1);
+        
+        schedulerCalibraCaricamento.scheduleAtFixedRate(() -> {
+            calibraCaricamento();
+        }, 0, 150, TimeUnit.MILLISECONDS);
 
         
         // 
@@ -139,9 +145,9 @@ public class Frame extends JFrame {
 	                
 	                
 	                // Adattamento dinamico delle dimensioni della navbar e delle sue componenti
-	                ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	                ScheduledExecutorService schedulerCalibra = Executors.newScheduledThreadPool(1);
 	                
-	                scheduler.scheduleAtFixedRate(() -> {
+	                schedulerCalibra.scheduleAtFixedRate(() -> {
 	                    calibra();  
 	                }, 0, 150, TimeUnit.MILLISECONDS);
 	                
@@ -272,4 +278,15 @@ public class Frame extends JFrame {
 		}
 	}
 	
+	
+	// Metodo che gestisce l'adattamento dinamico della schermata di caricamento
+	private void calibraCaricamento() {
+			
+		int newWidth = getWidth();
+		int newHeight = getHeight();
+		
+		this.dati.getSchermataCaricamento().getComponent(0).setBounds(200, 600 + (newHeight - 715) / 2, newWidth - 400, 20);            // progressBar
+		this.dati.getSchermataCaricamento().getComponent(1).setBounds(200, 615 + (newHeight - 715) / 2, newWidth - 400, 40);            // logs
+		this.dati.getSchermataCaricamento().getComponent(2).setBounds((newWidth / 2) - 350, -50 + (newHeight - 715) / 3, 700, 700);     // logoDamose
+	}
 }

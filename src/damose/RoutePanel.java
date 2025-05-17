@@ -553,6 +553,13 @@ public class RoutePanel extends JPanel {
 		this.revalidate();
 		this.repaint();
 	}
+
+// ---------------------------------------------------------------------------------------------
+
+	// Metodo get per l'ID (short name) della linea
+	public String getIDLinea() {
+		return this.codiceLinea.getText();
+	}
 	
 // ---------------------------------------------------------------------------------------------
 
