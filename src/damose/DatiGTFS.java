@@ -305,7 +305,7 @@ public class DatiGTFS {
 	// Metodo che restituisce tutte le fermate appartenenti a una determinata linea
 	public List<Stop> getFermatePerLinea(Route linea) {
 		
-		Trip viaggio = this.datiStatici.getTripsForRoute(linea).getFirst();
+		Trip viaggio = this.datiStatici.getTripsForRoute(linea).stream().max(Comparator.comparingInt(trip -> this.datiStatici.getStopTimesForTrip(trip).size())).orElseThrow();
 		
 		List<StopTime> stopTimes = this.datiStatici.getStopTimesForTrip(viaggio);
 		List<Stop> listaFermate = new ArrayList<>();
@@ -313,6 +313,8 @@ public class DatiGTFS {
 		for (StopTime stopTime: stopTimes) {
 			listaFermate.add((Stop) stopTime.getStop());
 		}
+
+		if (viaggio.getDirectionId().equals("1")) listaFermate = listaFermate.reversed();
 		
 		return listaFermate;
 	}

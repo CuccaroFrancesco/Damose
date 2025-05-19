@@ -9,6 +9,7 @@ package damose;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
@@ -86,8 +87,8 @@ public class LineaPainter implements Painter<JXMapViewer> {
 	public static void costruisciLineaDaDisegnare(Route lineaTrovata, Mappa mapPanel, DatiGTFS dati) {
 	 		
 		List<GeoPosition> puntiDaDisegnare = new ArrayList<>();
-	 		
-	 	Trip viaggio = dati.getDatiStatici().getTripsForRoute(lineaTrovata).getFirst();
+
+		Trip viaggio = dati.getDatiStatici().getTripsForRoute(lineaTrovata).stream().max(Comparator.comparingInt(trip -> dati.getDatiStatici().getStopTimesForTrip(trip).size())).orElseThrow();
 	 			
 	 	List<ShapePoint> shapePoints = new ArrayList<>(dati.getDatiStatici().getShapePointsForShapeId(viaggio.getShapeId()));
 	 	for (ShapePoint sp : shapePoints) {
