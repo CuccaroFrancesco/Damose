@@ -158,12 +158,6 @@ public class RoutePanel extends JPanel {
         ImageIcon newIconRefresh = new ImageIcon(scaledImageRefresh);
         btnRefresh.setIcon(newIconRefresh);
         
-        btnRefresh.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		
-        	}
-        });
-        
         this.add(btnRefresh);
         
         
@@ -321,6 +315,12 @@ public class RoutePanel extends JPanel {
 		if (fermateScrollPane != null) {
 		    this.remove(fermateScrollPane);
 		}
+		
+        btnRefresh.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		getViaggiDaVisualizzare(linea);
+        	}
+        });
 		
 		String iconCuorePath = "src/resources/cuore-vuoto.png";
 		ImageIcon iconCuore = new ImageIcon(iconCuorePath);
@@ -580,6 +580,23 @@ public class RoutePanel extends JPanel {
 		this.add(fermateScrollPane);
 		fermatePanel.repaint();
 		
+		getViaggiDaVisualizzare(linea);
+		
+		this.revalidate();
+		this.repaint();
+	}
+
+// ---------------------------------------------------------------------------------------------
+
+	// Metodo get per il codice (short name) della linea
+	public String getCodiceLinea() {
+		return this.codiceLinea.getText();
+	}
+	
+	
+	// Metodo che restituisce i viaggi più rilevanti (quello appena cominciato e i 2 successivi) rispetto all'orario attuale
+	public List<Trip> getViaggiDaVisualizzare(Route linea) {
+		
 		LocalTime timeNow = LocalTime.now();
 		
 		List<Trip> listaViaggi = this.frame.getDati().getDatiStatici().getTripsForRoute(linea);
@@ -620,16 +637,7 @@ public class RoutePanel extends JPanel {
 		}
 		
 		System.out.println(listaViaggiDaVisualizzare);
-		
-		this.revalidate();
-		this.repaint();
-	}
-
-// ---------------------------------------------------------------------------------------------
-
-	// Metodo get per il codice (short name) della linea
-	public String getCodiceLinea() {
-		return this.codiceLinea.getText();
+		return listaViaggiDaVisualizzare;
 	}
 	
 // ---------------------------------------------------------------------------------------------
