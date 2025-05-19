@@ -338,6 +338,15 @@ public class DatiGTFS {
 		
 		return lineePassanti;
 	}
+
+	// Metodo che restituisce un booleano in base alla circolarità della linea
+	public boolean isCircolare(Route linea) {
+		List<Stop> fermate = this.getFermatePerLinea(linea);
+		if(fermate.getFirst().equals(fermate.getLast())) {
+			return true;
+		}
+		return false;
+	}
 	
 // ---------------------------------------------------------------------------------------------
 

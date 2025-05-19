@@ -28,7 +28,7 @@ public class RoutePanel extends JPanel {
 	
 	private Frame frame;
 	
-	private JLabel codiceLinea, agenziaENomeLinea, lblFermate, lblViaggi, lblMezzi;
+	private JLabel codiceLinea, agenziaENomeLinea, lblViaggi, lblMezzi;
 	private JButton btnClose, btnRefresh, btnAgency, btnFavorite, btnWebsite, btnRouteType;
 	private JPanel fermatePanel;
 	private JScrollPane fermateScrollPane;
@@ -74,18 +74,6 @@ public class RoutePanel extends JPanel {
         agenziaENomeLinea.setBounds(20, 125, 300, 20);
         
         this.add(agenziaENomeLinea);
-        
-        
-//        // JLabel per il testo "Fermate:"
-//        lblFermate = new JLabel("Fermate:");
-//        
-//        lblFermate.setForeground(Color.WHITE);
-//        lblFermate.setFont(new Font("Arial Nova", Font.BOLD, 24));
-//        lblFermate.setFocusable(false);
-//        
-//        lblFermate.setBounds(20, 200, 150, 50);
-//        
-//        this.add(lblFermate);
         
         
         // JLabel per il testo "Prossimi viaggi:"
@@ -505,82 +493,84 @@ public class RoutePanel extends JPanel {
 		        btnRouteType.setText(" Autobus");
 		        break;
 		}
+
+		getViaggiDaVisualizzare(linea);
 		
 		List<Stop> fermate = frame.getDati().getFermatePerLinea(linea);
-		
+
 		fermatePanel = new JPanel();
 		fermatePanel.setLayout(null);
 		fermatePanel.setBackground(new Color(130, 36, 51));
 		fermatePanel.setPreferredSize(new Dimension(350, Math.max(100, fermate.size() * 40)));
-		
+
 		for (int i = 0; i < fermate.size(); i++) {
-			
+
 			Stop fermata = fermate.get(i);
 			int y = i * 40;
-			
+
 			JButton stopBtn = new JButton();
-			
-			stopBtn.setBounds(10, y, 290, 60);
-			
+
+			stopBtn.setBounds(10, y, 250, 60);
+
 			stopBtn.setFocusable(false);
 			stopBtn.setContentAreaFilled(false);
 			stopBtn.setFocusPainted(false);
 			stopBtn.setBorderPainted(false);
-			
+
 			stopBtn.setFont(new Font("Arial Nova", Font.BOLD, 12));
 			stopBtn.setText("<html><div style='width: 205px;'>  " + fermata.getName() + "</div></html");
 			stopBtn.setHorizontalAlignment(SwingConstants.LEADING);
-			
+
 			stopBtn.setForeground(new Color(255, 255, 255));
 			stopBtn.setBackground(new Color(130, 36, 51));
 			stopBtn.setBorder(BorderFactory.createEmptyBorder());
-			
+
 			switch (shortName) {
 				case "MEA":
 					if (i == 0) stopBtn.setIcon(newIconInizioMetroA);
-					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroA); 
-					else stopBtn.setIcon(newIconIntermezzoMetroA); 
-					
+					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroA);
+					else stopBtn.setIcon(newIconIntermezzoMetroA);
+
 					break;
-					
+
 				case "MEB", "MEB1":
 					if (i == 0) stopBtn.setIcon(newIconInizioMetroB);
-					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroB); 
-					else stopBtn.setIcon(newIconIntermezzoMetroB); 
-				
+					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroB);
+					else stopBtn.setIcon(newIconIntermezzoMetroB);
+
 					break;
-				
+
 				case "MEC":
 					if (i == 0) stopBtn.setIcon(newIconInizioMetroC);
-					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroC); 
-					else stopBtn.setIcon(newIconIntermezzoMetroC); 
-					
+					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroC);
+					else stopBtn.setIcon(newIconIntermezzoMetroC);
+
 					break;
-					
+
 				default:
 					if (i == 0) stopBtn.setIcon(newIconInizio);
-					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFine); 
-					else stopBtn.setIcon(newIconIntermezzo); 
-					
+					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFine);
+					else stopBtn.setIcon(newIconIntermezzo);
+
 					break;
 			}
-			
+
 			fermatePanel.add(stopBtn);
 		}
-		
+
 		fermateScrollPane = new JScrollPane(fermatePanel);
-		
+
 		fermateScrollPane.setBorder(null);
 		fermateScrollPane.setBounds(0, 250, 350, 200);
-		
+
 		fermateScrollPane.getVerticalScrollBar().setUnitIncrement(12);
 		fermateScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		fermateScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		
+
 		this.add(fermateScrollPane);
 		fermatePanel.repaint();
-		
-		getViaggiDaVisualizzare(linea);
+
+		aggiornaViaggio(linea, 0);
 		
 		this.revalidate();
 		this.repaint();
@@ -596,7 +586,7 @@ public class RoutePanel extends JPanel {
 	
 	// Metodo che restituisce i viaggi più rilevanti (quello appena cominciato e i 2 successivi) rispetto all'orario attuale
 	public List<Trip> getViaggiDaVisualizzare(Route linea) {
-		
+
 		LocalTime timeNow = LocalTime.now();
 		
 		List<Trip> listaViaggi = this.frame.getDati().getDatiStatici().getTripsForRoute(linea);
@@ -614,19 +604,18 @@ public class RoutePanel extends JPanel {
 			LocalTime orarioPrimaFermata = LocalTime.ofSecondOfDay(primaFermata.getDepartureTime());
 			
 			if (orarioPrimaFermata.isAfter(timeNow)) {
-				
+				listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i));
+
 				if (i > 0) {
 					
 					listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i - 1));
-					listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i));
+
 					
 					if (i + 1 < listaViaggiCopy.size()) listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i + 1));
 					
 					break;
 					
 				} else {
-					
-					listaViaggiDaVisualizzare.add(listaViaggi.get(i));
 					
 					if (i + 1 < listaViaggiCopy.size()) listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i + 1));
 					if (i + 2 < listaViaggiCopy.size()) listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i + 2));
@@ -695,5 +684,56 @@ public class RoutePanel extends JPanel {
 		    
 		    btnFavorite.repaint();
 		}
+	}
+
+	public int aggiornaViaggio(Route linea, int indice) {
+
+		List<Trip> viaggi = getViaggiDaVisualizzare(linea);
+		List<Stop> fermate = frame.getDati().getFermatePerLinea(linea);
+
+		Trip viaggio = viaggi.get(indice);
+		List<StopTime> listaStopTimes = frame.getDati().getDatiStatici().getStopTimesForTrip(viaggio);
+
+		List<String> controllati = new ArrayList<>();
+
+		for (int i = 0; i < fermate.size(); i++) {
+			int y = i * 40;
+
+			Stop fermata = fermate.get(i);
+			String fermataID = fermata.getId().getId();
+
+			JLabel orario = new JLabel("- - : - -");
+
+			orario.setBounds(290, y, 60, 60);
+			orario.setFont(new Font("Arial Nova", Font.BOLD, 14));
+			orario.setForeground(Color.WHITE);
+
+			if (!controllati.contains(fermataID)) {
+				for(StopTime stopTime : listaStopTimes) {
+					if (stopTime.getStop().getId().getId().equals(fermataID)) {
+						controllati.add(fermataID);
+						int orarioArrivoSecondi = stopTime.getArrivalTime();
+						LocalTime orarioArrivo = LocalTime.ofSecondOfDay(orarioArrivoSecondi);
+						String formattedOrarioArrivo = orarioArrivo.format(DateTimeFormatter.ofPattern("HH:mm"));
+						orario.setText(formattedOrarioArrivo);
+						break;
+					}
+				}
+			} else {
+				for(StopTime stopTime : listaStopTimes) {
+					if (stopTime.getStop().getId().getId().equals(fermataID)) {
+						int orarioArrivoSecondi = stopTime.getArrivalTime();
+						LocalTime orarioArrivo = LocalTime.ofSecondOfDay(orarioArrivoSecondi);
+						String formattedOrarioArrivo = orarioArrivo.format(DateTimeFormatter.ofPattern("HH:mm"));
+						orario.setText(formattedOrarioArrivo);
+					}
+				}
+			}
+
+
+			RoutePanel.this.fermatePanel.add(orario);
+		}
+		RoutePanel.this.fermatePanel.repaint();
+		return 0;
 	}
 }
