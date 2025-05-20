@@ -583,38 +583,20 @@ public class RoutePanel extends JPanel {
 		btnTripLeft.setEnabled(false);
 		btnTripRight.setEnabled(true);
 
-		btnTripLeft.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				indiceViaggioVisualizzato--;
-				lblViaggioVisualizzato.setText(indiceViaggioVisualizzato + 1 + "/" + getViaggiDaVisualizzare().size());
+		btnTripLeft.addActionListener(e -> {
+			indiceViaggioVisualizzato--;
+			int totaleViaggi = getViaggiDaVisualizzare().size();
+			lblViaggioVisualizzato.setText((indiceViaggioVisualizzato + 1) + "/" + totaleViaggi);
 
-				btnTripRight.setEnabled(true);
-				if (indiceViaggioVisualizzato == 0) btnTripLeft.setEnabled(false);
+			btnTripRight.setEnabled(true);
+			btnTripLeft.setEnabled(indiceViaggioVisualizzato != 0);
 
-				aggiornaViaggio(linea, indiceViaggioVisualizzato);
+			aggiornaViaggio(linea, indiceViaggioVisualizzato);
 
-				if (viaggiDaVisualizzare.get(indiceViaggioVisualizzato).getDirectionId().equals("1")) {
-					lblViaggioVisualizzatoInfo.setText("<html><div style='width: 280px;'><b>Capolinea</b>: " +
-							RoutePanel.this.frame.getDati().getFermatePerViaggio(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).reversed().getFirst().getName() +
-							" - <br> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp " + RoutePanel.this.frame.getDati().getFermatePerViaggio(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).reversed().getLast().getName() +
-							"<br><b>Fascia oraria</b>: " +
-							LocalTime.ofSecondOfDay(RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getFirst().getArrivalTime()).format(DateTimeFormatter.ofPattern("HH:mm")) +
-							" - " + LocalTime.ofSecondOfDay(RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getLast().getArrivalTime()).format(DateTimeFormatter.ofPattern("HH:mm")) +
-							"</div></html");
-				} else {
-					lblViaggioVisualizzatoInfo.setText("<html><div style='width: 280px;'><b>Capolinea</b>: " +
-							RoutePanel.this.frame.getDati().getFermatePerViaggio(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getFirst().getName() +
-							" - <br> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp " + RoutePanel.this.frame.getDati().getFermatePerViaggio(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getLast().getName() +
-							"<br><b>Fascia oraria</b>: " +
-							LocalTime.ofSecondOfDay(RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getFirst().getArrivalTime()).format(DateTimeFormatter.ofPattern("HH:mm")) +
-							" - " + LocalTime.ofSecondOfDay(RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getLast().getArrivalTime()).format(DateTimeFormatter.ofPattern("HH:mm")) +
-							"</div></html");
-				}
-
-				RoutePanel.this.frame.getMappa().aggiornaFermateVisibili(viaggiDaVisualizzare.get(indiceViaggioVisualizzato));
-				LineaPainter.costruisciLineaDaDisegnare(viaggiDaVisualizzare.get(indiceViaggioVisualizzato), RoutePanel.this.frame.getMappa(), RoutePanel.this.frame.getDati());
-			}
+			RoutePanel.this.frame.getMappa().aggiornaFermateVisibili(viaggiDaVisualizzare.get(indiceViaggioVisualizzato));
+			LineaPainter.costruisciLineaDaDisegnare(viaggiDaVisualizzare.get(indiceViaggioVisualizzato), RoutePanel.this.frame.getMappa(), RoutePanel.this.frame.getDati());
 		});
+
 
 		btnTripRight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -626,48 +608,12 @@ public class RoutePanel extends JPanel {
 
 				aggiornaViaggio(linea, indiceViaggioVisualizzato);
 
-				if (viaggiDaVisualizzare.get(indiceViaggioVisualizzato).getDirectionId().equals("1")) {
-					lblViaggioVisualizzatoInfo.setText("<html><div style='width: 280px;'><b>Capolinea</b>: " +
-							RoutePanel.this.frame.getDati().getFermatePerViaggio(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).reversed().getFirst().getName() +
-							" - <br> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp " + RoutePanel.this.frame.getDati().getFermatePerViaggio(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).reversed().getLast().getName() +
-							"<br><b>Fascia oraria</b>: " +
-							LocalTime.ofSecondOfDay(RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getFirst().getArrivalTime()).format(DateTimeFormatter.ofPattern("HH:mm")) +
-							" - " + LocalTime.ofSecondOfDay(RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getLast().getArrivalTime()).format(DateTimeFormatter.ofPattern("HH:mm")) +
-							"</div></html");
-				} else {
-					lblViaggioVisualizzatoInfo.setText("<html><div style='width: 280px;'><b>Capolinea</b>: " +
-							RoutePanel.this.frame.getDati().getFermatePerViaggio(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getFirst().getName() +
-							" - <br> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp " + RoutePanel.this.frame.getDati().getFermatePerViaggio(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getLast().getName() +
-							"<br><b>Fascia oraria</b>: " +
-							LocalTime.ofSecondOfDay(RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getFirst().getArrivalTime()).format(DateTimeFormatter.ofPattern("HH:mm")) +
-							" - " + LocalTime.ofSecondOfDay(RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getLast().getArrivalTime()).format(DateTimeFormatter.ofPattern("HH:mm")) +
-							"</div></html");
-				}
-
 				RoutePanel.this.frame.getMappa().aggiornaFermateVisibili(viaggiDaVisualizzare.get(indiceViaggioVisualizzato));
 				LineaPainter.costruisciLineaDaDisegnare(viaggiDaVisualizzare.get(indiceViaggioVisualizzato), RoutePanel.this.frame.getMappa(), RoutePanel.this.frame.getDati());
 			}
 		});
 
 		aggiornaViaggio(linea, indiceViaggioVisualizzato);
-
-		if (viaggiDaVisualizzare.get(indiceViaggioVisualizzato).getDirectionId().equals("1")) {
-			lblViaggioVisualizzatoInfo.setText("<html><div style='width: 280px;'><b>Capolinea</b>: " +
-					RoutePanel.this.frame.getDati().getFermatePerViaggio(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).reversed().getFirst().getName() +
-					" - <br> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp " + RoutePanel.this.frame.getDati().getFermatePerViaggio(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).reversed().getLast().getName() +
-					"<br><b>Fascia oraria</b>: " +
-					LocalTime.ofSecondOfDay(RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getFirst().getArrivalTime()).format(DateTimeFormatter.ofPattern("HH:mm")) +
-					" - " + LocalTime.ofSecondOfDay(RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getLast().getArrivalTime()).format(DateTimeFormatter.ofPattern("HH:mm")) +
-					"</div></html");
-		} else {
-			lblViaggioVisualizzatoInfo.setText("<html><div style='width: 280px;'><b>Capolinea</b>: " +
-					RoutePanel.this.frame.getDati().getFermatePerViaggio(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getFirst().getName() +
-					" - <br> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp " + RoutePanel.this.frame.getDati().getFermatePerViaggio(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getLast().getName() +
-					"<br><b>Fascia oraria</b>: " +
-					LocalTime.ofSecondOfDay(RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getFirst().getArrivalTime()).format(DateTimeFormatter.ofPattern("HH:mm")) +
-					" - " + LocalTime.ofSecondOfDay(RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggiDaVisualizzare.get(indiceViaggioVisualizzato)).getLast().getArrivalTime()).format(DateTimeFormatter.ofPattern("HH:mm")) +
-					"</div></html");
-		}
 
 		this.revalidate();
 		this.repaint();
@@ -693,7 +639,7 @@ public class RoutePanel extends JPanel {
 	}
 
 
-	// Metodo che restituisce i viaggi più rilevanti (quello appena cominciato e i 2 successivi) rispetto all'orario attuale
+	// Metodo che restituisce i viaggi più rilevanti (quello appena cominciato e i 4 successivi) rispetto all'orario attuale
 	public List<Trip> updateViaggiDaVisualizzare(Route linea) {
 
 		LocalTime timeNow = LocalTime.now();
@@ -755,6 +701,24 @@ public class RoutePanel extends JPanel {
 		if (viaggioDaVisualizzare.getDirectionId().equals("1")) fermate = fermate.reversed();
 
 		List<StopTime> listaStopTimes = frame.getDati().getDatiStatici().getStopTimesForTrip(viaggioDaVisualizzare);
+
+		String partenza = fermate.getFirst().getName();
+		String arrivo = fermate.getLast().getName();
+
+		String fasciaOraria = LocalTime.ofSecondOfDay(listaStopTimes.getFirst().getArrivalTime())
+				.format(DateTimeFormatter.ofPattern("HH:mm"))
+				+ " - "
+				+ LocalTime.ofSecondOfDay(listaStopTimes.getLast().getArrivalTime())
+				.format(DateTimeFormatter.ofPattern("HH:mm"));
+
+		lblViaggioVisualizzatoInfo.setText(String.format(
+				"<html><div style='width: 280px;'>"
+						+ "<b>Partenza</b>: %s<br>"
+						+ "<b>Arrivo</b>: %s<br>"
+						+ "<b>Fascia oraria</b>: %s"
+						+ "</div></html>",
+				partenza, arrivo, fasciaOraria
+		));
 
 		fermatePanel = new JPanel();
 		fermatePanel.setLayout(null);
