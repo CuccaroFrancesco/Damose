@@ -303,9 +303,7 @@ public class DatiGTFS {
 	
 	
 	// Metodo che restituisce tutte le fermate appartenenti a una determinata linea
-	public List<Stop> getFermatePerLinea(Route linea) {
-		
-		Trip viaggio = this.datiStatici.getTripsForRoute(linea).stream().max(Comparator.comparingInt(trip -> this.datiStatici.getStopTimesForTrip(trip).size())).orElseThrow();
+	public List<Stop> getFermatePerViaggio(Trip viaggio) {
 		
 		List<StopTime> stopTimes = this.datiStatici.getStopTimesForTrip(viaggio);
 		List<Stop> listaFermate = new ArrayList<>();
@@ -341,12 +339,13 @@ public class DatiGTFS {
 		return lineePassanti;
 	}
 
-	// Metodo che restituisce un booleano in base alla circolarità della linea
-	public boolean isCircolare(Route linea) {
-		List<Stop> fermate = this.getFermatePerLinea(linea);
-		if(fermate.getFirst().equals(fermate.getLast())) {
-			return true;
-		}
+
+	// Metodo che restituisce un booleano in base alla circolarità del viaggio
+	public boolean isCircolare(Trip viaggio) {
+
+		List<Stop> fermate = this.getFermatePerViaggio(viaggio);
+
+		if (fermate.getFirst().equals(fermate.getLast())) return true;
 		return false;
 	}
 	

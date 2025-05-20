@@ -101,7 +101,7 @@ public class Ricerca extends JPanel{
 	        btnLinea.addActionListener(e -> {
 	        	frame.getRoutePanel().creaPannelloLinea(linea);
         		
-        		LineaPainter.costruisciLineaDaDisegnare(linea, frame.getMappa(), frame.getDati());
+        		LineaPainter.costruisciLineaDaDisegnare(frame.getRoutePanel().updateViaggiDaVisualizzare(linea).getFirst(), frame.getMappa(), frame.getDati());
         		
 	        	Ricerca.this.setVisible(false);
 	        });

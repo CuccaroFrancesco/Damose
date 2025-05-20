@@ -648,7 +648,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
                 	public void actionPerformed(ActionEvent e) {
                 		if (lineaArray[0] != null) {
                 			frame.getRoutePanel().creaPannelloLinea(lineaArray[0]);
-                            LineaPainter.costruisciLineaDaDisegnare(lineaArray[0], frame.getMappa(), frame.getDati());
+                            LineaPainter.costruisciLineaDaDisegnare(frame.getRoutePanel().updateViaggiDaVisualizzare(lineaArray[0]).getFirst(), frame.getMappa(), frame.getDati());
                         } else {
                             System.out.println("Linea non trovata");
                         }

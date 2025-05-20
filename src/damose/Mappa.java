@@ -23,7 +23,6 @@ import java.awt.Point;
 import javax.swing.*;
 import java.io.File;
 import java.util.*;
-import java.util.stream.*;
 
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.VirtualEarthTileFactoryInfo;
@@ -32,9 +31,8 @@ import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCursor;
 import org.jxmapviewer.viewer.*;
 import org.jxmapviewer.painter.*;
-import org.jxmapviewer.painter.Painter;
 
-import org.onebusaway.gtfs.model.Stop;
+import org.onebusaway.gtfs.model.*;
 
 
 
@@ -100,8 +98,21 @@ public class Mappa extends JComponent {
         mapViewer.addMouseMotionListener(panListener);
         mapViewer.addMouseWheelListener(zoomListener);
         
-        mapViewer.addPropertyChangeListener("zoom", e -> aggiornaFermateVisibili());
-        mapViewer.addPropertyChangeListener("centerPosition", e -> aggiornaFermateVisibili());
+        mapViewer.addPropertyChangeListener("zoom", e -> {
+                if (frame.getRoutePanel().isVisible()) {
+                    aggiornaFermateVisibili(frame.getRoutePanel().getViaggiDaVisualizzare().get(frame.getRoutePanel().getIndiceViaggioVisualizzato()));
+                } else {
+                    aggiornaFermateVisibili();
+                }
+            });
+
+        mapViewer.addPropertyChangeListener("centerPosition", e -> {
+                if (frame.getRoutePanel().isVisible()) {
+                    aggiornaFermateVisibili(frame.getRoutePanel().getViaggiDaVisualizzare().get(frame.getRoutePanel().getIndiceViaggioVisualizzato()));
+                } else {
+                    aggiornaFermateVisibili();
+                }
+            });
         
         
         // Configurazione del layout della mappa e aggiunta al componente
@@ -158,45 +169,73 @@ public class Mappa extends JComponent {
     
     
     // Metodo che controlla quali sono le fermate visibili sulla mappa e le disegna, "eliminando" invece quelle non visibili
+    public void aggiornaFermateVisibili(Trip viaggio) {
+
+        int zoomAttuale = mapViewer.getZoom();
+
+        if (zoomAttuale > 3) {
+            painterFermate.setWaypoints(Collections.emptySet());
+            mapViewer.repaint();
+            return;
+        }
+
+        Set<Waypoint> puntatoriFermate = new HashSet<>();
+
+        Rectangle mappaVisibile = mapViewer.getViewportBounds();
+        TileFactory tileFactory = mapViewer.getTileFactory();
+
+        GeoPosition topLeft = tileFactory.pixelToGeo(new Point(mappaVisibile.x, mappaVisibile.y), zoomAttuale);
+        GeoPosition bottomRight = tileFactory.pixelToGeo(new Point(mappaVisibile.x + mappaVisibile.width, mappaVisibile.y + mappaVisibile.height), zoomAttuale);
+        double nord = topLeft.getLatitude();
+        double ovest = topLeft.getLongitude();
+        double sud = bottomRight.getLatitude();
+        double est = bottomRight.getLongitude();
+
+        List<Stop> fermateVisibili = frame.getDati().getFermate().stream()
+                .filter(stop -> stop.getLat() >= Math.min(nord, sud) && stop.getLat() <= Math.max(nord, sud))
+                .filter(stop -> stop.getLon() >= Math.min(ovest, est) && stop.getLon() <= Math.max(ovest, est))
+                .toList();
+
+        for (Stop fermata : fermateVisibili) {
+            if (this.frame.getDati().getFermatePerViaggio(viaggio).contains(fermata)) puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
+        }
+
+        painterFermate.setWaypoints(puntatoriFermate);
+        mapViewer.repaint();
+    }
+
     public void aggiornaFermateVisibili() {
-    	
-    	int zoomAttuale = mapViewer.getZoom();
-    	
-    	if (zoomAttuale > 3) {
-    		painterFermate.setWaypoints(Collections.emptySet());
-    		mapViewer.repaint();
-    		return;
-    	}
-    	
-    	Set<Waypoint> puntatoriFermate = new HashSet<>();
-    	
-    	Rectangle mappaVisibile = mapViewer.getViewportBounds();
-    	TileFactory tileFactory = mapViewer.getTileFactory();
-    	
-    	GeoPosition topLeft = tileFactory.pixelToGeo(new Point(mappaVisibile.x, mappaVisibile.y), zoomAttuale);
-    	GeoPosition bottomRight = tileFactory.pixelToGeo(new Point(mappaVisibile.x + mappaVisibile.width, mappaVisibile.y + mappaVisibile.height), zoomAttuale);
-    	double nord = topLeft.getLatitude();
-    	double ovest = topLeft.getLongitude();
-    	double sud = bottomRight.getLatitude();
-    	double est = bottomRight.getLongitude();
-    	
-    	List<Stop> fermateVisibili = frame.getDati().getFermate().stream()
-    			.filter(stop -> stop.getLat() >= Math.min(nord, sud) && stop.getLat() <= Math.max(nord, sud))
-    	        .filter(stop -> stop.getLon() >= Math.min(ovest, est) && stop.getLon() <= Math.max(ovest, est))
-    	        .collect(Collectors.toList());
-    	
-    	for (Stop fermata : fermateVisibili) {
-    		
-    		if (this.frame.getRoutePanel().isVisible()) {
-    			if (this.frame.getDati().getFermatePerLinea(this.frame.getDati().cercaLineaByID(this.frame.getRoutePanel().getCodiceLinea().trim())).contains(fermata)) {
-    				puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
-    			}
-    		} else {
-    			puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
-    		}
-    	}
-    	
-    	painterFermate.setWaypoints(puntatoriFermate);
+
+        int zoomAttuale = mapViewer.getZoom();
+
+        if (zoomAttuale > 3) {
+            painterFermate.setWaypoints(Collections.emptySet());
+            mapViewer.repaint();
+            return;
+        }
+
+        Set<Waypoint> puntatoriFermate = new HashSet<>();
+
+        Rectangle mappaVisibile = mapViewer.getViewportBounds();
+        TileFactory tileFactory = mapViewer.getTileFactory();
+
+        GeoPosition topLeft = tileFactory.pixelToGeo(new Point(mappaVisibile.x, mappaVisibile.y), zoomAttuale);
+        GeoPosition bottomRight = tileFactory.pixelToGeo(new Point(mappaVisibile.x + mappaVisibile.width, mappaVisibile.y + mappaVisibile.height), zoomAttuale);
+        double nord = topLeft.getLatitude();
+        double ovest = topLeft.getLongitude();
+        double sud = bottomRight.getLatitude();
+        double est = bottomRight.getLongitude();
+
+        List<Stop> fermateVisibili = frame.getDati().getFermate().stream()
+                .filter(stop -> stop.getLat() >= Math.min(nord, sud) && stop.getLat() <= Math.max(nord, sud))
+                .filter(stop -> stop.getLon() >= Math.min(ovest, est) && stop.getLon() <= Math.max(ovest, est))
+                .toList();
+
+        for (Stop fermata : fermateVisibili) {
+            puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
+        }
+
+        painterFermate.setWaypoints(puntatoriFermate);
         mapViewer.repaint();
     }
 }

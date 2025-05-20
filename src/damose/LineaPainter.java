@@ -84,13 +84,11 @@ public class LineaPainter implements Painter<JXMapViewer> {
 	
 	
 	// Metodo che restituisce la lista di GeoPosition corrispondenti alla shape di una determinata linea
-	public static void costruisciLineaDaDisegnare(Route lineaTrovata, Mappa mapPanel, DatiGTFS dati) {
+	public static void costruisciLineaDaDisegnare(Trip viaggio, Mappa mapPanel, DatiGTFS dati) {
 	 		
 		List<GeoPosition> puntiDaDisegnare = new ArrayList<>();
 
-		Trip viaggio = dati.getDatiStatici().getTripsForRoute(lineaTrovata).stream().max(Comparator.comparingInt(trip -> dati.getDatiStatici().getStopTimesForTrip(trip).size())).orElseThrow();
-	 			
-	 	List<ShapePoint> shapePoints = new ArrayList<>(dati.getDatiStatici().getShapePointsForShapeId(viaggio.getShapeId()));
+		List<ShapePoint> shapePoints = new ArrayList<>(dati.getDatiStatici().getShapePointsForShapeId(viaggio.getShapeId()));
 	 	for (ShapePoint sp : shapePoints) {
 	 		puntiDaDisegnare.add(new GeoPosition(sp.getLat(), sp.getLon()));
 	 	}
@@ -102,7 +100,7 @@ public class LineaPainter implements Painter<JXMapViewer> {
 
 	 	Color colore = null;
 
-	 	switch (lineaTrovata.getType()) {
+	 	switch (viaggio.getRoute().getType()) {
 	 	    case 0:
 	 	        colore = new Color(1, 140, 146);
 	 	        break;
@@ -115,7 +113,7 @@ public class LineaPainter implements Painter<JXMapViewer> {
 	 	            "MEC", new Color(1, 135, 81)
 	 	        );
 	 	        
-	 	        colore = coloriLinea.get(lineaTrovata.getShortName());
+	 	        colore = coloriLinea.get(viaggio.getRoute().getShortName());
 	 	        break;
 
 	 	    case 2:
@@ -128,7 +126,7 @@ public class LineaPainter implements Painter<JXMapViewer> {
 	 	}
 
 	 	if (colore != null) mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, colore);
-	 	else System.out.println("Colore non definito per la linea: " + lineaTrovata.getShortName());
+	 	else System.out.println("Colore non definito per la linea: " + viaggio.getRoute().getShortName());
 	
     	int centro = puntiDaDisegnare.size() / 2;
     	GeoPosition puntoCentrale = puntiDaDisegnare.get(centro);
