@@ -822,13 +822,14 @@ public class RoutePanel extends JPanel {
 
 			LocalTime now = LocalTime.now();
 
-			if (linea.getType() == 1) {
-				if (!controllati.contains(fermata.getName())) {
+				String verifica = linea.getType() == 1 ? fermata.getName() : fermataID;
+				if (!controllati.contains(verifica)) {
 
 					for (StopTime stopTime : listaStopTimes) {
-						if (stopTime.getStop().getName().equals(fermata.getName())) {
+						String IdStopName = linea.getType() == 1 ? stopTime.getStop().getName() : stopTime.getStop().getId().getId();
+						if (IdStopName.equals(verifica)) {
 
-							controllati.add(fermata.getName());
+							controllati.add(verifica);
 
 							int orarioArrivoFermataInSecondi = stopTime.getArrivalTime();
 							LocalTime orarioArrivoFermata;
@@ -852,7 +853,8 @@ public class RoutePanel extends JPanel {
 				} else {
 
 					for (StopTime stopTime : listaStopTimes) {
-						if (stopTime.getStop().getName().equals(fermata.getName())) {
+						String IdStopName = linea.getType() == 1 ? stopTime.getStop().getName() : stopTime.getStop().getId().getId();
+						if (IdStopName.equals(verifica)) {
 
 							int orarioArrivoFermataInSecondi = stopTime.getArrivalTime();
 							LocalTime orarioArrivoFermata;
@@ -871,57 +873,6 @@ public class RoutePanel extends JPanel {
 						}
 					}
 				}
-
-			} else {
-				if (!controllati.contains(fermataID)) {
-
-					for (StopTime stopTime : listaStopTimes) {
-						if (stopTime.getStop().getId().getId().equals(fermataID)) {
-
-							controllati.add(fermataID);
-
-							int orarioArrivoFermataInSecondi = stopTime.getArrivalTime();
-							LocalTime orarioArrivoFermata;
-
-							if (orarioArrivoFermataInSecondi >= 86400) orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi - 86400);
-							else orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi);
-
-							if(!orarioArrivoFermata.isAfter(now)) {
-								orario.setForeground(new Color(170, 170, 170));
-								stopBtn.setForeground(new Color(170, 170, 170));
-								stopBtn.setFont(new Font("Arial Nova", Font.BOLD | Font.ITALIC, 12));
-							}
-
-							String formattedOrarioArrivoFermata = orarioArrivoFermata.format(DateTimeFormatter.ofPattern("HH:mm"));
-							orario.setText(formattedOrarioArrivoFermata);
-
-							break;
-						}
-					}
-
-				} else {
-
-					for (StopTime stopTime : listaStopTimes) {
-						if (stopTime.getStop().getId().getId().equals(fermataID)) {
-
-							int orarioArrivoFermataInSecondi = stopTime.getArrivalTime();
-							LocalTime orarioArrivoFermata;
-
-							if (orarioArrivoFermataInSecondi >= 86400) orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi - 86400);
-							else orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi);
-
-							if(!orarioArrivoFermata.isAfter(now)) {
-								orario.setForeground(new Color(170, 170, 170));
-								stopBtn.setForeground(new Color(170, 170, 170));
-								stopBtn.setFont(new Font("Arial Nova", Font.BOLD | Font.ITALIC, 12));
-							}
-
-							String formattedOrarioArrivoFermata = orarioArrivoFermata.format(DateTimeFormatter.ofPattern("HH:mm"));
-							orario.setText(formattedOrarioArrivoFermata);
-						}
-					}
-				}
-			}
 
 			fermatePanel.add(orario);
 		}
