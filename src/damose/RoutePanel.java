@@ -818,6 +818,9 @@ public class RoutePanel extends JPanel {
 
 			orario.setBounds(290, y, 60, 60);
 			orario.setFont(new Font("Arial Nova", Font.BOLD, 14));
+			orario.setForeground(Color.WHITE);
+
+			LocalTime now = LocalTime.now();
 
 			if (linea.getType() == 1) {
 				if (!controllati.contains(fermata.getName())) {
@@ -833,10 +836,10 @@ public class RoutePanel extends JPanel {
 							if (orarioArrivoFermataInSecondi >= 86400) orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi - 86400);
 							else orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi);
 
-							if(orarioArrivoFermata.isAfter(orarioPartenza)) {
-								orario.setForeground(Color.WHITE);
-							} else {
-								orario.setForeground(Color.GRAY);
+							if(!orarioArrivoFermata.isAfter(now)) {
+								orario.setForeground(new Color(170, 170, 170));
+								stopBtn.setForeground(new Color(170, 170, 170));
+								stopBtn.setFont(new Font("Arial Nova", Font.BOLD | Font.ITALIC, 12));
 							}
 
 							String formattedOrarioArrivoFermata = orarioArrivoFermata.format(DateTimeFormatter.ofPattern("HH:mm"));
@@ -856,6 +859,12 @@ public class RoutePanel extends JPanel {
 
 							if (orarioArrivoFermataInSecondi >= 86400) orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi - 86400);
 							else orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi);
+
+							if(!orarioArrivoFermata.isAfter(now)) {
+								orario.setForeground(new Color(170, 170, 170));
+								stopBtn.setForeground(new Color(170, 170, 170));
+								stopBtn.setFont(new Font("Arial Nova", Font.BOLD | Font.ITALIC, 12));
+							}
 
 							String formattedOrarioArrivoFermata = orarioArrivoFermata.format(DateTimeFormatter.ofPattern("HH:mm"));
 							orario.setText(formattedOrarioArrivoFermata);
@@ -877,6 +886,12 @@ public class RoutePanel extends JPanel {
 							if (orarioArrivoFermataInSecondi >= 86400) orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi - 86400);
 							else orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi);
 
+							if(!orarioArrivoFermata.isAfter(now)) {
+								orario.setForeground(new Color(170, 170, 170));
+								stopBtn.setForeground(new Color(170, 170, 170));
+								stopBtn.setFont(new Font("Arial Nova", Font.BOLD | Font.ITALIC, 12));
+							}
+
 							String formattedOrarioArrivoFermata = orarioArrivoFermata.format(DateTimeFormatter.ofPattern("HH:mm"));
 							orario.setText(formattedOrarioArrivoFermata);
 
@@ -894,6 +909,12 @@ public class RoutePanel extends JPanel {
 
 							if (orarioArrivoFermataInSecondi >= 86400) orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi - 86400);
 							else orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi);
+
+							if(!orarioArrivoFermata.isAfter(now)) {
+								orario.setForeground(new Color(170, 170, 170));
+								stopBtn.setForeground(new Color(170, 170, 170));
+								stopBtn.setFont(new Font("Arial Nova", Font.BOLD | Font.ITALIC, 12));
+							}
 
 							String formattedOrarioArrivoFermata = orarioArrivoFermata.format(DateTimeFormatter.ofPattern("HH:mm"));
 							orario.setText(formattedOrarioArrivoFermata);
