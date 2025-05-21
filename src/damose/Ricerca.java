@@ -43,6 +43,18 @@ public class Ricerca extends JPanel{
 		this.setLayout(null);
 		this.setVisible(false);
 	}
+
+
+// ---------------------------------------------------------------------------------------------
+
+
+	// Metodo get per il risultatiScrollPane
+	public JScrollPane getRisultatiScrollPane() {
+		return this.risultatiScrollPane;
+	}
+
+
+// ---------------------------------------------------------------------------------------------
 	
 	
 	// Metodo che costruisce il pannello risultatiScrollPane, dove vengono visualizzati i risultati di una ricerca
@@ -236,11 +248,5 @@ public class Ricerca extends JPanel{
         
         this.revalidate();
         this.repaint();
-	}
-	
-	
-	// Metodo get per il risultatiScrollPane
-	public JScrollPane getRisultatiScrollPane() {
-		return this.risultatiScrollPane;
 	}
 }

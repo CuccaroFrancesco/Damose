@@ -1,14 +1,3 @@
-/**********************************************************************************
-
-Classe "TilesetManager" che contiene il metodo statico che gestisce il cambiamento
-di "tipo" della mappa visualizzata.
-
-METODI:
-- updateMap(), gestisce il cambiamento di "tipo" della mappa visualizzata, offrendo
-  tre opzioni (normale, satellitare, mista).
-
-**********************************************************************************/
-
 package damose;
 
 import org.jxmapviewer.VirtualEarthTileFactoryInfo;

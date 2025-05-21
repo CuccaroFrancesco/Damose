@@ -9,14 +9,12 @@ package damose;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
-import org.onebusaway.gtfs.model.Route;
 import org.onebusaway.gtfs.model.ShapePoint;
 import org.onebusaway.gtfs.model.Trip;
 import org.jxmapviewer.painter.*;
@@ -34,8 +32,11 @@ public class LineaPainter implements Painter<JXMapViewer> {
 	public LineaPainter(List<GeoPosition> linea) {
 		this.linea = new ArrayList<GeoPosition>(linea);
 	}
-	
-	
+
+
+// ---------------------------------------------------------------------------------------------
+
+
 	// Metodo utilizzato per disegnare una singola linea a partire dalla lista di punti fornita all'istanza
 	private void disegnaLinea(Graphics2D g, JXMapViewer mappa) {
         
@@ -81,6 +82,9 @@ public class LineaPainter implements Painter<JXMapViewer> {
 
         g.dispose();
     }
+
+
+// ---------------------------------------------------------------------------------------------
 	
 	
 	// Metodo che restituisce la lista di GeoPosition corrispondenti alla shape di una determinata linea
@@ -125,7 +129,7 @@ public class LineaPainter implements Painter<JXMapViewer> {
 	 	        break;
 	 	}
 
-	 	if (colore != null) mapPanel.getPainterLinea().setLineaDaDisegnare(puntiDaDisegnare, colore);
+	 	if (colore != null) mapPanel.getLineaPainter().setLineaDaDisegnare(puntiDaDisegnare, colore);
 	 	else System.out.println("Colore non definito per la linea: " + viaggio.getRoute().getShortName());
 	
     	int centro = puntiDaDisegnare.size() / 2;

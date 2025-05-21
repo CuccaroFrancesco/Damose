@@ -1,19 +1,3 @@
-/**********************************************************************************
-
-Classe "Mappa" per l'oggetto destinato a contenere la mappa visualizzata all'interno
-dell'applicazione. 
-
-METODI:
-- getLocalCache(), restituisce la cache locale utilizzata dalla mappa;
-- getPainterGroup(), restituisce il CompoundPainter associato alla mappa;
-
-- updateMap(), gestisce il cambiamento di "tipo" della mappa visualizzata;
-- aggiornaFermateVisibili(), viene invocato dinamicamente ogni volta che l'utente 
-  si muove sulla mappa o modifica lo zoom, disegna sulla mappa le fermate visibili
-  e scarta quelle non visibili.
-
-**********************************************************************************/
-
 package damose;
 
 import java.awt.Dimension;
@@ -42,8 +26,8 @@ public class Mappa extends JComponent {
 	
     private JXMapViewer mapViewer;
     private FileBasedLocalCache localCache;
-    private WaypointPainter<Waypoint> painterFermate;
-    private LineaPainter painterLinea;
+    private WaypointPainter<Waypoint> fermatePainter;
+    private LineaPainter lineaPainter;
 
     
     // Costruttore dell'oggetto Mappa
@@ -52,7 +36,7 @@ public class Mappa extends JComponent {
     	this.frame = frame;
     	
     	
-    	// Impostazione iniziale della mappa
+    	// Impostazioni iniziale della mappa
         TileFactoryInfo info = new VirtualEarthTileFactoryInfo(VirtualEarthTileFactoryInfo.MAP);
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
 
@@ -76,11 +60,11 @@ public class Mappa extends JComponent {
         
         
         // Creazione dei vari painter e aggiunta al painterGroup della mappa
-        this.painterFermate = new WaypointPainter<Waypoint>();
-        this.painterLinea = new LineaPainter(new ArrayList<>());
+        this.fermatePainter = new WaypointPainter<Waypoint>();
+        this.lineaPainter = new LineaPainter(new ArrayList<>());
         
-        this.frame.getPainterGroup().addPainter(painterLinea);
-        this.frame.getPainterGroup().addPainter(painterFermate);
+        this.frame.getPainterGroup().addPainter(lineaPainter);
+        this.frame.getPainterGroup().addPainter(fermatePainter);
 
         
         // Impostazione della posizione e dello zoom iniziale
@@ -115,10 +99,13 @@ public class Mappa extends JComponent {
             });
         
         
-        // Configurazione del layout della mappa e aggiunta al componente
+        // Configurazione del layout e aggiunta del mapViewer alla mappa
         this.setLayout(null); 
         this.add(mapViewer);
     }
+
+
+// ---------------------------------------------------------------------------------------------
 
     
     // Metodo get per la cache locale, dove vengono conservati i tile della mappa in modalità offline
@@ -140,15 +127,18 @@ public class Mappa extends JComponent {
     
     
     // Metodo get per il painterGroup, ossia il gruppo ordinato di painter che disegna sulla mappa
-    public WaypointPainter<Waypoint> getPainterFermate() {
-    	return this.painterFermate;
+    public WaypointPainter<Waypoint> getFermatePainter() {
+    	return this.fermatePainter;
     }
     
     
     // Metodo get per il painterGroup, ossia il gruppo ordinato di painter che disegna sulla mappa
-    public LineaPainter getPainterLinea() {
-    	return this.painterLinea;
+    public LineaPainter getLineaPainter() {
+    	return this.lineaPainter;
     }
+
+
+// ---------------------------------------------------------------------------------------------
     
     
     // Metodo che permette di aggiornare il tipo di mappa (normale, satellitare, mista)
@@ -159,7 +149,7 @@ public class Mappa extends JComponent {
     }
     
     
-    // Metodo che centra 
+    // Metodo che centra la mappa su un determinato punto e con un determinato zoom
     public void centraMappa(double lon, double lat, int zoom) {
     	GeoPosition target = new GeoPosition(lat, lon);
         mapViewer.setAddressLocation(target); 
@@ -174,7 +164,7 @@ public class Mappa extends JComponent {
         int zoomAttuale = mapViewer.getZoom();
 
         if (zoomAttuale > 3) {
-            painterFermate.setWaypoints(Collections.emptySet());
+            fermatePainter.setWaypoints(Collections.emptySet());
             mapViewer.repaint();
             return;
         }
@@ -200,7 +190,7 @@ public class Mappa extends JComponent {
             if (this.frame.getDati().getFermatePerViaggio(viaggio).contains(fermata)) puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
         }
 
-        painterFermate.setWaypoints(puntatoriFermate);
+        fermatePainter.setWaypoints(puntatoriFermate);
         mapViewer.repaint();
     }
 
@@ -209,7 +199,7 @@ public class Mappa extends JComponent {
         int zoomAttuale = mapViewer.getZoom();
 
         if (zoomAttuale > 3) {
-            painterFermate.setWaypoints(Collections.emptySet());
+            fermatePainter.setWaypoints(Collections.emptySet());
             mapViewer.repaint();
             return;
         }
@@ -235,7 +225,7 @@ public class Mappa extends JComponent {
             puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
         }
 
-        painterFermate.setWaypoints(puntatoriFermate);
+        fermatePainter.setWaypoints(puntatoriFermate);
         mapViewer.repaint();
     }
 }

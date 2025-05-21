@@ -11,7 +11,6 @@ import javax.swing.*;
 import org.onebusaway.gtfs.model.*;
 
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -184,13 +183,15 @@ public class StopPanel extends JPanel {
         this.add(btnCoordinates);
 	}
 
+
 // ---------------------------------------------------------------------------------------------
-	
+
+
 	// Metodo che gestisce la creazione dello stopPanel
 	public void creaPannelloFermata(Stop fermata) {
 		
 		this.setVisible(true);
-		frame.getMappa().getPainterLinea().setLineaDaDisegnare(new ArrayList<>(), null);
+		frame.getMappa().getLineaPainter().setLineaDaDisegnare(new ArrayList<>(), null);
 		frame.getRoutePanel().setVisible(false);
 		
 		if (lineePassantiScrollPane != null) {
@@ -356,8 +357,10 @@ public class StopPanel extends JPanel {
         lineePassantiPanel.repaint();
 	}
 
+
 // ---------------------------------------------------------------------------------------------
-	
+
+
 	// Metodo che gestisce il comportamento del pulsante dei preferiti in base allo stato (logged o non logged) dell'utente
 	public void controllaUtente(Stop fermata) {
 		

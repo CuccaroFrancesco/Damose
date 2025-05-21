@@ -1,22 +1,3 @@
-/**********************************************************************************
-
-Classe "DatiGTFS" per oggetti destinati a conservare dati GTFS (statici e real-time)
-come attributi. 
-
-METODI:
-- caricaDatiStaticiGTFS(), carica i dati statici e li assegna come attributo all'istanza;
-- caricaDatiRealTimeGTFS(), carica i dati real-time e li assegna come attributo all'istanza;
- 
-- getDatiStatici(), restituisce i dati statici attribuiti all'istanza;
-- getLinee(), restituisce esclusivamente i dati statici relativi alle linee;
-- getFermate(), restituisce esclusivamente i dati statici relativi alle fermate;
-- getShapes(), restituisce esclusivamente i dati statici relativi alle shapes;
-- getViaggi(), restituisce esclusivamente i dati statici relativi ai viaggi;
-
-- getDatiRealTime(), restituisce i dati real-time attribuiti all'istanza.
-
-**********************************************************************************/
-
 package damose;
 
 import java.awt.*;
@@ -98,6 +79,9 @@ public class DatiGTFS {
 		schermataCaricamento.add(logs);
 		schermataCaricamento.add(logoDamose);
 	}
+
+
+// ---------------------------------------------------------------------------------------------
 	
 	
 	// Metodo get per la schermata di caricamento
@@ -123,18 +107,23 @@ public class DatiGTFS {
 		this.progressBar.setValue(i);
 		logs.setText("Loading " + nome + "...  (" + i +"/22)");
 	}
+
 	
 // ---------------------------------------------------------------------------------------------
-	
+
+
 	// Metodo che permette di caricare dei dati GTFS statici da file di testo contenuti in una cartella
 	public void caricaDatiStaticiGTFS(String path) throws Exception {
-			
+
+		// Istanziamento del lettore di dati GTFS e configurazione della variabile di destinazione degli stessi
 		GtfsReader reader = new GtfsReader();
 		GtfsRelationalDaoImpl dati = new GtfsRelationalDaoImpl();
 			
 		reader.setInputLocation(new File(path));
 		reader.setEntityStore(dati);
-		
+
+
+		// Lista dei tipi di dati GTFS da caricare
 		List<Class<?>> listaClassi = List.of(
 			Agency.class,
 			Calendar.class,
@@ -160,7 +149,8 @@ public class DatiGTFS {
 		    AlternateStopNameException.class
 		);
 
-		
+
+		// Caricamento di ciascuna delle classi indicate in listaClassi
 		for (int i = 0; i < listaClassi.size(); i++) {
 			
 			Class<?> classe = listaClassi.get(i);
@@ -169,7 +159,9 @@ public class DatiGTFS {
 			if (listaClassi.getLast().equals(classe)) this.setProgress(i + 1, classe.getName());
 			else this.setProgress(i + 1, listaClassi.get(i + 1).getName());
 		}
-			
+
+
+		// Assegnamento dei dati GTFS caricati all'attributo datiStatici
 		this.datiStatici = dati;
 	}
 	
@@ -182,7 +174,8 @@ public class DatiGTFS {
 		FeedMessage feed = FeedMessage.parseFrom(url.openStream());
 		this.tripUpdates = feed;
 	}
-	
+
+
 	// Metodo che permette di caricare dei dati GTFS real-time "VehiclePositions" da file .pb
 	public void caricaVehiclePositionsGTFS() throws Exception {
 				
@@ -191,7 +184,8 @@ public class DatiGTFS {
 		FeedMessage feed = FeedMessage.parseFrom(url.openStream());
 		this.vehiclePositions = feed;
 	}
-	
+
+
 	// Metodo che permette di caricare dei dati GTFS real-time "Alert" da file .pb
 	public void caricaAlertGTFS() throws Exception {
 				
@@ -201,8 +195,10 @@ public class DatiGTFS {
 		this.alert = feed;
 	}
 
+
 // ---------------------------------------------------------------------------------------------
-	
+
+
 	// Metodo get per i dati statici GTFS dell'istanza
 	public GtfsRelationalDaoImpl getDatiStatici() {
 		return this.datiStatici;
@@ -276,32 +272,32 @@ public class DatiGTFS {
 	}
 
 	
-	// Metodo che cerca e restituisce una fermata in base al suo ID
-	public Stop cercaFermataByID(String stopId) {
-		
-		for (Stop stop : this.getFermate()) {
-            if (stop.getId().getId().equals(stopId)) {
-                return stop;
-            }
-        }
-		
-		return null;
-	}
-	
-	
 	// Metodo che cerca e restituisce una linea in base al suo ID
 	public Route cercaLineaByID(String lineaID) {
-		
+
 		for (Route linea : this.getLinee()) {
             if (linea.getId().getId().equals(lineaID)) {
                 return linea;
             }
         }
-		
+
 		return null;
 	}
-	
-	
+
+
+	// Metodo che cerca e restituisce una fermata in base al suo ID
+	public Stop cercaFermataByID(String stopId) {
+
+		for (Stop stop : this.getFermate()) {
+            if (stop.getId().getId().equals(stopId)) {
+                return stop;
+            }
+        }
+
+		return null;
+	}
+
+
 	// Metodo che restituisce tutte le fermate appartenenti a una determinata linea
 	public List<Stop> getFermatePerViaggio(Trip viaggio) {
 		
@@ -348,8 +344,10 @@ public class DatiGTFS {
 		if (fermate.getFirst().equals(fermate.getLast())) return true;
 		return false;
 	}
-	
+
+
 // ---------------------------------------------------------------------------------------------
+
 
 	// Metodo get per i tripUpdates dell'istanza
 	public FeedMessage getTripUpdates() {

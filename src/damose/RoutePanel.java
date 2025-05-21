@@ -149,7 +149,7 @@ public class RoutePanel extends JPanel {
 		btnClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RoutePanel.this.setVisible(false);
-				RoutePanel.this.frame.getMappa().getPainterLinea().setLineaDaDisegnare(new ArrayList<>(), null);
+				RoutePanel.this.frame.getMappa().getLineaPainter().setLineaDaDisegnare(new ArrayList<>(), null);
 			}
 		});
 
@@ -362,54 +362,56 @@ public class RoutePanel extends JPanel {
 		newIconFineMetroC = new ImageIcon(scaledImageFineMetroC);
 	}
 
+
 // ---------------------------------------------------------------------------------------------
 
-	// Metodo che "costruisce" concretamente il lineaPanel in base alla linea in questione
+
+	// Metodo che "costruisce" concretamente il routePanel in base alla linea in questione
 	public void creaPannelloLinea(Route linea) {
 
+		// Visualizzazione del routePanel e disattivazione di un eventuale stopPanel precedentemente visibile
 		this.setVisible(true);
 		frame.getStopPanel().setVisible(false);
 
-		this.indiceViaggioVisualizzato = 0;
+
+		// All'inizializzazione del pannello, viene visualizzato di default il primo dei viaggi da visualizzare
 		this.viaggiDaVisualizzare = updateViaggiDaVisualizzare(linea);
+		this.indiceViaggioVisualizzato = 0;
 
-		if (fermateScrollPane != null) {
-			this.remove(fermateScrollPane);
-		}
 
+		// Rimozione di eventuali fermateScrollPane precedenti (necessario per evitare overlap)
+		if (fermateScrollPane != null) this.remove(fermateScrollPane);
+
+
+		// Rimozione di eventuali ActionListener precedenti da vari pulsanti (necessario per evitare overlap)
+		for (ActionListener a : btnRefresh.getActionListeners()) { btnRefresh.removeActionListener(a); }
+		for (ActionListener a : btnFavorite.getActionListeners()) { btnFavorite.removeActionListener(a); }
+		for (ActionListener a : btnWebsite.getActionListeners()) { btnWebsite.removeActionListener(a); }
+		for (ActionListener a : btnTripRight.getActionListeners()) { btnTripRight.removeActionListener(a); }
+		for (ActionListener a : btnTripLeft.getActionListeners()) { btnTripLeft.removeActionListener(a); }
+
+
+		// Chiamata al metodo controllaUtente() per verificare se visualizzare o meno il pulsante btnFavorite
 		this.controllaUtente(linea);
 
-		for (ActionListener a : btnFavorite.getActionListeners()) {
-			btnFavorite.removeActionListener(a);
-		}
 
-		for (ActionListener a : btnWebsite.getActionListeners()) {
-			btnWebsite.removeActionListener(a);
-		}
-
-		for (ActionListener a : btnRefresh.getActionListeners()) {
-			btnRefresh.removeActionListener(a);
-		}
-
-		for (ActionListener a : btnTripRight.getActionListeners()) {
-			btnTripRight.removeActionListener(a);
-		}
-
-		for (ActionListener a : btnTripLeft.getActionListeners()) {
-			btnTripLeft.removeActionListener(a);
-		}
-
+		// Funzionalità per il pulsante btnRefresh, che permette di aggiornare i viaggi da visualizzare in base all'orario
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RoutePanel.this.viaggiDaVisualizzare = updateViaggiDaVisualizzare(linea);
+				aggiornaViaggio(linea, indiceViaggioVisualizzato);
 			}
 		});
 
+
+		// Assegnamento dell'icona di default per il pulsante btnFavorite
 		String iconCuorePath = "src/resources/cuore-vuoto.png";
 		ImageIcon iconCuore = new ImageIcon(iconCuorePath);
 		Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
 
+
+		// Funzionalità per il pulsante btnFavorite
 		btnFavorite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -439,12 +441,14 @@ public class RoutePanel extends JPanel {
 			}
 		});
 
+
+		// Variabili che contengono informazioni sulla linea (agenzia, long name e short name)
 		String agencyName = linea.getAgency().getName();
 		String longName = linea.getLongName();
 		String shortName = linea.getShortName();
 
-		btnAgency.setVisible(true);
 
+		// Visualizzazione dell'eventuale logo dell'agenzia che gestisce la linea in base a agencyName
 		switch (agencyName) {
 			case "Atac":
 				ImageIcon iconAtac = new ImageIcon("src/resources/atac-logo.png");
@@ -470,6 +474,10 @@ public class RoutePanel extends JPanel {
 				break;
 		}
 
+		btnAgency.setVisible(true);
+
+
+		// Visualizzazione dei nomi (long name e short name) assegnati alla linea e del nome dell'agenzia che la gestisce
 		codiceLinea.setText(" " + shortName);
 
 		if (longName == null || longName.isEmpty()) {
@@ -478,6 +486,8 @@ public class RoutePanel extends JPanel {
 			agenziaENomeLinea.setText(agencyName + "  -  " + longName);
 		}
 
+
+		// Funzionalità per il pulsante btnWebsite, che permette di accedere a un sito web con informazioni relative alla linea
 		String url = linea.getUrl();
 
 		btnWebsite.addActionListener(new ActionListener() {
@@ -497,6 +507,8 @@ public class RoutePanel extends JPanel {
 			}
 		});
 
+
+		// Visualizzazione del tipo di linea (tram, metropolitana, treno, autobus) in base alla variabile routeType
 		int routeType = linea.getType();
 
 		switch (routeType) {
@@ -579,28 +591,35 @@ public class RoutePanel extends JPanel {
 				break;
 		}
 
+
+		// Gestione del viaggio visualizzato nel routePanel e funzionalità per i pulsanti btnTripLeft e btnTripRight
 		lblViaggioVisualizzato.setText(indiceViaggioVisualizzato + 1 + "/" + getViaggiDaVisualizzare().size());
 		btnTripLeft.setEnabled(false);
 		btnTripRight.setEnabled(true);
 
-		btnTripLeft.addActionListener(e -> {
-			indiceViaggioVisualizzato--;
-			int totaleViaggi = getViaggiDaVisualizzare().size();
-			lblViaggioVisualizzato.setText((indiceViaggioVisualizzato + 1) + "/" + totaleViaggi);
+		btnTripLeft.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 
-			btnTripRight.setEnabled(true);
-			btnTripLeft.setEnabled(indiceViaggioVisualizzato != 0);
+				indiceViaggioVisualizzato--;
 
-			aggiornaViaggio(linea, indiceViaggioVisualizzato);
+				int totaleViaggi = getViaggiDaVisualizzare().size();
+				lblViaggioVisualizzato.setText((indiceViaggioVisualizzato + 1) + "/" + totaleViaggi);
 
-			RoutePanel.this.frame.getMappa().aggiornaFermateVisibili(viaggiDaVisualizzare.get(indiceViaggioVisualizzato));
-			LineaPainter.costruisciLineaDaDisegnare(viaggiDaVisualizzare.get(indiceViaggioVisualizzato), RoutePanel.this.frame.getMappa(), RoutePanel.this.frame.getDati());
+				btnTripRight.setEnabled(true);
+				btnTripLeft.setEnabled(indiceViaggioVisualizzato != 0);
+
+				aggiornaViaggio(linea, indiceViaggioVisualizzato);
+
+				frame.getMappa().aggiornaFermateVisibili(viaggiDaVisualizzare.get(indiceViaggioVisualizzato));
+				LineaPainter.costruisciLineaDaDisegnare(viaggiDaVisualizzare.get(indiceViaggioVisualizzato), frame.getMappa(), frame.getDati());
+			}
 		});
-
 
 		btnTripRight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
 				indiceViaggioVisualizzato++;
+
 				lblViaggioVisualizzato.setText(indiceViaggioVisualizzato + 1 + "/" + getViaggiDaVisualizzare().size());
 
 				btnTripLeft.setEnabled(true);
@@ -608,18 +627,23 @@ public class RoutePanel extends JPanel {
 
 				aggiornaViaggio(linea, indiceViaggioVisualizzato);
 
-				RoutePanel.this.frame.getMappa().aggiornaFermateVisibili(viaggiDaVisualizzare.get(indiceViaggioVisualizzato));
-				LineaPainter.costruisciLineaDaDisegnare(viaggiDaVisualizzare.get(indiceViaggioVisualizzato), RoutePanel.this.frame.getMappa(), RoutePanel.this.frame.getDati());
+				frame.getMappa().aggiornaFermateVisibili(viaggiDaVisualizzare.get(indiceViaggioVisualizzato));
+				LineaPainter.costruisciLineaDaDisegnare(viaggiDaVisualizzare.get(indiceViaggioVisualizzato), frame.getMappa(), frame.getDati());
 			}
 		});
 
+		// Chiamata al metodo aggiornaViaggio con l'indice 0, per visualizzare il viaggio di default
 		aggiornaViaggio(linea, indiceViaggioVisualizzato);
 
+
+		// Aggiornamento del rendering del routePanel
 		this.revalidate();
 		this.repaint();
 	}
 
+
 // ---------------------------------------------------------------------------------------------
+
 
 	// Metodo get per il codice (short name) della linea
 	public String getCodiceLinea() {
@@ -637,6 +661,9 @@ public class RoutePanel extends JPanel {
 	public int getIndiceViaggioVisualizzato() {
 		return this.indiceViaggioVisualizzato;
 	}
+
+
+// ---------------------------------------------------------------------------------------------
 
 
 	// Metodo che restituisce i viaggi più rilevanti (quello appena cominciato e i 4 successivi) rispetto all'orario attuale
@@ -690,18 +717,27 @@ public class RoutePanel extends JPanel {
 
 
 	// Metodo che gestisce la visualizzazione delle fermate e dei rispettivi orari in base al viaggio scelto
-	public int aggiornaViaggio(Route linea, int indice) {
+	public void aggiornaViaggio(Route linea, int indice) {
 
+		// Rimozione di eventuali fermateScrollPane precedenti (necessario per evitare overlap)
 		if (fermateScrollPane != null) this.remove(fermateScrollPane);
 
+
+		// Scelta del viaggio da visualizzare in base alla variabile indice
 		List<Trip> viaggi = getViaggiDaVisualizzare();
 		Trip viaggioDaVisualizzare = viaggi.get(indice);
 
+
+		// Gestione della lista delle fermate associate al viaggioDaVisualizzare
 		List<Stop> fermate = frame.getDati().getFermatePerViaggio(viaggioDaVisualizzare);
 		if (viaggioDaVisualizzare.getDirectionId().equals("1")) fermate = fermate.reversed();
 
+
+		// Ottenimento degli orari associati a ciascuna fermata
 		List<StopTime> listaStopTimes = frame.getDati().getDatiStatici().getStopTimesForTrip(viaggioDaVisualizzare);
 
+
+		// Ottenimento delle informazioni principali relative al viaggio visualizzato (capolinea e fascia oraria) e visualizzazione di tali informazioni
 		String partenza = fermate.getFirst().getName();
 		String arrivo = fermate.getLast().getName();
 
@@ -720,6 +756,8 @@ public class RoutePanel extends JPanel {
 				partenza, arrivo, fasciaOraria
 		));
 
+
+		// Creazione e gestione del pannello fermatePanel, che ospiterà la lista delle fermate con i relativi orari
 		fermatePanel = new JPanel();
 		fermatePanel.setLayout(null);
 		fermatePanel.setBackground(new Color(130, 36, 51));
@@ -853,6 +891,8 @@ public class RoutePanel extends JPanel {
 			fermatePanel.add(orario);
 		}
 
+
+		// Creazione del pannello fermateScrollPane, necessario per ospitare fermatePanel e rendere quest'ultimo "scrollabile"
 		fermateScrollPane = new JScrollPane(fermatePanel);
 
 		fermateScrollPane.setBorder(null);
@@ -863,13 +903,16 @@ public class RoutePanel extends JPanel {
 		fermateScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 		this.add(fermateScrollPane);
+
+
+		// Aggiornamento del rendering di fermatePanel e del routePanel nel complesso
 		fermatePanel.repaint();
 		this.repaint();
-
-		return 0;
 	}
 
+
 // ---------------------------------------------------------------------------------------------
+
 
 	// Metodo che gestisce il comportamento del pulsante dei preferiti in base allo stato (logged o non logged) dell'utente
 	public void controllaUtente(Route linea) {

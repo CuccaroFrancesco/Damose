@@ -1,27 +1,3 @@
-/**********************************************************************************
-
-Classe "Utente" per l'oggetto destinato a contenere l'utente eventualmente loggato
-nell'applicazione durante il suo utilizzo.
-
-METODI:
-- getNome(), restituisce il nome associato all'utente;
-- getCognome(), restituisce il cognome associato all'utente;
-- getUsername(), restituisce lo username associato all'utente;
-- getPassword(), restituisce la password associata all'utente;
-- getLineePreferite(), restituisce le linee preferite dell'utente;
-- getFermatePreferite(), restituisce le fermate preferite dell'utente;
-
-- setNome(), setta il nome associato all'utente;
-- setCognome(), setta il cognome associato all'utente;
-- setUsername(), setta lo username associato all'utente;
-- setPassword(), setta la password associata all'utente;
-- setLineePreferite(), setta le linee preferite dell'utente;
-- setFermatePreferite(), setta le fermate preferite dell'utente;
-
-- accedi(), gestisce i vari controlli necessari a confermare l'accesso a un utente.
-
-**********************************************************************************/
-
 package damose;
 
 import java.io.BufferedReader;

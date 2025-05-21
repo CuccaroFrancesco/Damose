@@ -1,19 +1,3 @@
-/**********************************************************************************
-
-Classe "Navbar" per l'oggetto destinato a contenere la navbar visualizzata nella
-parte superiore dell'applicazione, all'interno della quale si troveranno i pulsanti
-per il cambio del "tipo" della mappa visualizzata (mapButtonGroup), la barra di
-ricerca (searchBar) e il pulsante per la sezione utente (btnLogin).
-
-METODI:
-- getSearchBar(), restituisce la barra di ricerca contenuta nella navbar;
-- getMapButtonGroup(), restituisce il gruppo di pulsanti per il cambio della mappa
-  contenuto nella navbar;
-- getBtnLogin(), restituisce il pulsante per la sezione utente contenuto nella
-  navbar.
-
-**********************************************************************************/
-
 package damose;
 
 import javax.swing.*;
@@ -159,7 +143,7 @@ public class Navbar extends JPanel {
         searchBar.setBounds(0, 0, 500, 40);  // relativamente al searchLayeredPane
         
         
-        // Pulsante per la barra di ricerca
+        // Pulsante della barra di ricerca
         btnRicerca = new JButton();
         searchLayeredPane.setLayer(btnRicerca, 100);
         
@@ -271,7 +255,7 @@ public class Navbar extends JPanel {
         }, AWTEvent.MOUSE_EVENT_MASK);
         
         
-        // Pulsante per la sezione utente e il login
+        // Pulsante per la sezione utente
         btnLogin = new JButton();
         
         btnLogin.setContentAreaFilled(false);
@@ -290,30 +274,39 @@ public class Navbar extends JPanel {
         
         this.add(btnLogin);
     }
+
+
+// ---------------------------------------------------------------------------------------------
     
     
-    // Metodo get per la barra di ricerca
+    // Metodo get per la searchBar
     public JLayeredPane getSearchBar() {
     	return this.searchLayeredPane;
     }
-    
+
+
+    // Metodo get per il pulsante btnRicerca
     public JButton getBtnRicerca() {
     	return this.btnRicerca;
     }
     
     
-    // Metodo get per l'insieme dei pulsanti per il cambio di mappa
+    // Metodo get per il mapButtonGroup
     public JPanel getMapButtonGroup() {
     	return this.mapButtonGroup;
     }
     
     
-    // Metodo get per il pulsante della sezione utente
+    // Metodo get per il pulsante btnLogin
     public JButton getBtnLogin() {
     	return this.btnLogin;
     }
-    
-    // Metodo per la ricerca
+
+
+// ---------------------------------------------------------------------------------------------
+
+
+    // Metodo che gestisce la ricerca effettuata mediante la searchBar
     public void ricerca() {
     	String lineaDaCercare = searchBar.getText();
     	frame.getRicerca().mostraRisultatiRicerca(lineaDaCercare, this);

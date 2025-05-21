@@ -76,15 +76,14 @@ public class Frame extends JFrame {
         this.setContentPane(layeredPane);
         
         layeredPane.add(dati.getSchermataCaricamento(), Integer.valueOf(104));
-        
+
+
+		// Istanziamento di uno ScheduledExecutor per ricalibrare il layout della schermata di caricamento ogni 150ms
         ScheduledExecutorService schedulerCalibraCaricamento = Executors.newScheduledThreadPool(1);
-        
-        schedulerCalibraCaricamento.scheduleAtFixedRate(() -> {
-            calibraCaricamento();
-        }, 0, 150, TimeUnit.MILLISECONDS);
+        schedulerCalibraCaricamento.scheduleAtFixedRate(() -> calibraCaricamento(), 0, 150, TimeUnit.MILLISECONDS);
 
         
-        // 
+        // Istanziamento di uno SwingWorker che permette di gestire il caricamento dei dati GTFS e la seguente apertura dell'applicazione effettiva
         SwingWorker<Void, Void> loader = new SwingWorker<>() {
             
         	@Override
@@ -110,21 +109,21 @@ public class Frame extends JFrame {
 	                layeredPane.add(mapPanel, JLayeredPane.DEFAULT_LAYER);
 
 	                
-	                // Aggiunta del pannello delle linee 
+	                // Aggiunta del routePanel alla finestra principale
 	                routePanel = new RoutePanel(Frame.this);
 	                
 	                routePanel.setBounds(0, 70, 350, screenSize.height - 70);
 	                layeredPane.add(routePanel, Integer.valueOf(101));
 	                
 	                
-	                // Aggiunta del pannello delle fermate 
+	                // Aggiunta dello stopPanel alla finestra principale
 	                stopPanel = new StopPanel(Frame.this);
 	                
 	                stopPanel.setBounds(0, 70, 350, screenSize.height - 70);
 	                layeredPane.add(stopPanel, Integer.valueOf(101));
 	                
 	                
-	                // Aggiunta del pannello di ricerca
+	                // Aggiunta del pannello dei risultati di ricerca alla finestra principale
 	                ricerca = new Ricerca(Frame.this);
 	                layeredPane.add(ricerca, Integer.valueOf(103));
 	                
@@ -136,7 +135,7 @@ public class Frame extends JFrame {
 	                layeredPane.add(navbar, Integer.valueOf(102));
 	                
 	                
-	                // Aggiunta del pannello utente (inizialmente invisibile) alla finestra principale
+	                // Aggiunta dello userPanel alla finestra principale
 	                userPanel = new UserPanel(Frame.this);
 	                
 	                userPanel.setBounds(screenSize.width - 350, 70, 350, screenSize.height - 70);
@@ -144,7 +143,7 @@ public class Frame extends JFrame {
 	                layeredPane.add(userPanel, Integer.valueOf(101));
 	                
 	                
-	                // Adattamento dinamico delle dimensioni della navbar e delle sue componenti
+	                // Istanziamento di uno ScheduledExecutor per ricalibrare il layout della finestra ogni 150ms
 	                ScheduledExecutorService schedulerCalibra = Executors.newScheduledThreadPool(1);
 	                
 	                schedulerCalibra.scheduleAtFixedRate(() -> {
@@ -154,7 +153,6 @@ public class Frame extends JFrame {
 
 	                // Gestione del click sul pulsante di login per mostrare/nascondere il pannello utente
 	                navbar.getBtnLogin().addActionListener(new ActionListener() {
-	                	
 	                	public void actionPerformed(ActionEvent e) {
 	                		
 	                		if (userPanel.isVisible()) {
@@ -183,7 +181,9 @@ public class Frame extends JFrame {
         loader.execute();
 	}
 
+
 // ---------------------------------------------------------------------------------------------
+
 
 	// Metodo get per i dati GTFS assegnati all'istanza
 	public DatiGTFS getDati() {
@@ -238,9 +238,11 @@ public class Frame extends JFrame {
 		return this.painterGroup;
 	}
 
+
 // ---------------------------------------------------------------------------------------------
 
-	// Metodo che gestisce l'adattamento dinamico delle componenti del frame
+
+	// Metodo che gestisce l'adattamento dinamico delle componenti della finestra principale
 	private void calibra() {
 		
 		int newWidth = getWidth();              // Nuova larghezza della finestra
