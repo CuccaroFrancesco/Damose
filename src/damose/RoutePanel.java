@@ -94,7 +94,7 @@ public class RoutePanel extends JPanel {
 		lblViaggioVisualizzato = new JLabel();
 
 		lblViaggioVisualizzato.setForeground(new Color(210, 210, 210));
-		lblViaggioVisualizzato.setFont(new Font("Arial Nova", Font.ITALIC, 14));
+		lblViaggioVisualizzato.setFont(new Font("Arial Nova", Font.ITALIC, 12));
 		lblViaggioVisualizzato.setHorizontalAlignment(SwingConstants.CENTER);
 		lblViaggioVisualizzato.setFocusable(false);
 
@@ -215,7 +215,7 @@ public class RoutePanel extends JPanel {
 
 		btnWebsite.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-		btnWebsite.setForeground(new Color(255, 255, 255));
+		btnWebsite.setForeground(Color.WHITE);
 		btnWebsite.setFont(new Font("Arial Nova", Font.BOLD, 12));
 		btnWebsite.setText(" Sito Web");
 		btnWebsite.setHorizontalAlignment(SwingConstants.LEADING);
@@ -683,32 +683,17 @@ public class RoutePanel extends JPanel {
 			Trip viaggio = listaViaggiCopy.get(i);
 
 			StopTime primaFermata = this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggio).getFirst();
-			LocalTime orarioPrimaFermata = LocalTime.ofSecondOfDay(primaFermata.getDepartureTime());
+			LocalTime orarioPrimaFermata;
+
+			if (primaFermata.getArrivalTime() >= 86400) orarioPrimaFermata = LocalTime.ofSecondOfDay(primaFermata.getArrivalTime() - 86400);
+			else orarioPrimaFermata = LocalTime.ofSecondOfDay(primaFermata.getArrivalTime());
 
 			if (orarioPrimaFermata.isAfter(timeNow)) {
 
-				if (i > 0) {
+				listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i - 1));
+				for (int j = i; j < listaViaggiCopy.size(); j++) { listaViaggiDaVisualizzare.add(listaViaggiCopy.get(j)); }
 
-					listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i - 1));
-					listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i));
-
-					if (i + 1 < listaViaggiCopy.size()) listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i + 1));
-					if (i + 2 < listaViaggiCopy.size()) listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i + 2));
-					if (i + 3 < listaViaggiCopy.size()) listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i + 3));
-
-					break;
-
-				} else {
-
-					listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i));
-
-					if (i + 1 < listaViaggiCopy.size()) listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i + 1));
-					if (i + 2 < listaViaggiCopy.size()) listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i + 2));
-					if (i + 3 < listaViaggiCopy.size()) listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i + 3));
-					if (i + 4 < listaViaggiCopy.size()) listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i + 4));
-
-					break;
-				}
+				break;
 			}
 		}
 
@@ -740,11 +725,19 @@ public class RoutePanel extends JPanel {
 		// Ottenimento delle informazioni principali relative al viaggio visualizzato (capolinea e fascia oraria) e visualizzazione di tali informazioni
 		String partenza = fermate.getFirst().getName();
 		String arrivo = fermate.getLast().getName();
+		LocalTime orarioPartenza;
+		LocalTime orarioArrivo;
 
-		String fasciaOraria = LocalTime.ofSecondOfDay(listaStopTimes.getFirst().getArrivalTime())
+		if (listaStopTimes.getFirst().getArrivalTime() >= 86400) orarioPartenza = LocalTime.ofSecondOfDay(listaStopTimes.getFirst().getArrivalTime() - 86400);
+		else orarioPartenza = LocalTime.ofSecondOfDay(listaStopTimes.getFirst().getArrivalTime());
+
+		if (listaStopTimes.getLast().getArrivalTime() >= 86400) orarioArrivo = LocalTime.ofSecondOfDay(listaStopTimes.getLast().getArrivalTime() - 86400);
+		else orarioArrivo = LocalTime.ofSecondOfDay(listaStopTimes.getLast().getArrivalTime());
+
+		String fasciaOraria = orarioPartenza
 				.format(DateTimeFormatter.ofPattern("HH:mm"))
 				+ " - "
-				+ LocalTime.ofSecondOfDay(listaStopTimes.getLast().getArrivalTime())
+				+ orarioArrivo
 				.format(DateTimeFormatter.ofPattern("HH:mm"));
 
 		lblViaggioVisualizzatoInfo.setText(String.format(
@@ -825,7 +818,6 @@ public class RoutePanel extends JPanel {
 
 			orario.setBounds(290, y, 60, 60);
 			orario.setFont(new Font("Arial Nova", Font.BOLD, 14));
-			orario.setForeground(Color.WHITE);
 
 			if (linea.getType() == 1) {
 				if (!controllati.contains(fermata.getName())) {
@@ -835,10 +827,20 @@ public class RoutePanel extends JPanel {
 
 							controllati.add(fermata.getName());
 
-							int orarioArrivoSecondi = stopTime.getArrivalTime();
-							LocalTime orarioArrivo = LocalTime.ofSecondOfDay(orarioArrivoSecondi);
-							String formattedOrarioArrivo = orarioArrivo.format(DateTimeFormatter.ofPattern("HH:mm"));
-							orario.setText(formattedOrarioArrivo);
+							int orarioArrivoFermataInSecondi = stopTime.getArrivalTime();
+							LocalTime orarioArrivoFermata;
+
+							if (orarioArrivoFermataInSecondi >= 86400) orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi - 86400);
+							else orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi);
+
+							if(orarioArrivoFermata.isAfter(orarioPartenza)) {
+								orario.setForeground(Color.WHITE);
+							} else {
+								orario.setForeground(Color.GRAY);
+							}
+
+							String formattedOrarioArrivoFermata = orarioArrivoFermata.format(DateTimeFormatter.ofPattern("HH:mm"));
+							orario.setText(formattedOrarioArrivoFermata);
 
 							break;
 						}
@@ -849,10 +851,14 @@ public class RoutePanel extends JPanel {
 					for (StopTime stopTime : listaStopTimes) {
 						if (stopTime.getStop().getName().equals(fermata.getName())) {
 
-							int orarioArrivoSecondi = stopTime.getArrivalTime();
-							LocalTime orarioArrivo = LocalTime.ofSecondOfDay(orarioArrivoSecondi);
-							String formattedOrarioArrivo = orarioArrivo.format(DateTimeFormatter.ofPattern("HH:mm"));
-							orario.setText(formattedOrarioArrivo);
+							int orarioArrivoFermataInSecondi = stopTime.getArrivalTime();
+							LocalTime orarioArrivoFermata;
+
+							if (orarioArrivoFermataInSecondi >= 86400) orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi - 86400);
+							else orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi);
+
+							String formattedOrarioArrivoFermata = orarioArrivoFermata.format(DateTimeFormatter.ofPattern("HH:mm"));
+							orario.setText(formattedOrarioArrivoFermata);
 						}
 					}
 				}
@@ -865,10 +871,14 @@ public class RoutePanel extends JPanel {
 
 							controllati.add(fermataID);
 
-							int orarioArrivoSecondi = stopTime.getArrivalTime();
-							LocalTime orarioArrivo = LocalTime.ofSecondOfDay(orarioArrivoSecondi);
-							String formattedOrarioArrivo = orarioArrivo.format(DateTimeFormatter.ofPattern("HH:mm"));
-							orario.setText(formattedOrarioArrivo);
+							int orarioArrivoFermataInSecondi = stopTime.getArrivalTime();
+							LocalTime orarioArrivoFermata;
+
+							if (orarioArrivoFermataInSecondi >= 86400) orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi - 86400);
+							else orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi);
+
+							String formattedOrarioArrivoFermata = orarioArrivoFermata.format(DateTimeFormatter.ofPattern("HH:mm"));
+							orario.setText(formattedOrarioArrivoFermata);
 
 							break;
 						}
@@ -879,10 +889,14 @@ public class RoutePanel extends JPanel {
 					for (StopTime stopTime : listaStopTimes) {
 						if (stopTime.getStop().getId().getId().equals(fermataID)) {
 
-							int orarioArrivoSecondi = stopTime.getArrivalTime();
-							LocalTime orarioArrivo = LocalTime.ofSecondOfDay(orarioArrivoSecondi);
-							String formattedOrarioArrivo = orarioArrivo.format(DateTimeFormatter.ofPattern("HH:mm"));
-							orario.setText(formattedOrarioArrivo);
+							int orarioArrivoFermataInSecondi = stopTime.getArrivalTime();
+							LocalTime orarioArrivoFermata;
+
+							if (orarioArrivoFermataInSecondi >= 86400) orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi - 86400);
+							else orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi);
+
+							String formattedOrarioArrivoFermata = orarioArrivoFermata.format(DateTimeFormatter.ofPattern("HH:mm"));
+							orario.setText(formattedOrarioArrivoFermata);
 						}
 					}
 				}
@@ -906,6 +920,7 @@ public class RoutePanel extends JPanel {
 
 
 		// Aggiornamento del rendering di fermatePanel e del routePanel nel complesso
+		fermatePanel.revalidate();
 		fermatePanel.repaint();
 		this.repaint();
 	}
