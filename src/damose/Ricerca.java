@@ -5,13 +5,11 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.Insets;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -21,8 +19,7 @@ import javax.swing.border.MatteBorder;
 
 import org.onebusaway.gtfs.model.Route;
 import org.onebusaway.gtfs.model.Stop;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
+
 import java.awt.event.ActionListener;
 
 
@@ -113,7 +110,7 @@ public class Ricerca extends JPanel{
 	        btnLinea.addActionListener(e -> {
 	        	frame.getRoutePanel().creaPannelloLinea(linea);
         		
-        		LineaPainter.costruisciLineaDaDisegnare(frame.getRoutePanel().updateViaggiDaVisualizzare(linea).getFirst(), frame.getMappa(), frame.getDati());
+        		LineaPainter.costruisciLineaDaDisegnare(frame.getDati().getViaggiDaVisualizzare(linea).getFirst(), frame.getMappa(), frame.getDati());
         		
 	        	Ricerca.this.setVisible(false);
 	        });

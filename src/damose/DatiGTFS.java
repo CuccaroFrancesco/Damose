@@ -336,6 +336,19 @@ public class DatiGTFS {
 	}
 
 
+	// Metodo che restituisce tutti i viaggi relativi alla linea attuale
+	public List<Trip> getViaggiDaVisualizzare(Route linea) {
+
+		List<Trip> listaViaggi = this.getDatiStatici().getTripsForRoute(linea);
+		List<Trip> listaViaggiCopy = new ArrayList<>(listaViaggi);
+		listaViaggiCopy.sort((t1, t2) -> Integer.compare(this.getDatiStatici().getStopTimesForTrip(t1).getFirst().getDepartureTime(),
+																	this.getDatiStatici().getStopTimesForTrip(t2).getFirst().getDepartureTime()));
+
+		return listaViaggiCopy;
+	}
+
+
+
 	// Metodo che restituisce un booleano in base alla circolarità del viaggio
 	public boolean isCircolare(Trip viaggio) {
 

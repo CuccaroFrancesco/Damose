@@ -28,7 +28,7 @@ public class RoutePanel extends JPanel {
 
 	private Frame frame;
 
-	private JLabel codiceLinea, agenziaENomeLinea, lblViaggi, lblViaggioVisualizzato, lblViaggioVisualizzatoInfo, lblMezzi;
+	private JLabel codiceLinea, agenziaENomeLinea, lblPartenze, lblViaggioVisualizzato, lblViaggioVisualizzatoInfo, lblMezzi;
 	private JButton btnClose, btnRefresh, btnAgency, btnFavorite, btnWebsite, btnRouteType, btnTripLeft, btnTripRight;
 	private JPanel fermatePanel;
 	private JScrollPane fermateScrollPane;
@@ -78,16 +78,16 @@ public class RoutePanel extends JPanel {
 		this.add(agenziaENomeLinea);
 
 
-		// JLabel per il testo "Prossimi viaggi:"
-		lblViaggi = new JLabel("Prossimi viaggi:");
+		// JLabel per il testo "Partenze:"
+		lblPartenze = new JLabel("Partenze:");
 
-		lblViaggi.setForeground(Color.WHITE);
-		lblViaggi.setFont(new Font("Arial Nova", Font.BOLD, 24));
-		lblViaggi.setFocusable(false);
+		lblPartenze.setForeground(Color.WHITE);
+		lblPartenze.setFont(new Font("Arial Nova", Font.BOLD, 24));
+		lblPartenze.setFocusable(false);
 
-		lblViaggi.setBounds(20, 205, 200, 50);
+		lblPartenze.setBounds(20, 205, 120, 50);
 
-		this.add(lblViaggi);
+		this.add(lblPartenze);
 
 
 		// JLabel per l'indice del viaggio visualizzato
@@ -98,7 +98,7 @@ public class RoutePanel extends JPanel {
 		lblViaggioVisualizzato.setHorizontalAlignment(SwingConstants.CENTER);
 		lblViaggioVisualizzato.setFocusable(false);
 
-		lblViaggioVisualizzato.setBounds(275, 220, 36, 24);
+		lblViaggioVisualizzato.setBounds(245, 220, 66, 24);
 
 		this.add(lblViaggioVisualizzato);
 
@@ -269,7 +269,7 @@ public class RoutePanel extends JPanel {
 		btnTripLeft.setBackground(new Color(130, 36, 51));
 
 		btnTripLeft.setPreferredSize(new Dimension(24, 24));
-		btnTripLeft.setBounds(250, 220, 24, 24);
+		btnTripLeft.setBounds(220, 220, 24, 24);
 
 		ImageIcon iconLeft = new ImageIcon("src/resources/left.png");
 		Image scaledImageLeft = iconLeft.getImage().getScaledInstance(12, 20, Image.SCALE_SMOOTH);
@@ -374,9 +374,27 @@ public class RoutePanel extends JPanel {
 		frame.getStopPanel().setVisible(false);
 
 
-		// All'inizializzazione del pannello, viene visualizzato di default il primo dei viaggi da visualizzare
-		this.viaggiDaVisualizzare = updateViaggiDaVisualizzare(linea);
-		this.indiceViaggioVisualizzato = 0;
+		// All'inizializzazione del pannello, viene visualizzato di default il viaggio con la partenza più vicina all'orario attuale
+		this.viaggiDaVisualizzare = this.frame.getDati().getViaggiDaVisualizzare(linea);
+
+		LocalTime timeNow = LocalTime.now();
+
+		for (int i = 0; i < viaggiDaVisualizzare.size(); i++) {
+			Trip viaggio = viaggiDaVisualizzare.get(i);
+
+			StopTime primaFermata = this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggio).getFirst();
+			LocalTime orarioPrimaFermata;
+
+			if (primaFermata.getArrivalTime() >= 86400) orarioPrimaFermata = LocalTime.ofSecondOfDay(primaFermata.getArrivalTime() - 86400);
+			else orarioPrimaFermata = LocalTime.ofSecondOfDay(primaFermata.getArrivalTime());
+
+			if (orarioPrimaFermata.isAfter(timeNow)) {
+				if (i > 0) indiceViaggioVisualizzato = i - 1;
+				else indiceViaggioVisualizzato = i;
+
+				break;
+			}
+		}
 
 
 		// Rimozione di eventuali fermateScrollPane precedenti (necessario per evitare overlap)
@@ -398,8 +416,28 @@ public class RoutePanel extends JPanel {
 		// Funzionalità per il pulsante btnRefresh, che permette di aggiornare i viaggi da visualizzare in base all'orario
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RoutePanel.this.viaggiDaVisualizzare = updateViaggiDaVisualizzare(linea);
+
+				LocalTime timeNow = LocalTime.now();
+
+				for (int i = 0; i < viaggiDaVisualizzare.size(); i++) {
+					Trip viaggio = viaggiDaVisualizzare.get(i);
+
+					StopTime primaFermata = RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggio).getFirst();
+					LocalTime orarioPrimaFermata;
+
+					if (primaFermata.getArrivalTime() >= 86400) orarioPrimaFermata = LocalTime.ofSecondOfDay(primaFermata.getArrivalTime() - 86400);
+					else orarioPrimaFermata = LocalTime.ofSecondOfDay(primaFermata.getArrivalTime());
+
+					if (orarioPrimaFermata.isAfter(timeNow)) {
+						if (i > 0) indiceViaggioVisualizzato = i - 1;
+						else indiceViaggioVisualizzato = i;
+
+						break;
+					}
+				}
+
 				aggiornaViaggio(linea, indiceViaggioVisualizzato);
+				lblViaggioVisualizzato.setText(indiceViaggioVisualizzato + 1 + "/" + getViaggiDaVisualizzare().size());
 			}
 		});
 
@@ -594,8 +632,8 @@ public class RoutePanel extends JPanel {
 
 		// Gestione del viaggio visualizzato nel routePanel e funzionalità per i pulsanti btnTripLeft e btnTripRight
 		lblViaggioVisualizzato.setText(indiceViaggioVisualizzato + 1 + "/" + getViaggiDaVisualizzare().size());
-		btnTripLeft.setEnabled(false);
-		btnTripRight.setEnabled(true);
+		btnTripLeft.setEnabled(indiceViaggioVisualizzato != 0);
+		btnTripRight.setEnabled(indiceViaggioVisualizzato != getViaggiDaVisualizzare().size() - 1);
 
 		btnTripLeft.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -623,7 +661,7 @@ public class RoutePanel extends JPanel {
 				lblViaggioVisualizzato.setText(indiceViaggioVisualizzato + 1 + "/" + getViaggiDaVisualizzare().size());
 
 				btnTripLeft.setEnabled(true);
-				if (indiceViaggioVisualizzato == getViaggiDaVisualizzare().size() - 1) btnTripRight.setEnabled(false);
+				btnTripRight.setEnabled(indiceViaggioVisualizzato != getViaggiDaVisualizzare().size() - 1);
 
 				aggiornaViaggio(linea, indiceViaggioVisualizzato);
 
@@ -664,41 +702,6 @@ public class RoutePanel extends JPanel {
 
 
 // ---------------------------------------------------------------------------------------------
-
-
-	// Metodo che restituisce i viaggi più rilevanti (quello appena cominciato e i 4 successivi) rispetto all'orario attuale
-	public List<Trip> updateViaggiDaVisualizzare(Route linea) {
-
-		LocalTime timeNow = LocalTime.now();
-
-		List<Trip> listaViaggi = this.frame.getDati().getDatiStatici().getTripsForRoute(linea);
-		List<Trip> listaViaggiCopy = new ArrayList<>(listaViaggi);
-		listaViaggiCopy.sort((t1, t2) -> Integer.compare(RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(t1).getFirst().getDepartureTime(),
-				                                                   RoutePanel.this.frame.getDati().getDatiStatici().getStopTimesForTrip(t2).getFirst().getDepartureTime()));
-
-		List<Trip> listaViaggiDaVisualizzare = new ArrayList<>();
-
-		for (int i = 0; i < listaViaggiCopy.size(); i++) {
-
-			Trip viaggio = listaViaggiCopy.get(i);
-
-			StopTime primaFermata = this.frame.getDati().getDatiStatici().getStopTimesForTrip(viaggio).getFirst();
-			LocalTime orarioPrimaFermata;
-
-			if (primaFermata.getArrivalTime() >= 86400) orarioPrimaFermata = LocalTime.ofSecondOfDay(primaFermata.getArrivalTime() - 86400);
-			else orarioPrimaFermata = LocalTime.ofSecondOfDay(primaFermata.getArrivalTime());
-
-			if (orarioPrimaFermata.isAfter(timeNow)) {
-
-				listaViaggiDaVisualizzare.add(listaViaggiCopy.get(i - 1));
-				for (int j = i; j < listaViaggiCopy.size(); j++) { listaViaggiDaVisualizzare.add(listaViaggiCopy.get(j)); }
-
-				break;
-			}
-		}
-
-		return listaViaggiDaVisualizzare;
-	}
 
 
 	// Metodo che gestisce la visualizzazione delle fermate e dei rispettivi orari in base al viaggio scelto
@@ -754,13 +757,13 @@ public class RoutePanel extends JPanel {
 		fermatePanel = new JPanel();
 		fermatePanel.setLayout(null);
 		fermatePanel.setBackground(new Color(130, 36, 51));
-		fermatePanel.setPreferredSize(new Dimension(350, Math.max(100, fermate.size() * 40)));
+		fermatePanel.setPreferredSize(new Dimension(350, Math.max(100, fermate.size() * 40 - 20)));
 
 		List<String> controllati = new ArrayList<>();
 
 		for (int i = 0; i < fermate.size(); i++) {
 
-			int y = i * 40;
+			int y = i * 40 - 20;
 
 			Stop fermata = fermate.get(i);
 			String fermataID = fermata.getId().getId();
@@ -827,6 +830,7 @@ public class RoutePanel extends JPanel {
 
 					for (StopTime stopTime : listaStopTimes) {
 						String IdStopName = linea.getType() == 1 ? stopTime.getStop().getName() : stopTime.getStop().getId().getId();
+
 						if (IdStopName.equals(verifica)) {
 
 							controllati.add(verifica);
@@ -837,7 +841,7 @@ public class RoutePanel extends JPanel {
 							if (orarioArrivoFermataInSecondi >= 86400) orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi - 86400);
 							else orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi);
 
-							if(!orarioArrivoFermata.isAfter(now)) {
+							if (!orarioArrivoFermata.isAfter(now)) {
 								orario.setForeground(new Color(170, 170, 170));
 								stopBtn.setForeground(new Color(170, 170, 170));
 								stopBtn.setFont(new Font("Arial Nova", Font.BOLD | Font.ITALIC, 12));
@@ -854,6 +858,7 @@ public class RoutePanel extends JPanel {
 
 					for (StopTime stopTime : listaStopTimes) {
 						String IdStopName = linea.getType() == 1 ? stopTime.getStop().getName() : stopTime.getStop().getId().getId();
+
 						if (IdStopName.equals(verifica)) {
 
 							int orarioArrivoFermataInSecondi = stopTime.getArrivalTime();
@@ -862,7 +867,7 @@ public class RoutePanel extends JPanel {
 							if (orarioArrivoFermataInSecondi >= 86400) orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi - 86400);
 							else orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi);
 
-							if(!orarioArrivoFermata.isAfter(now)) {
+							if (!orarioArrivoFermata.isAfter(now)) {
 								orario.setForeground(new Color(170, 170, 170));
 								stopBtn.setForeground(new Color(170, 170, 170));
 								stopBtn.setFont(new Font("Arial Nova", Font.BOLD | Font.ITALIC, 12));

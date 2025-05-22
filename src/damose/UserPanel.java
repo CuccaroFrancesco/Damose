@@ -3,16 +3,12 @@ package damose;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
-import org.jxmapviewer.viewer.*;
-
 import org.onebusaway.gtfs.model.Route;
 import org.onebusaway.gtfs.model.Stop;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -648,7 +644,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
                 	public void actionPerformed(ActionEvent e) {
                 		if (lineaArray[0] != null) {
                 			frame.getRoutePanel().creaPannelloLinea(lineaArray[0]);
-                            LineaPainter.costruisciLineaDaDisegnare(frame.getRoutePanel().updateViaggiDaVisualizzare(lineaArray[0]).getFirst(), frame.getMappa(), frame.getDati());
+                            LineaPainter.costruisciLineaDaDisegnare(frame.getDati().getViaggiDaVisualizzare(lineaArray[0]).getFirst(), frame.getMappa(), frame.getDati());
                         } else {
                             System.out.println("Linea non trovata");
                         }

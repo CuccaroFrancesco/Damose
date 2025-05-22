@@ -57,6 +57,7 @@ Alla selezione di un determinato mezzo, dovrebbero diventare accessibili le segu
 - Percentuale di corse puntuali per linea
 - Percentuale di corse cancellate per linea
 - Numero di mezzi attualmente in transito per linea
+- Implementare la classe StatsPanel
 
 #### 🧑‍💼 Utente:
 - Icona del profilo
