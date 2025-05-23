@@ -72,6 +72,8 @@ ___
 ___
 
 ## ⚒️ BUG E MIGLIORAMENTI
+- Sistemare i preferiti per le linee (fermate funzia)
+- Logo delle agenzie non atac buggati
 - Creare un WaypointPainter personalizzato, per distinguere tra fermate generiche, fermate preferite (giallo) e fermate selezionate in un determinato momento
 - Eliminare l'observer (non più necessario)
 - Rendere interattivi i waypoint delle fermate (se premuto, creare lo stopPanel corrispondente)
