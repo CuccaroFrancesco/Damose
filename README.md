@@ -14,8 +14,6 @@ ___
 - Visualizzare messaggio di avviso se i dati real-time non sono disponibili (errori o mancanza di rete)
 
 #### 🎨 Estetica:
-- Inserire animazioni per i vari pannelli pop-up (scorrimento o fade)
-- Inserire un frame di transizione (cuore bianco leggermente più grande) tra cuore pieno e cuore vuoto nel btnPreferiti
 - Personalizzare l'aspetto dei waypoint (fermate di agenzie diverse, mezzi, ecc. ecc.)
 
 #### 🚏 StopPanel:
@@ -60,7 +58,6 @@ Alla selezione di un determinato mezzo, dovrebbero diventare accessibili le segu
 - Implementare la classe StatsPanel
 
 #### 🧑‍💼 Utente:
-- Icona del profilo
 - Impostazioni per l'utente:
   - Cambiare tema
   - Liberare la cache
@@ -73,9 +70,7 @@ ___
 
 ## ⚒️ BUG E MIGLIORAMENTI
 - Sistemare i preferiti per le linee (fermate funzia)
-- Logo delle agenzie non atac buggati
 - Creare un WaypointPainter personalizzato, per distinguere tra fermate generiche, fermate preferite (giallo) e fermate selezionate in un determinato momento
 - Eliminare l'observer (non più necessario)
 - Rendere interattivi i waypoint delle fermate (se premuto, creare lo stopPanel corrispondente)
 - Rifare la sezione "Appartiene a:" dello stopPanel (inserire agenzia e pulsante che rimanda alla linea in questione)
-- Se le lineePreferite iniziano con "-" in utenti.txt, viene creato un lineaBtn vuoto all'inizio

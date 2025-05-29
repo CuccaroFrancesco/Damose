@@ -247,16 +247,16 @@ public class StopPanel extends JPanel {
 		lineePassantiPanel = new JPanel();
 		lineePassantiPanel.setLayout(null);
 		lineePassantiPanel.setBackground(new Color(130, 36, 51));
-		lineePassantiPanel.setPreferredSize(new Dimension(350, Math.max(100, lineePassanti.size() * 40)));
+		lineePassantiPanel.setPreferredSize(new Dimension(350, Math.max(100, lineePassanti.size() * 50)));
 		
 		for (int i = 0; i < lineePassanti.size(); i++) {
 			
 			Route linea = lineePassanti.get(i);
-			int y = i * 40;
+			int y = i * 50;
 			
 			JButton lineaBtn = new JButton();
 			
-			lineaBtn.setBounds(10, y, 290, 40);
+			lineaBtn.setBounds(10, y, 290, 50);
 			
 			lineaBtn.setFocusable(false);
             lineaBtn.setContentAreaFilled(false);
@@ -264,17 +264,17 @@ public class StopPanel extends JPanel {
             lineaBtn.setBorderPainted(false);
             
             lineaBtn.setFont(new Font("Arial Nova", Font.BOLD, 16));
-            lineaBtn.setText(" " + linea.getShortName());
             lineaBtn.setHorizontalAlignment(SwingConstants.LEADING);
-            
-            lineaBtn.setForeground(new Color(255, 255, 255));
+			lineaBtn.setText("<html><font size='5'>&nbsp;&nbsp;&nbsp;<b>" + linea.getId().getId() + "</b></font><br><font size='3'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>" + linea.getAgency().getName().toUpperCase() +  "</b></font></html>");
+
+			lineaBtn.setForeground(new Color(255, 255, 255));
             lineaBtn.setBackground(new Color(130, 36, 51));
             lineaBtn.setBorder(BorderFactory.createEmptyBorder());
             
             switch (linea.getType()) {
 				case 0:
 					ImageIcon iconTram = new ImageIcon("src/resources/tram.png");
-			        Image scaledImageTram = iconTram.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+			        Image scaledImageTram = iconTram.getImage().getScaledInstance(38, 38, Image.SCALE_SMOOTH);
 			        ImageIcon newIconTram = new ImageIcon(scaledImageTram);
 			        lineaBtn.setIcon(newIconTram);
 			        
@@ -284,40 +284,40 @@ public class StopPanel extends JPanel {
 					switch (linea.getShortName()) {
 			        	case "MEA":
 			        		ImageIcon iconMetroA = new ImageIcon("src/resources/metro-a-logo-withborder.png");
-					        Image scaledImageMetroA = iconMetroA.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+					        Image scaledImageMetroA = iconMetroA.getImage().getScaledInstance(38, 38, Image.SCALE_SMOOTH);
 					        ImageIcon newIconMetroA = new ImageIcon(scaledImageMetroA);
 					        lineaBtn.setIcon(newIconMetroA);
-					        
-					        lineaBtn.setText(" Metro A");
+
+							lineaBtn.setText("<html><font size='5'>&nbsp;&nbsp;&nbsp;<b>" + "Metro A" + "</b></font><br><font size='3'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>" + linea.getAgency().getName().toUpperCase() +  "</b></font></html>");
 					        
 					        break;
 					    
 			        	case "MEB":
 			        		ImageIcon iconMetroB = new ImageIcon("src/resources/metro-b-logo-withborder.png");
-					        Image scaledImageMetroB = iconMetroB.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+					        Image scaledImageMetroB = iconMetroB.getImage().getScaledInstance(38, 38, Image.SCALE_SMOOTH);
 					        ImageIcon newIconMetroB = new ImageIcon(scaledImageMetroB);
 					        lineaBtn.setIcon(newIconMetroB);
-					        
-					        lineaBtn.setText(" Metro B");
+
+							lineaBtn.setText("<html><font size='5'>&nbsp;&nbsp;&nbsp;<b>" + "Metro B" + "</b></font><br><font size='3'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>" + linea.getAgency().getName().toUpperCase() +  "</b></font></html>");
 					        
 					        break;
 					        
 			        	case "MEB1":
 			        		ImageIcon iconMetroB1 = new ImageIcon("src/resources/metro-b-logo-withborder.png");
-					        Image scaledImageMetroB1 = iconMetroB1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+					        Image scaledImageMetroB1 = iconMetroB1.getImage().getScaledInstance(38, 38, Image.SCALE_SMOOTH);
 					        ImageIcon newIconMetroB1 = new ImageIcon(scaledImageMetroB1);
 					        lineaBtn.setIcon(newIconMetroB1);
-					        
-					        lineaBtn.setText(" Metro B1");
+
+							lineaBtn.setText("<html><font size='5'>&nbsp;&nbsp;&nbsp;<b>" + "Metro B1" + "</b></font><br><font size='3'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>" + linea.getAgency().getName().toUpperCase() +  "</b></font></html>");
 					        break;
 					        
 			        	case "MEC":
 			        		ImageIcon iconMetroC = new ImageIcon("src/resources/metro-c-logo-withborder.png");
-					        Image scaledImageMetroC = iconMetroC.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+					        Image scaledImageMetroC = iconMetroC.getImage().getScaledInstance(38, 38, Image.SCALE_SMOOTH);
 					        ImageIcon newIconMetroC = new ImageIcon(scaledImageMetroC);
 					        lineaBtn.setIcon(newIconMetroC);
-					        
-					        lineaBtn.setText(" Metro C");
+
+							lineaBtn.setText("<html><font size='5'>&nbsp;&nbsp;&nbsp;<b>" + "Metro C" + "</b></font><br><font size='3'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>" + linea.getAgency().getName().toUpperCase() +  "</b></font></html>");
 					        
 					        break;
 			        }
@@ -326,7 +326,7 @@ public class StopPanel extends JPanel {
 			        
 				case 2:
 					ImageIcon iconTreno = new ImageIcon("src/resources/train.png");
-			        Image scaledImageTreno = iconTreno.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+			        Image scaledImageTreno = iconTreno.getImage().getScaledInstance(38, 38, Image.SCALE_SMOOTH);
 			        ImageIcon newIconTreno = new ImageIcon(scaledImageTreno);
 			        lineaBtn.setIcon(newIconTreno);
 			        
@@ -334,7 +334,7 @@ public class StopPanel extends JPanel {
 			        
 				case 3:
 					ImageIcon iconBus = new ImageIcon("src/resources/bus.png");
-			        Image scaledImageBus = iconBus.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+			        Image scaledImageBus = iconBus.getImage().getScaledInstance(38, 38, Image.SCALE_SMOOTH);
 			        ImageIcon newIconBus = new ImageIcon(scaledImageBus);
 			        lineaBtn.setIcon(newIconBus);
 			        

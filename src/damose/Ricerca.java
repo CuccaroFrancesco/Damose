@@ -91,7 +91,7 @@ public class Ricerca extends JPanel{
         		    new EmptyBorder(5, 15, 5, 0)
         		));
         	
-        	if(linea.getLongName() == null || linea.getLongName().isBlank()) {        		
+        	if (linea.getLongName() == null || linea.getLongName().isBlank()) {
         		btnLinea.setText("<html><font size='5'><b>" + linea.getId().getId() + "</b></font><br><font size='3'><b>" + linea.getAgency().getName().toUpperCase() +  "</b></font></html>");
         	} else {
         		btnLinea.setText("<html><font size='5'><b>" + linea.getId().getId() + "</b></font><br><font size='3'><b>" + linea.getLongName() +  "&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;</b>" + linea.getAgency().getName().toUpperCase() + "</font></html>");

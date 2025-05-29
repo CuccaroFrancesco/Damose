@@ -209,11 +209,9 @@ public class Utente {
         String riga;
         
         while ((riga = reader.readLine()) != null) {
-            List<String> dati = new ArrayList<>();
-            
-            for (String dato : riga.split(",")) {
-            	dati.add(dato);
-            }
+
+         	List<String> dati = new ArrayList<>(List.of(riga.split(",", -1)));
+			System.out.println(dati);
 
             if (dati.size() > 0 && dati.get(0).equals(username.trim())) {
             	
@@ -224,8 +222,28 @@ public class Utente {
             		this.setNome(dati.get(1).trim());
             		this.setCognome(dati.get(2).trim());
             		this.setPassword(password.trim());
-            		this.setLineePreferite(new ArrayList<>(Arrays.asList(dati.get(4).trim().split("-"))));
-            		this.setFermatePreferite(new ArrayList<>(Arrays.asList(dati.get(5).trim().split("-"))));
+
+					List<String> listaLineePreferite = new ArrayList<>();
+					if (!dati.get(4).isBlank()) {
+						for (String linea : dati.get(4).trim().split("-")) {
+							if (!linea.isBlank()) listaLineePreferite.add(linea);
+						}
+					}
+
+					this.setLineePreferite(listaLineePreferite);
+					System.out.println("LINEE PREFERITE OTTENUTE!");
+					System.out.println(this.getLineePreferite());
+
+					List<String> listaFermatePreferite = new ArrayList<>();
+					if (!dati.get(5).isBlank()) {
+						for (String fermata : dati.get(5).trim().split("-")) {
+							if (!fermata.isBlank()) listaFermatePreferite.add(fermata);
+						}
+					}
+
+					this.setFermatePreferite(listaFermatePreferite);
+					System.out.println("FERMATE PREFERITE OTTENUTE!");
+					System.out.println(this.getFermatePreferite());
 
             		return "Verificata.";
             		

@@ -489,19 +489,25 @@ public class RoutePanel extends JPanel {
 		// Visualizzazione dell'eventuale logo dell'agenzia che gestisce la linea in base a agencyName
 		switch (agencyName) {
 			case "Atac":
+				btnAgency.setVisible(true);
+
 				ImageIcon iconAtac = new ImageIcon("src/resources/atac-logo.png");
 				Image scaledImageAtac = iconAtac.getImage().getScaledInstance(65, 45, Image.SCALE_SMOOTH);
 				ImageIcon newIconAtac = new ImageIcon(scaledImageAtac);
 				btnAgency.setIcon(newIconAtac);
+
 				codiceLinea.setBounds(80, 70, 180, 50);
 
 				break;
 
 			case "Autoservizi Troiani":
+				btnAgency.setVisible(true);
+
 				ImageIcon iconTroiani = new ImageIcon("src/resources/autoservizi-troiani-logo.png");
 				Image scaledImageTroiani = iconTroiani.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 				ImageIcon newIconTroiani = new ImageIcon(scaledImageTroiani);
 				btnAgency.setIcon(newIconTroiani);
+
 				codiceLinea.setBounds(80, 70, 180, 50);
 
 				break;
@@ -509,10 +515,9 @@ public class RoutePanel extends JPanel {
 			default:
 				btnAgency.setVisible(false);
 				codiceLinea.setBounds(12, 70, 180, 50);
+
 				break;
 		}
-
-		btnAgency.setVisible(true);
 
 
 		// Visualizzazione dei nomi (long name e short name) assegnati alla linea e del nome dell'agenzia che la gestisce

@@ -17,8 +17,8 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	
 	private Frame frame;
 	
-	private JButton btnAccedi, btnRegistrati, btnConfermaLogin, btnConfermaRegistr, btnLogout, btnBack, btnToggleFermate, btnToggleLinee;
-	private JLabel titolo, lblNome, lblCognome, lblUsername, lblPassword, lblConfermaPassword,
+	private JButton btnProfilePic, btnAccedi, btnRegistrati, btnConfermaLogin, btnConfermaRegistr, btnLogout, btnBack, btnToggleFermate, btnToggleLinee;
+	private JLabel titolo, lblNome, lblCognome, lblUsername, lblPassword, lblConfermaPassword, lblNomeCognomeUtente,
 	               erroreNome, erroreCognome, erroreUsername, errorePassword, erroreConfermaPassword, registrazioneEffettuata;
 	private JTextField inputNome, inputCognome, inputUsername;
 	private JPasswordField inputPassword, inputConfermaPassword;
@@ -48,6 +48,38 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		titolo.setBounds(0, 180, 350, 50);
 				
 		this.add(titolo);
+
+
+		// JLabel destinato a visualizzare nome e cognome dell'utente loggato
+		lblNomeCognomeUtente = new JLabel();
+
+		lblNomeCognomeUtente.setForeground(new Color(210, 210, 210));
+		lblNomeCognomeUtente.setFont(new Font("Arial Nova", Font.ITALIC, 14));
+		lblNomeCognomeUtente.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNomeCognomeUtente.setBounds(100, 240, 150, 20);
+
+		lblNomeCognomeUtente.setVisible(false);
+
+		this.add(lblNomeCognomeUtente);
+
+
+		// Pulsante per l'icona dell'utente (nessuna funzionalità, serve solo per visualizzare comodamente l'immagine)
+		btnProfilePic = new JButton();
+
+		btnProfilePic.setFocusable(false);
+		btnProfilePic.setBorderPainted(false);
+		btnProfilePic.setFocusPainted(false);
+		btnProfilePic.setContentAreaFilled(false);
+
+		ImageIcon iconProfilePic = new ImageIcon("src/resources/user_placeholder.png");
+		Image scaledImageProfilePic = iconProfilePic.getImage().getScaledInstance(144, 144, Image.SCALE_SMOOTH);
+		ImageIcon newIconProfilePic = new ImageIcon(scaledImageProfilePic);
+		btnProfilePic.setIcon(newIconProfilePic);
+
+		btnProfilePic.setBounds(103, 55, 144, 144);
+		btnProfilePic.setVisible(false);
+
+		this.add(btnProfilePic);
 		
 		
 		// Pulsante per l'accesso (con account già esistente)
@@ -530,15 +562,21 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		            	
 		            	UserPanel.this.aggiornaPreferiti();
 		            	UserPanel.this.repaint();
+
+						btnProfilePic.setVisible(true);
 		                
 		                titolo.setText(frame.getUtente().getUsername());
-		                titolo.setBounds(0, 120, 350, 50);
+		                titolo.setBounds(0, 200, 350, 50);
 		                titolo.setVisible(true);
-		                
+
+						lblNomeCognomeUtente.setText(frame.getUtente().getNome() + " " + frame.getUtente().getCognome());
+						lblNomeCognomeUtente.setVisible(true);
+
 		                btnLogout.setVisible(true);
 		                
 		                frame.getStopPanel().controllaUtente(true);
 		                frame.getRoutePanel().controllaUtente(true);
+
 		            } else {
 		            	
 		                errorePassword.setVisible(true);
@@ -732,8 +770,9 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	    lineeScrollPane.setBorder(null);
 	    lineeScrollPane.setVisible(false);
 	    
-	    if (lineePreferite.toString().equals("[]")) lineeScrollPane.setBounds(0, 250, 350, 50);
-	    else lineeScrollPane.setBounds(0, 250, 350, 250);
+	    if (lineePreferite.toString().equals("[]")) lineeScrollPane.setBounds(0, 330, 350, 40);
+		else if (lineePreferite.size() < 4) lineeScrollPane.setBounds(0, 330, 350, lineePreferite.size() * 60 + 10);
+	    else lineeScrollPane.setBounds(0, 330, 350, 250);
 	    	
 	    lineeScrollPane.getVerticalScrollBar().setUnitIncrement(12);
 	    lineeScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -746,7 +785,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	    
 	    fermateScrollPane.setBorder(null);
 	    fermateScrollPane.setVisible(false);
-	    fermateScrollPane.setBounds(0, 300, 350, 250);
+	    fermateScrollPane.setBounds(0, 380, 350, 250);
 	    
 	    fermateScrollPane.getVerticalScrollBar().setUnitIncrement(12);
 	    fermateScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -759,13 +798,13 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	    
 	    btnToggleLinee.setFocusPainted(false);
 	    btnToggleLinee.setBackground(Color.WHITE);
-	    btnToggleLinee.setBounds(25, 200, 300, 30);
+	    btnToggleLinee.setBounds(25, 280, 300, 30);
 	
 	    btnToggleFermate = new JButton("Fermate preferite: ▲");
 	    
 	    btnToggleFermate.setFocusPainted(false);
 	    btnToggleFermate.setBackground(Color.WHITE);
-	    btnToggleFermate.setBounds(25, 250, 300, 30);
+	    btnToggleFermate.setBounds(25, 330, 300, 30);
 	
 	    UserPanel.this.add(btnToggleLinee);
 	    UserPanel.this.add(btnToggleFermate);
@@ -780,17 +819,21 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	        btnToggleLinee.setText("Linee preferite: " + (mostraLinee[0] ? "▼" : "▲"));
 	            
 	            if (mostraLinee[0]) {
-	            	if(lineePreferite.toString().equals("[]")) {
-	            		fermateScrollPane.setBounds(0, 340, 350, 250);
-	                	btnToggleFermate.setBounds(25, 290, 300, 30);
+
+	            	if (lineePreferite.toString().equals("[]")) {
+	            		fermateScrollPane.setBounds(0, 420, 350, 250);
+	                	btnToggleFermate.setBounds(25, 370, 300, 30);
+	            	} else if (lineePreferite.size() < 4){
+	            		fermateScrollPane.setBounds(0, 380 + lineePreferite.size() * 60 + 10, 350, 250);
+	                	btnToggleFermate.setBounds(25, 330 + lineePreferite.size() * 60 + 10, 300, 30);
 	            	} else {
-	            		fermateScrollPane.setBounds(0, 580, 350, 250);
-	                	btnToggleFermate.setBounds(25, 530, 300, 30);
-	            	}
+						fermateScrollPane.setBounds(0, 660, 350, 250);
+						btnToggleFermate.setBounds(25, 610, 300, 30);
+					}
 	            	
 	            } else {
-	            	fermateScrollPane.setBounds(0, 300, 350, 250);
-	            	btnToggleFermate.setBounds(25, 250, 300, 30);
+	            	fermateScrollPane.setBounds(0, 380, 350, 250);
+	            	btnToggleFermate.setBounds(25, 330, 300, 30);
 	            }
 	            
 	            UserPanel.this.repaint();
