@@ -73,4 +73,3 @@ ___
 - Creare un WaypointPainter personalizzato, per distinguere tra fermate generiche, fermate preferite (giallo) e fermate selezionate in un determinato momento
 - Eliminare l'observer (non più necessario)
 - Rendere interattivi i waypoint delle fermate (se premuto, creare lo stopPanel corrispondente)
-- Rifare la sezione "Appartiene a:" dello stopPanel (inserire agenzia e pulsante che rimanda alla linea in questione)
