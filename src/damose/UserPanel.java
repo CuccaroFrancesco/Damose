@@ -610,9 +610,9 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		// Funzionalità per il pulsante "Logout"
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				frame.getUtente().logout();
-				nascondiTutto();	
+				nascondiTutto();
 				
 				titolo.setText("Ospite");
 				titolo.setBounds(0, 200, 350, 50);
@@ -623,6 +623,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 				
 				frame.getStopPanel().controllaUtente(false);
 				frame.getRoutePanel().controllaUtente(false);
+
 			}
 		});
 	}
@@ -682,9 +683,10 @@ public class UserPanel extends JPanel implements PreferitiObserver {
                 	public void actionPerformed(ActionEvent e) {
                 		if (lineaArray[0] != null) {
                 			frame.getRoutePanel().creaPannelloLinea(lineaArray[0]);
+							frame.getRoutePanel().controllaUtente(frame.getUtente().getIsLogged());
                             LineaPainter.costruisciLineaDaDisegnare(frame.getDati().getViaggiDaVisualizzare(lineaArray[0]).getFirst(), frame.getMappa(), frame.getDati());
                         } else {
-                            System.out.println("Linea non trovata");
+                            System.err.println("Linea non trovata");
                         }
                     }
                 });
@@ -735,9 +737,10 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	            	public void actionPerformed(ActionEvent e) {
 	            		if (fermata[0] != null) {
 	            			frame.getStopPanel().creaPannelloFermata(fermata[0]);
+							frame.getStopPanel().controllaUtente(frame.getUtente().getIsLogged());
 	            			frame.getMappa().centraMappa(fermata[0].getLon(), fermata[0].getLat(), 2);
 	                    } else {
-	                        System.out.println("Fermata non trovata");
+	                        System.err.println("Fermata non trovata");
 	                    }
 	                }
 	            });

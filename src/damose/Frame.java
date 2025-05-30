@@ -265,7 +265,7 @@ public class Frame extends JFrame {
 		
 		navbar.getBtnRicerca().setBounds(460, 8, 30, 25);
 		
-		if (ricerca.getRisultatiScrollPane() == null) ricerca.setBounds(navbar.getSearchBar().getX(), 55, navbar.getSearchBar().getWidth(), 60);
+		if (ricerca.getRisultatiScrollPane() == null) ricerca.setBounds(navbar.getSearchBar().getX(), 55, navbar.getSearchBar().getWidth(), 0);
 		else ricerca.setBounds(navbar.getSearchBar().getX(), 55, navbar.getSearchBar().getWidth(), ricerca.getRisultatiScrollPane().getHeight());
 		
 		if (userPanel.isVisible()) {

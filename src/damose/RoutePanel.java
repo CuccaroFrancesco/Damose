@@ -915,13 +915,33 @@ public class RoutePanel extends JPanel {
 	public void controllaUtente(boolean isLogged) {
 
 		if (isLogged) {
+
+			String linea = codiceLinea.getText().trim();
+
+			switch (linea) {
+				case "Metro A":
+					linea = "MEA";
+					break;
+				case "Metro B":
+					linea = "MEB";
+					break;
+				case "Metro B1":
+					linea = "MEB1";
+					break;
+				case "Metro C":
+					linea = "MEC";
+					break;
+				default:
+					break;
+			}
+
 			btnFavorite.setEnabled(true);
 			btnFavorite.setVisible(true);
 
 			boolean isPreferita = false;
 
 			for (String lineaPreferita : frame.getUtente().getLineePreferite()) {
-				if (lineaPreferita.equals(codiceLinea.getText().trim())) {
+				if (lineaPreferita.equals(linea)) {
 					isPreferita = true;
 					break;
 				}
@@ -933,6 +953,10 @@ public class RoutePanel extends JPanel {
 			btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
 
 			btnFavorite.repaint();
+		} else {
+			btnFavorite.setEnabled(false);
+			btnFavorite.setVisible(false);
+			RoutePanel.this.repaint();
 		}
 	}
 }

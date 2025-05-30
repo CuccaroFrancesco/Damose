@@ -228,25 +228,28 @@ public class Navbar extends JPanel {
         
         // Chiusura automatica della ricerca se si perde il focus
         Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
+
         	@Override
         	public void eventDispatched(AWTEvent event) {
         		if (event instanceof MouseEvent && ((MouseEvent) event).getID() == MouseEvent.MOUSE_PRESSED) {
         			MouseEvent me = (MouseEvent) event;
-        			
+
         			int XCliccata = me.getXOnScreen();
         			int YCliccata = me.getYOnScreen();
-        			
+
         			boolean inRicerca = false;
         			boolean inSearchBar = false;
-        			
-        			if(XCliccata <= getSearchBar().getX() + getSearchBar().getWidth() && XCliccata >= getSearchBar().getX()
-        					&& YCliccata >= getSearchBar().getY() && YCliccata <= getSearchBar().getY() + getSearchBar().getHeight())
+
+        			if (XCliccata <= getSearchBar().getX() + getSearchBar().getWidth() && XCliccata >= getSearchBar().getX()
+                     && YCliccata >= getSearchBar().getY() && YCliccata <= getSearchBar().getY() + getSearchBar().getHeight())
         				inSearchBar = true;
-        			
-        			if(XCliccata <= frame.getRicerca().getX() + frame.getRicerca().getWidth() && XCliccata >= frame.getRicerca().getX()
-        					&& YCliccata >= frame.getRicerca().getY() && YCliccata <= frame.getRicerca().getY() + frame.getRicerca().getHeight())
+
+//                  void maim if click mouse map compare else not click no map-.
+
+        			if (XCliccata <= frame.getRicerca().getX() + frame.getRicerca().getWidth() && XCliccata >= frame.getRicerca().getX()
+                     && YCliccata >= frame.getRicerca().getY() && YCliccata <= frame.getRicerca().getY() + frame.getRicerca().getHeight())
         				inRicerca = true;
-        			
+
         			if (!inRicerca && !inSearchBar) {
         				SwingUtilities.invokeLater(() -> frame.getRicerca().setVisible(false));
         			}
