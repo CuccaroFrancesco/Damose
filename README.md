@@ -20,23 +20,10 @@ ___
 Da implementare:
 - se presenti, prossimi arrivi con linea di appartenenza, orario di arrivo e direzione
 - ritardo tipico dei mezzi per tale fermata
-- (OPZIONALE MA SAREBBE BELLO) vicinanza a punti di interesse
 
 #### 〽️ LineaPanel:
 Da implementare:
 - Mezzi attualmente sulla linea
-
-#### 🗺️ Mappa:
-- Inserire filtri per cosa visualizzare sulla mappa
-	- fermate
-		- fermate con alto tasso di puntualità
-		- fermate con medio tasso di puntualità
-		- fermate con basso tasso di puntualità
-		- distinzione tra agenzie
-		- distinzione tra tipo di fermata
-	- mezzi
-		- distinzione tra tipo di mezzo
-	- linee
 
 #### 🚌 Mezzi:
 - Visualizzazione della posizione stimata sulla mappa (aggiornata ogni 30 secondi)
@@ -69,7 +56,6 @@ ___
 ___
 
 ## ⚒️ BUG E MIGLIORAMENTI
-- Sistemare i preferiti per le linee (fermate funzia)
 - Creare un WaypointPainter personalizzato, per distinguere tra fermate generiche, fermate preferite (giallo) e fermate selezionate in un determinato momento
 - Eliminare l'observer (non più necessario)
 - Rendere interattivi i waypoint delle fermate (se premuto, creare lo stopPanel corrispondente)

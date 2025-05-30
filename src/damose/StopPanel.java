@@ -203,7 +203,7 @@ public class StopPanel extends JPanel {
 		Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
 		
-		this.controllaUtente(fermata);
+		this.controllaUtente(this.frame.getUtente().getIsLogged());
 		
 		for (ActionListener a : btnFavorite.getActionListeners()) {
 		    btnFavorite.removeActionListener(a);
@@ -226,7 +226,7 @@ public class StopPanel extends JPanel {
 		        }
 		        
 		        try {
-		        	frame.getUtente().cambiaFermatePreferite(fermatePreferite);
+		        	frame.getUtente().cambiaPreferiti(frame.getUtente().getLineePreferite(), fermatePreferite);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -383,35 +383,6 @@ public class StopPanel extends JPanel {
 
 
 	// Metodo che gestisce il comportamento del pulsante dei preferiti in base allo stato (logged o non logged) dell'utente
-	public void controllaUtente(Stop fermata) {
-		
-		if (fermata == null) {
-			btnFavorite.setEnabled(false);
-			btnFavorite.setVisible(false);
-		}
-		
-		if (frame.getUtente().getIsLogged()) {
-			btnFavorite.setEnabled(true);
-			btnFavorite.setVisible(true);
-			
-		    boolean isPreferita = false;
-		    
-		    for (String fermataPreferita : frame.getUtente().getFermatePreferite()) {
-		        if (fermataPreferita.equals(fermata.getId().getId())) {
-		            isPreferita = true;
-		            break;
-		        }
-		    }
-
-		    String iconCuorePath = isPreferita ? "src/resources/cuore.png" : "src/resources/cuore-vuoto.png";
-		    ImageIcon iconCuore = new ImageIcon(iconCuorePath);
-		    Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		    btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
-		    
-		    btnFavorite.repaint();
-		}
-	}
-	
 	public void controllaUtente(boolean isLogged) {
 		
 		if (isLogged) {

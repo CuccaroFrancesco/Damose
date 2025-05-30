@@ -621,8 +621,8 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 				btnAccedi.setVisible(true);
 				btnRegistrati.setVisible(true);
 				
-				frame.getStopPanel().controllaUtente(null);
-				frame.getRoutePanel().controllaUtente(null);
+				frame.getStopPanel().controllaUtente(false);
+				frame.getRoutePanel().controllaUtente(false);
 			}
 		});
 	}

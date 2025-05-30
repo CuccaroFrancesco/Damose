@@ -409,10 +409,6 @@ public class RoutePanel extends JPanel {
 		for (ActionListener a : btnTripLeft.getActionListeners()) { btnTripLeft.removeActionListener(a); }
 
 
-		// Chiamata al metodo controllaUtente() per verificare se visualizzare o meno il pulsante btnFavorite
-		this.controllaUtente(linea);
-
-
 		// Funzionalità per il pulsante btnRefresh, che permette di aggiornare i viaggi da visualizzare in base all'orario
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -449,6 +445,10 @@ public class RoutePanel extends JPanel {
 		btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
 
 
+		// Chiamata al metodo controllaUtente() per verificare se visualizzare o meno il pulsante btnFavorite
+		this.controllaUtente(this.frame.getUtente().getIsLogged());
+
+
 		// Funzionalità per il pulsante btnFavorite
 		btnFavorite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -467,7 +467,7 @@ public class RoutePanel extends JPanel {
 				}
 
 				try {
-					frame.getUtente().cambiaLineePreferite(lineePreferite);
+					frame.getUtente().cambiaPreferiti(lineePreferite, frame.getUtente().getFermatePreferite());
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -912,36 +912,6 @@ public class RoutePanel extends JPanel {
 
 
 	// Metodo che gestisce il comportamento del pulsante dei preferiti in base allo stato (logged o non logged) dell'utente
-	public void controllaUtente(Route linea) {
-
-		if (linea == null) {
-			btnFavorite.setEnabled(false);
-			btnFavorite.setVisible(false);
-			return;
-		}
-
-		if (frame.getUtente().getIsLogged()) {
-			btnFavorite.setEnabled(true);
-			btnFavorite.setVisible(true);
-
-			boolean isPreferita = false;
-
-			for (String lineaPreferita : frame.getUtente().getLineePreferite()) {
-				if (lineaPreferita.equals(linea.getId().getId())) {
-					isPreferita = true;
-					break;
-				}
-			}
-
-			String iconCuorePath = isPreferita ? "src/resources/cuore.png" : "src/resources/cuore-vuoto.png";
-			ImageIcon iconCuore = new ImageIcon(iconCuorePath);
-			Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-			btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
-
-			btnFavorite.repaint();
-		}
-	}
-
 	public void controllaUtente(boolean isLogged) {
 
 		if (isLogged) {
