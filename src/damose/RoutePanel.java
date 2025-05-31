@@ -710,7 +710,7 @@ public class RoutePanel extends JPanel {
 
 
 	// Metodo che gestisce la visualizzazione delle fermate e dei rispettivi orari in base al viaggio scelto
-	public void aggiornaViaggio(Route linea, int indice) {
+	private void aggiornaViaggio(Route linea, int indice) {
 
 		// Rimozione di eventuali fermateScrollPane precedenti (necessario per evitare overlap)
 		if (fermateScrollPane != null) this.remove(fermateScrollPane);
@@ -828,7 +828,7 @@ public class RoutePanel extends JPanel {
 			orario.setFont(new Font("Arial Nova", Font.BOLD, 14));
 			orario.setForeground(Color.WHITE);
 
-			LocalTime now = LocalTime.now();
+			LocalDateTime timeNow = LocalDateTime.now();
 
 				String verifica = linea.getType() == 1 ? fermata.getName() : fermataID;
 				if (!controllati.contains(verifica)) {
@@ -841,12 +841,9 @@ public class RoutePanel extends JPanel {
 							controllati.add(verifica);
 
 							int orarioArrivoFermataInSecondi = stopTime.getArrivalTime();
-							LocalTime orarioArrivoFermata;
+							LocalDateTime orarioArrivoFermata = LocalDate.now().atStartOfDay().plusSeconds(orarioArrivoFermataInSecondi);
 
-							if (orarioArrivoFermataInSecondi >= 86400) orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi - 86400);
-							else orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi);
-
-							if (!orarioArrivoFermata.isAfter(now)) {
+							if (!orarioArrivoFermata.isAfter(timeNow)) {
 								orario.setForeground(new Color(170, 170, 170));
 								stopBtn.setForeground(new Color(170, 170, 170));
 								stopBtn.setFont(new Font("Arial Nova", Font.BOLD | Font.ITALIC, 12));
@@ -867,12 +864,9 @@ public class RoutePanel extends JPanel {
 						if (IdStopName.equals(verifica)) {
 
 							int orarioArrivoFermataInSecondi = stopTime.getArrivalTime();
-							LocalTime orarioArrivoFermata;
+							LocalDateTime orarioArrivoFermata = LocalDate.now().atStartOfDay().plusSeconds(orarioArrivoFermataInSecondi);
 
-							if (orarioArrivoFermataInSecondi >= 86400) orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi - 86400);
-							else orarioArrivoFermata = LocalTime.ofSecondOfDay(orarioArrivoFermataInSecondi);
-
-							if (!orarioArrivoFermata.isAfter(now)) {
+							if (!orarioArrivoFermata.isAfter(timeNow)) {
 								orario.setForeground(new Color(170, 170, 170));
 								stopBtn.setForeground(new Color(170, 170, 170));
 								stopBtn.setFont(new Font("Arial Nova", Font.BOLD | Font.ITALIC, 12));
@@ -953,7 +947,9 @@ public class RoutePanel extends JPanel {
 			btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
 
 			btnFavorite.repaint();
+
 		} else {
+
 			btnFavorite.setEnabled(false);
 			btnFavorite.setVisible(false);
 			RoutePanel.this.repaint();

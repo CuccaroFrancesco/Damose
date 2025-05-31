@@ -11,6 +11,7 @@ import javax.swing.*;
 import org.onebusaway.gtfs.model.*;
 
 import java.awt.event.ActionListener;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -22,7 +23,7 @@ public class StopPanel extends JPanel {
 	private Frame frame;
 	
 	private JLabel nomeFermata, codiceFermata, lblArrivi, lblLineePassanti;
-	private JButton btnClose, btnStopIcon, btnFavorite, btnCoordinates;
+	private JButton btnClose, btnRefresh, btnStopIcon, btnFavorite, btnCoordinates;
 	private JPanel lineePassantiPanel;
 	private JScrollPane lineePassantiScrollPane;
 	
@@ -115,6 +116,25 @@ public class StopPanel extends JPanel {
         });
         
         this.add(btnClose);
+
+
+		// Pulsante per aggiornare i dati visualizzati in base all'orario di visualizzazione
+		btnRefresh = new JButton();
+
+		btnRefresh.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+		btnRefresh.setBorderPainted(false);
+		btnRefresh.setFocusPainted(false);
+		btnRefresh.setContentAreaFilled(false);
+
+		btnRefresh.setBounds(313, 4, 30, 30);
+
+		ImageIcon iconRefresh = new ImageIcon("src/resources/refresh.png");
+		Image scaledImageRefresh = iconRefresh.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+		ImageIcon newIconRefresh = new ImageIcon(scaledImageRefresh);
+		btnRefresh.setIcon(newIconRefresh);
+
+		this.add(btnRefresh);
         
         
         // Pulsante per l'icona di una fermata (non interattivo, serve solo a visualizzare comodamente l'icona)
@@ -189,26 +209,33 @@ public class StopPanel extends JPanel {
 
 	// Metodo che gestisce la creazione dello stopPanel
 	public void creaPannelloFermata(Stop fermata) {
-		
+
+		// Visualizzazione dello stopPanel e disattivazione di un eventuale routePanel precedentemente visibile
 		this.setVisible(true);
 		frame.getMappa().getLineaPainter().setLineaDaDisegnare(new ArrayList<>(), null);
 		frame.getRoutePanel().setVisible(false);
-		
-		if (lineePassantiScrollPane != null) {
-		    this.remove(lineePassantiScrollPane);
-		}
-		
+
+
+		// Rimozione di eventuali lineePassantiScrollPane precedenti (necessario per evitare overlap)
+		if (lineePassantiScrollPane != null) this.remove(lineePassantiScrollPane);
+
+
+		// Rimozione di eventuali ActionListener precedenti da vari pulsanti (necessario per evitare overlap)
+		for (ActionListener a : btnFavorite.getActionListeners()) { btnFavorite.removeActionListener(a); }
+
+
+		// Assegnamento dell'icona di default per il pulsante btnFavorite
 		String iconCuorePath = "src/resources/cuore-vuoto.png";
 		ImageIcon iconCuore = new ImageIcon(iconCuorePath);
 		Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
-		
+
+
+		// Chiamata al metodo controllaUtente() per verificare se visualizzare o meno il pulsante btnFavorite
 		this.controllaUtente(this.frame.getUtente().getIsLogged());
-		
-		for (ActionListener a : btnFavorite.getActionListeners()) {
-		    btnFavorite.removeActionListener(a);
-		}
-		
+
+
+		// Funzionalità per il pulsante btnFavorite
 		btnFavorite.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        
@@ -237,11 +264,24 @@ public class StopPanel extends JPanel {
 		        btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
 		    }
 		});
-		
-		nomeFermata.setText(fermata.getName());
-		codiceFermata.setText("ID: " + fermata.getId().getId());
-		btnCoordinates.setText(" " + Math.floor(fermata.getLat() * 100000) / 100000 + ", " + Math.floor(fermata.getLon() * 100000) / 100000);
-		
+
+		// Variabili che contengono informazioni sulla fermata (nome, ID e coordinate)
+		String name = fermata.getName();
+		String id = fermata.getId().getId();
+		double lat = fermata.getLat();
+		double lon = fermata.getLon();
+
+
+		// Visualizzazione del nome e dell'ID della fermata
+		nomeFermata.setText(name);
+		codiceFermata.setText("ID: " + id);
+
+
+		// Visualizzazione delle coordinate (latitudine e longitudine) della fermata
+		btnCoordinates.setText(" " + Math.floor(lat * 100000) / 100000 + ", " + Math.floor(lon * 100000) / 100000);
+
+
+		// Visualizzazione delle linee passanti per la fermata, con pulsanti interattivi per le varie linee
 		List<Route> lineePassanti = frame.getDati().getLineePassantiPerFermata(fermata);
 		
 		lineePassantiPanel = new JPanel();
@@ -364,7 +404,9 @@ public class StopPanel extends JPanel {
             lineePassantiPanel.add(btnInfoLinea);
 			lineePassantiPanel.add(btnLinea);
 		}
-		
+
+
+		// Inserimento delle linee passanti in un JScrollPane
 		lineePassantiScrollPane = new JScrollPane(lineePassantiPanel);
         
 		lineePassantiScrollPane.setBorder(null);
@@ -376,6 +418,47 @@ public class StopPanel extends JPanel {
         
         this.add(lineePassantiScrollPane);
         lineePassantiPanel.repaint();
+
+
+		// Aggiornamento del rendering dello stopPanel
+		this.revalidate();
+		this.repaint();
+	}
+
+
+// ---------------------------------------------------------------------------------------------
+
+
+	// Metodo che restituisce i 5 prossimi arrivi alla fermata in base all'orario attuale
+	private List<StopTime> aggiornaArrivi(Stop fermata) {
+
+		LocalDateTime timeNow = LocalDateTime.now();
+		List<StopTime> arriviDaVisualizzare = new ArrayList<>();
+
+		List<StopTime> arrivi = frame.getDati().getDatiStatici().getStopTimesForStop(fermata);
+		List<StopTime> arriviCopy = new ArrayList<>(arrivi);
+		arriviCopy.sort((s1, s2) -> Integer.compare(s1.getArrivalTime(), s2.getArrivalTime()));
+
+		for (int i = 0; i < arriviCopy.size(); i++) {
+
+			StopTime stopTime = arriviCopy.get(i);
+
+			int orarioArrivoInSecondi = stopTime.getArrivalTime();
+			LocalDateTime orarioArrivo = LocalDate.now().atStartOfDay().plusSeconds(orarioArrivoInSecondi);
+
+			if (orarioArrivo.isAfter(timeNow)) {
+				arriviDaVisualizzare.add(stopTime);
+
+				if (i + 1 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 1));
+				if (i + 2 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 2));
+				if (i + 3 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 3));
+				if (i + 4 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 4));
+
+				break;
+			}
+		}
+
+		return arriviDaVisualizzare;
 	}
 
 

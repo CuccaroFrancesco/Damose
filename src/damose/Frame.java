@@ -91,7 +91,6 @@ public class Frame extends JFrame {
                 
         		dati.caricaDatiStaticiGTFS("staticGTFS");
                 return null;
-                
             }
 
             @Override

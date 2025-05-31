@@ -12,6 +12,7 @@ import javax.swing.JProgressBar;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import com.google.transit.realtime.GtfsRealtime;
 import org.onebusaway.gtfs.impl.GtfsRelationalDaoImpl;
 import org.onebusaway.gtfs.model.*;
 import org.onebusaway.gtfs.serialization.GtfsReader;
@@ -342,7 +343,7 @@ public class DatiGTFS {
 		List<Trip> listaViaggi = this.getDatiStatici().getTripsForRoute(linea);
 		List<Trip> listaViaggiCopy = new ArrayList<>(listaViaggi);
 		listaViaggiCopy.sort((t1, t2) -> Integer.compare(this.getDatiStatici().getStopTimesForTrip(t1).getFirst().getDepartureTime(),
-																	this.getDatiStatici().getStopTimesForTrip(t2).getFirst().getDepartureTime()));
+							  								       this.getDatiStatici().getStopTimesForTrip(t2).getFirst().getDepartureTime()));
 
 		return listaViaggiCopy;
 	}
