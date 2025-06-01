@@ -232,28 +232,25 @@ public class Navbar extends JPanel {
         	@Override
         	public void eventDispatched(AWTEvent event) {
         		if (event instanceof MouseEvent && ((MouseEvent) event).getID() == MouseEvent.MOUSE_PRESSED) {
+
         			MouseEvent me = (MouseEvent) event;
+                    Point clickPoint = me.getLocationOnScreen();
 
-        			int XCliccata = me.getXOnScreen();
-        			int YCliccata = me.getYOnScreen();
-
-        			boolean inRicerca = false;
         			boolean inSearchBar = false;
+                    boolean inRicerca = false;
 
-        			if (XCliccata <= getSearchBar().getX() + getSearchBar().getWidth() && XCliccata >= getSearchBar().getX()
-                     && YCliccata >= getSearchBar().getY() && YCliccata <= getSearchBar().getY() + getSearchBar().getHeight())
-        				inSearchBar = true;
+                    if (getSearchBar().isShowing()) {
+                        Rectangle searchBarBounds = new Rectangle(getSearchBar().getLocationOnScreen(), getSearchBar().getSize());
+                        if (searchBarBounds.contains(clickPoint)) inSearchBar = true;
+                    }
 
-//                  void maim if click mouse map compare else not click no map-.
+                    if (frame.getRicerca().isShowing()) {
+                        Rectangle ricercaBounds = new Rectangle(frame.getRicerca().getLocationOnScreen(), frame.getRicerca().getSize());
+                        if (ricercaBounds.contains(clickPoint)) inRicerca = true;
+                    }
 
-        			if (XCliccata <= frame.getRicerca().getX() + frame.getRicerca().getWidth() && XCliccata >= frame.getRicerca().getX()
-                     && YCliccata >= frame.getRicerca().getY() && YCliccata <= frame.getRicerca().getY() + frame.getRicerca().getHeight())
-        				inRicerca = true;
-
-        			if (!inRicerca && !inSearchBar) {
-        				SwingUtilities.invokeLater(() -> frame.getRicerca().setVisible(false));
-        			}
-        		}
+                    if (!inRicerca && !inSearchBar) SwingUtilities.invokeLater(() -> frame.getRicerca().setVisible(false));
+                }
         	}
         }, AWTEvent.MOUSE_EVENT_MASK);
         
