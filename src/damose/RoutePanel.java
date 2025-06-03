@@ -562,6 +562,7 @@ public class RoutePanel extends JPanel {
 				btnRouteType.setIcon(newIconTram);
 
 				btnRouteType.setText(" Tram");
+				
 				break;
 
 			case 1:
@@ -600,6 +601,7 @@ public class RoutePanel extends JPanel {
 						btnAgency.setIcon(newIconMetroB1);
 
 						codiceLinea.setText(" Metro B1");
+
 						break;
 
 					case "MEC":
@@ -895,9 +897,8 @@ public class RoutePanel extends JPanel {
 		this.add(fermateScrollPane);
 
 
-		// Aggiornamento del rendering di fermatePanel e del routePanel nel complesso
-		fermatePanel.revalidate();
-		fermatePanel.repaint();
+		// Aggiornamento del rendering del routePanel
+		this.revalidate();
 		this.repaint();
 	}
 

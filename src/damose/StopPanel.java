@@ -12,10 +12,10 @@ import org.onebusaway.gtfs.model.*;
 
 import java.awt.event.ActionListener;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
-
 
 
 public class StopPanel extends JPanel {
@@ -24,10 +24,11 @@ public class StopPanel extends JPanel {
 	
 	private JLabel nomeFermata, codiceFermata, lblArrivi, lblLineePassanti;
 	private JButton btnClose, btnRefresh, btnStopIcon, btnFavorite, btnCoordinates;
-	private JPanel lineePassantiPanel;
-	private JScrollPane lineePassantiScrollPane;
-	
-	
+	private JPanel prossimiArriviPanel, lineePassantiPanel;
+	private JScrollPane prossimiArriviScrollPane, lineePassantiScrollPane;
+	private List<StopTime> arriviDaVisualizzare;
+
+
 	// Costruttore del pannello stopPanel
 	public StopPanel(Frame frame) {
 		
@@ -76,8 +77,8 @@ public class StopPanel extends JPanel {
 		this.add(lblArrivi);
 		
 		
-		// JLabel che contiene la scritta "Appartiene a:"
-		lblLineePassanti = new JLabel("Appartiene a:");
+		// JLabel che contiene la scritta "Linee passanti:"
+		lblLineePassanti = new JLabel("Linee passanti:");
 		
 		lblLineePassanti.setHorizontalAlignment(SwingConstants.LEADING);
 		
@@ -85,7 +86,7 @@ public class StopPanel extends JPanel {
 		lblLineePassanti.setFont(new Font("Arial Nova", Font.BOLD, 24));
 		lblLineePassanti.setFocusable(false);
 		
-		lblLineePassanti.setBounds(20, 380, 200, 50);
+		lblLineePassanti.setBounds(20, 430, 200, 50);
 		
 		this.add(lblLineePassanti);
 		
@@ -217,11 +218,25 @@ public class StopPanel extends JPanel {
 
 
 		// Rimozione di eventuali lineePassantiScrollPane precedenti (necessario per evitare overlap)
+		if (prossimiArriviScrollPane != null) this.remove(prossimiArriviScrollPane);
 		if (lineePassantiScrollPane != null) this.remove(lineePassantiScrollPane);
 
 
 		// Rimozione di eventuali ActionListener precedenti da vari pulsanti (necessario per evitare overlap)
+		for (ActionListener a : btnRefresh.getActionListeners()) { btnRefresh.removeActionListener(a); }
 		for (ActionListener a : btnFavorite.getActionListeners()) { btnFavorite.removeActionListener(a); }
+
+
+		// Ottenimento dei prossimi 10 arrivi alla fermata
+		aggiornaArriviDaVisualizzare(fermata);
+
+
+		// Funzionalità per il pulsante btnRefresh
+		btnRefresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				aggiornaArriviDaVisualizzare(fermata);
+			}
+		});
 
 
 		// Assegnamento dell'icona di default per il pulsante btnFavorite
@@ -264,6 +279,7 @@ public class StopPanel extends JPanel {
 		        btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
 		    }
 		});
+
 
 		// Variabili che contengono informazioni sulla fermata (nome, ID e coordinate)
 		String name = fermata.getName();
@@ -410,7 +426,7 @@ public class StopPanel extends JPanel {
 		lineePassantiScrollPane = new JScrollPane(lineePassantiPanel);
         
 		lineePassantiScrollPane.setBorder(null);
-		lineePassantiScrollPane.setBounds(10, 430, 350, 200);
+		lineePassantiScrollPane.setBounds(10, 480, 350, 200);
         
 		lineePassantiScrollPane.getVerticalScrollBar().setUnitIncrement(12);
 		lineePassantiScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -429,15 +445,20 @@ public class StopPanel extends JPanel {
 // ---------------------------------------------------------------------------------------------
 
 
-	// Metodo che restituisce i 5 prossimi arrivi alla fermata in base all'orario attuale
-	private List<StopTime> aggiornaArrivi(Stop fermata) {
+	// Metodo che restituisce i 10 prossimi arrivi alla fermata in base all'orario attuale
+	private void aggiornaArriviDaVisualizzare(Stop fermata) {
 
+		// Rimozione di eventuali prossimiArriviScrollPane precedenti (necessario per evitare overlap)
+		if (prossimiArriviScrollPane != null) this.remove(prossimiArriviScrollPane);
+
+
+		// Ottenimento dei 10 arrivi da visualizzare in base all'orario attuale
 		LocalDateTime timeNow = LocalDateTime.now();
 		List<StopTime> arriviDaVisualizzare = new ArrayList<>();
 
 		List<StopTime> arrivi = frame.getDati().getDatiStatici().getStopTimesForStop(fermata);
 		List<StopTime> arriviCopy = new ArrayList<>(arrivi);
-		arriviCopy.sort((s1, s2) -> Integer.compare(s1.getArrivalTime(), s2.getArrivalTime()));
+		arriviCopy.sort((s1, s2) -> LocalDate.now().atStartOfDay().plusSeconds(s1.getArrivalTime()).compareTo(LocalDate.now().atStartOfDay().plusSeconds(s2.getArrivalTime())));
 
 		for (int i = 0; i < arriviCopy.size(); i++) {
 
@@ -453,12 +474,205 @@ public class StopPanel extends JPanel {
 				if (i + 2 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 2));
 				if (i + 3 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 3));
 				if (i + 4 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 4));
+				if (i + 5 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 4));
+				if (i + 6 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 4));
+				if (i + 7 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 4));
+				if (i + 8 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 4));
+				if (i + 9 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 4));
 
 				break;
 			}
 		}
 
-		return arriviDaVisualizzare;
+
+		// Assegnamento degli arriviDaVisualizzare al corrispondente attributo dell'istanza di StopPanel
+		this.arriviDaVisualizzare = arriviDaVisualizzare;
+
+
+		// Istanziamento di un JPanel che ospiterà i visualizzatori degli arrivi da visualizzare
+		prossimiArriviPanel = new JPanel();
+		prossimiArriviPanel.setLayout(null);
+		prossimiArriviPanel.setBackground(new Color(130, 36, 51));
+		prossimiArriviPanel.setPreferredSize(new Dimension(350, Math.max(100, this.arriviDaVisualizzare.size() * 50)));
+
+
+		// Creazione di vari JLabel e JButton per visualizzare i dati relativi ai prossimi arrivi
+		for (int i = 0; i < this.arriviDaVisualizzare.size(); i++) {
+
+			StopTime arrivo = this.arriviDaVisualizzare.get(i);
+			int y = i * 70;
+
+			Route lineaDiAppartenenza = arrivo.getTrip().getRoute();
+			LocalDateTime orarioArrivo = LocalDate.now().atStartOfDay().plusSeconds(arrivo.getArrivalTime());
+			Duration tempoMancante = Duration.between(LocalDateTime.now(), orarioArrivo);
+			Stop fermataDiArrivo = frame.getDati().getFermatePerViaggio(arrivo.getTrip()).getLast();
+
+			JLabel lblTempoMancante = new JLabel();
+			lblTempoMancante.setForeground(Color.WHITE);
+			lblTempoMancante.setFont(new Font("Arial Nova", Font.BOLD, 12));
+			lblTempoMancante.setHorizontalAlignment(SwingConstants.CENTER);
+			lblTempoMancante.setBounds(10, y + 10, 50, 50);
+
+			if (tempoMancante.compareTo(Duration.ofMinutes(1)) < 0) lblTempoMancante.setText("<html>" +
+																								"<div style='text-align:center;'>" +
+																									"<span style='font-size:8px;'>IN</span><br>" +
+																									"<span style='font-size:10px;'>ARRIVO</span>" +
+																								"</div>" +
+																							 "</html>");
+			else if (tempoMancante.compareTo(Duration.ofHours(1)) < 0) {
+				if (tempoMancante.toMinutes() < 2) lblTempoMancante.setText("<html>" +
+																				"<div style='text-align:center;'>" +
+																					"<span style='font-size:8px;'>TRA</span><br>" +
+																					"<span style='font-size:14px;'>1</span><br>" +
+																					"<span style='font-size:8px;'>MINUTO</span>" +
+																				"</div>" +
+																			"</html>");
+				else lblTempoMancante.setText("<html>" +
+												"<div style='text-align:center;'>" +
+													"<span style='font-size:8px;'>TRA</span><br>" +
+													"<span style='font-size:14px;'>" + tempoMancante.toMinutes() + "</span><br>" +
+													"<span style='font-size:8px;'>MINUTI</span>" +
+												"</div>" +
+											  "</html>");
+			}
+
+			else lblTempoMancante.setText("<html>" +
+											"<div style='text-align:center;'>" +
+												"<span style='font-size:8px;'>TRA</span><br>" +
+												"<span style='font-size:14px;'>" + tempoMancante.toHours() + "</span><br>" +
+												"<span style='font-size:8px;'>ORE</span>" +
+											"</div>" +
+										  "</html>");
+
+			JLabel lblCodiceLinea = new JLabel();
+			lblCodiceLinea.setForeground(Color.WHITE);
+			lblCodiceLinea.setFont(new Font("Arial Nova", Font.BOLD, 18));
+			lblCodiceLinea.setHorizontalAlignment(SwingConstants.LEADING);
+			lblCodiceLinea.setBounds(105, y + 13, 100, 15);
+
+			lblCodiceLinea.setText(lineaDiAppartenenza.getShortName());
+
+			JButton btnIconaLinea = new JButton();
+			btnIconaLinea.setContentAreaFilled(false);
+			btnIconaLinea.setFocusPainted(false);
+			btnIconaLinea.setBorderPainted(false);
+			btnIconaLinea.setFocusable(false);
+			btnIconaLinea.setBackground(new Color(130, 36, 51));
+
+			btnIconaLinea.setBounds(80, y + 13, 16, 16);
+			btnIconaLinea.setPreferredSize(new Dimension(16, 16));
+
+			switch (lineaDiAppartenenza.getType()) {
+				case 0:
+					ImageIcon iconTram = new ImageIcon("src/resources/tram.png");
+					Image scaledImageTram = iconTram.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+					ImageIcon newIconTram = new ImageIcon(scaledImageTram);
+					btnIconaLinea.setIcon(newIconTram);
+
+					break;
+
+				case 1:
+					switch (lineaDiAppartenenza.getShortName()) {
+						case "MEA":
+							ImageIcon iconMetroA = new ImageIcon("src/resources/metro-a-logo-withborder.png");
+							Image scaledImageMetroA = iconMetroA.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+							ImageIcon newIconMetroA = new ImageIcon(scaledImageMetroA);
+							btnIconaLinea.setIcon(newIconMetroA);
+
+							lblCodiceLinea.setText("Metro A");
+
+							break;
+
+						case "MEB":
+							ImageIcon iconMetroB = new ImageIcon("src/resources/metro-b-logo-withborder.png");
+							Image scaledImageMetroB = iconMetroB.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+							ImageIcon newIconMetroB = new ImageIcon(scaledImageMetroB);
+							btnIconaLinea.setIcon(newIconMetroB);
+
+							lblCodiceLinea.setText("Metro B");
+
+							break;
+
+						case "MEB1":
+							ImageIcon iconMetroB1 = new ImageIcon("src/resources/metro-b-logo-withborder.png");
+							Image scaledImageMetroB1 = iconMetroB1.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+							ImageIcon newIconMetroB1 = new ImageIcon(scaledImageMetroB1);
+							btnIconaLinea.setIcon(newIconMetroB1);
+
+							lblCodiceLinea.setText("Metro B1");
+
+							break;
+
+						case "MEC":
+							ImageIcon iconMetroC = new ImageIcon("src/resources/metro-c-logo-withborder.png");
+							Image scaledImageMetroC = iconMetroC.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+							ImageIcon newIconMetroC = new ImageIcon(scaledImageMetroC);
+							btnIconaLinea.setIcon(newIconMetroC);
+
+							lblCodiceLinea.setText("Metro C");
+
+							break;
+					}
+
+					break;
+
+				case 2:
+					ImageIcon iconTreno = new ImageIcon("src/resources/train.png");
+					Image scaledImageTreno = iconTreno.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+					ImageIcon newIconTreno = new ImageIcon(scaledImageTreno);
+					btnIconaLinea.setIcon(newIconTreno);
+
+					break;
+
+				case 3:
+					ImageIcon iconBus = new ImageIcon("src/resources/bus.png");
+					Image scaledImageBus = iconBus.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+					ImageIcon newIconBus = new ImageIcon(scaledImageBus);
+					btnIconaLinea.setIcon(newIconBus);
+
+					break;
+			}
+
+			JLabel lblOrarioArrivo = new JLabel();
+			lblOrarioArrivo.setForeground(new Color(210, 210, 210));
+			lblOrarioArrivo.setFont(new Font("Arial Nova", Font.PLAIN, 12));
+			lblOrarioArrivo.setHorizontalAlignment(SwingConstants.LEADING);
+			lblOrarioArrivo.setBounds(80, y + 33, 100, 10);
+
+			lblOrarioArrivo.setText("Arriva alle " + orarioArrivo.format(DateTimeFormatter.ofPattern("HH:mm")));
+
+			JLabel lblDirezione = new JLabel();
+			lblDirezione.setForeground(new Color(210, 210, 210));
+			lblDirezione.setFont(new Font("Arial Nova", Font.PLAIN, 12));
+			lblDirezione.setHorizontalAlignment(SwingConstants.LEADING);
+			lblDirezione.setBounds(80, y + 48, 235, 10);
+
+			lblDirezione.setText("Direzione: " + fermataDiArrivo.getName());
+
+			prossimiArriviPanel.add(lblTempoMancante);
+			prossimiArriviPanel.add(lblCodiceLinea);
+			prossimiArriviPanel.add(lblOrarioArrivo);
+			prossimiArriviPanel.add(lblDirezione);
+			prossimiArriviPanel.add(btnIconaLinea);
+		}
+
+
+		// Creazione del pannello prossimiArriviScrollPane, necessario per ospitare prossimiArriviPanel e rendere quest'ultimo "scrollabile"
+		prossimiArriviScrollPane = new JScrollPane(prossimiArriviPanel);
+
+		prossimiArriviScrollPane.setBorder(null);
+		prossimiArriviScrollPane.setBounds(10, 210, 350, 200);
+
+		prossimiArriviScrollPane.getVerticalScrollBar().setUnitIncrement(12);
+		prossimiArriviScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		prossimiArriviScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+		this.add(prossimiArriviScrollPane);
+
+
+		// Aggiornamento del rendering dello stopPanel
+		this.revalidate();
+		this.repaint();
 	}
 
 
