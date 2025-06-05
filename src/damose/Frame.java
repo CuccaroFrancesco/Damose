@@ -84,7 +84,7 @@ public class Frame extends JFrame {
 
         
         // Istanziamento di uno SwingWorker che permette di gestire il caricamento dei dati GTFS e la seguente apertura dell'applicazione effettiva
-        SwingWorker<Void, Void> loader = new SwingWorker<>() {
+        SwingWorker<Void, Void> staticDataLoader = new SwingWorker<>() {
             
         	@Override
             protected Void doInBackground() throws Exception {
@@ -170,6 +170,30 @@ public class Frame extends JFrame {
 	                		}
 	                	}
 	                });
+
+					SwingWorker<Void, Void> realTimeDataLoader = new SwingWorker<>() {
+
+						@Override
+						protected Void doInBackground() throws Exception {
+
+							ScheduledExecutorService schedulerRealTimeData = Executors.newScheduledThreadPool(1);
+							schedulerRealTimeData.scheduleAtFixedRate(() -> {
+								try {
+
+									dati.caricaVehiclePositionsGTFS();
+									dati.caricaTripUpdatesGTFS();
+									dati.caricaAlertGTFS();
+
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}, 0, 30, TimeUnit.SECONDS);
+
+							return null;
+						}
+					};
+
+					realTimeDataLoader.execute();
 	                
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -177,7 +201,7 @@ public class Frame extends JFrame {
             }
         };
         
-        loader.execute();
+        staticDataLoader.execute();
 	}
 
 

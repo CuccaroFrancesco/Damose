@@ -12,12 +12,11 @@ import javax.swing.JProgressBar;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import com.google.transit.realtime.GtfsRealtime;
 import org.onebusaway.gtfs.impl.GtfsRelationalDaoImpl;
 import org.onebusaway.gtfs.model.*;
 import org.onebusaway.gtfs.serialization.GtfsReader;
 
-import com.google.transit.realtime.GtfsRealtime.FeedMessage;
+import com.google.transit.realtime.GtfsRealtime.*;
 
 
 
@@ -378,5 +377,23 @@ public class DatiGTFS {
 	// Metodo get per gli alert dell'istanza
 	public FeedMessage getAlert() {
 		return this.alert;
+	}
+
+
+	// Metodo che restituisce tutti i mezzi che stanno percorrendo attualmente una linea
+	public List<VehiclePosition> getVeicoliPerLinea(Route linea) {
+
+		FeedMessage veicoli = getVehiclePositions();
+		List<VehiclePosition> veicoliDellaLinea = new ArrayList<>();
+
+		for (FeedEntity vp : veicoli.getEntityList()) {
+
+			if (vp.hasVehicle()) {
+				VehiclePosition veicolo = vp.getVehicle();
+				if (veicolo.getTrip().getRouteId().equals(linea.getId().getId())) veicoliDellaLinea.add(veicolo);
+			}
+		}
+
+		return veicoliDellaLinea;
 	}
 }

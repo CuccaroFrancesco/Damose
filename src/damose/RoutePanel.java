@@ -15,12 +15,14 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-import org.onebusaway.gtfs.model.*;
-
 import java.util.List;
 
 import java.time.*;
 import java.time.format.*;
+
+import org.onebusaway.gtfs.model.*;
+
+import com.google.transit.realtime.GtfsRealtime.*;
 
 
 
@@ -28,10 +30,10 @@ public class RoutePanel extends JPanel {
 
 	private Frame frame;
 
-	private JLabel codiceLinea, agenziaENomeLinea, lblPartenze, lblViaggioVisualizzato, lblViaggioVisualizzatoInfo, lblMezzi;
+	private JLabel codiceLinea, agenziaENomeLinea, lblPartenze, lblViaggioVisualizzato, lblViaggioVisualizzatoInfo, lblVeicoli;
 	private JButton btnClose, btnRefresh, btnAgency, btnFavorite, btnWebsite, btnRouteType, btnTripLeft, btnTripRight;
-	private JPanel fermatePanel;
-	private JScrollPane fermateScrollPane;
+	private JPanel fermatePanel, veicoliPanel;
+	private JScrollPane fermateScrollPane, veicoliScrollPane;
 	private ImageIcon iconIntermezzo, newIconIntermezzo, iconInizio, newIconInizio, iconFine, newIconFine,
 			iconIntermezzoMetroA, newIconIntermezzoMetroA, iconInizioMetroA, newIconInizioMetroA, iconFineMetroA, newIconFineMetroA,
 			iconIntermezzoMetroB, newIconIntermezzoMetroB, iconInizioMetroB, newIconInizioMetroB, iconFineMetroB, newIconFineMetroB,
@@ -115,16 +117,16 @@ public class RoutePanel extends JPanel {
 		this.add(lblViaggioVisualizzatoInfo);
 
 
-		// JLabel per il testo "Mezzi:"
-		lblMezzi = new JLabel("Mezzi:");
+		// JLabel per il testo "Veicoli:"
+		lblVeicoli = new JLabel("Veicoli:");
 
-		lblMezzi.setForeground(Color.WHITE);
-		lblMezzi.setFont(new Font("Arial Nova", Font.BOLD, 24));
-		lblMezzi.setFocusable(false);
+		lblVeicoli.setForeground(Color.WHITE);
+		lblVeicoli.setFont(new Font("Arial Nova", Font.BOLD, 24));
+		lblVeicoli.setFocusable(false);
 
-		lblMezzi.setBounds(20, 550, 150, 50);
+		lblVeicoli.setBounds(20, 550, 150, 50);
 
-		this.add(lblMezzi);
+		this.add(lblVeicoli);
 
 
 		// Pulsante per chiudere il lineaPanel
@@ -397,8 +399,9 @@ public class RoutePanel extends JPanel {
 		}
 
 
-		// Rimozione di eventuali fermateScrollPane precedenti (necessario per evitare overlap)
+		// Rimozione di eventuali JScrollPane precedenti (necessario per evitare overlap)
 		if (fermateScrollPane != null) this.remove(fermateScrollPane);
+		if (veicoliScrollPane != null) this.remove(veicoliScrollPane);
 
 
 		// Rimozione di eventuali ActionListener precedenti da vari pulsanti (necessario per evitare overlap)
@@ -677,8 +680,139 @@ public class RoutePanel extends JPanel {
 			}
 		});
 
+
 		// Chiamata al metodo aggiornaViaggio con l'indice 0, per visualizzare il viaggio di default
 		aggiornaViaggio(linea, indiceViaggioVisualizzato);
+
+
+		// Ottenimento dei veicoli che stanno percorrendo la linea
+		List<VehiclePosition> veicoliDellaLinea = frame.getDati().getVeicoliPerLinea(linea);
+
+
+		// Creazione del pannello veicoliPanel, che ospiterà la lista dei veicoli percorrenti la linea e le relative informazioni
+		veicoliPanel = new JPanel();
+		veicoliPanel.setLayout(null);
+		veicoliPanel.setBackground(new Color(130, 36, 51));
+		veicoliPanel.setPreferredSize(new Dimension(350, Math.max(150, veicoliDellaLinea.size() * 60 - 10)));
+
+
+		for (int i = 0; i < veicoliDellaLinea.size(); i++) {
+
+			int y = i * 60;
+
+			// Ottenimento del veicolo all'indice i
+			VehiclePosition veicolo = veicoliDellaLinea.get(i);
+
+
+			// Ottenimento di ID e targa (se disponibile) del veicolo
+			String idVeicolo = veicolo.getVehicle().getId();
+			String targaVeicolo = veicolo.getVehicle().getLicensePlate();
+
+
+			// Ottenimento dello status (fermo, in arrivo, ecc. ecc.) del veicolo e della fermata verso cui sta andando o nella quale sta sostando
+			int statusVeicolo = veicolo.getCurrentStatus().getNumber();
+			String fermataVeicolo = frame.getDati().cercaFermataByID(veicolo.getStopId()).getName();
+
+
+			// Ottenimento della quantità di posti disponibili a bordo del veicolo (se disponibile)
+			int postiDisponibiliVeicolo = veicolo.getOccupancyStatus().getNumber();
+
+
+			// JLabel che visualizza l'ID e la targa (se disponibile) del veicolo
+			JLabel lblIdTargaVeicolo = new JLabel();
+			lblIdTargaVeicolo.setForeground(Color.WHITE);
+			lblIdTargaVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 14));
+			lblIdTargaVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
+			lblIdTargaVeicolo.setBounds(20, y, 150, 10);
+
+			if (veicolo.getVehicle().hasLicensePlate()) lblIdTargaVeicolo.setText("<html>" +
+																					"<div style='width: 150px;'>ID: <b>" + idVeicolo + "</b>   " +
+																					"Targa: " + targaVeicolo + "</div>" +
+																				  "</html>");
+
+			else lblIdTargaVeicolo.setText("<html><div style='width: 150px;'>ID: <b>" + idVeicolo + "</b></div></html>");
+
+
+			// JLabel che visualizza lo status e la fermata del veicolo
+			JLabel lblStatusFermataVeicolo = new JLabel();
+			lblStatusFermataVeicolo.setForeground(new Color(210, 210, 210));
+			lblStatusFermataVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 12));
+			lblStatusFermataVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
+			lblStatusFermataVeicolo.setBounds(20, y + 13, 250, 14);
+
+			switch (statusVeicolo) {
+				case 1:
+					lblStatusFermataVeicolo.setText("Sta arrivando a " + fermataVeicolo);
+					break;
+				case 2:
+					lblStatusFermataVeicolo.setText("E' fermo a " + fermataVeicolo);
+					break;
+				case 3:
+					lblStatusFermataVeicolo.setText("Si dirige verso " + fermataVeicolo);
+					break;
+				default:
+					lblStatusFermataVeicolo.setText("Status e fermata sconosciuti.");
+					lblStatusFermataVeicolo.setFont(new Font("Arial Nova", Font.ITALIC, 12));
+					lblStatusFermataVeicolo.setForeground(new Color(202, 203, 202));
+					break;
+			}
+
+
+			// JLabel che visualizza i posti disponibili a bordo del veicolo
+			JLabel lblPostiDisponibiliVeicolo = new JLabel();
+			lblPostiDisponibiliVeicolo.setForeground(new Color(210, 210, 210));
+			lblPostiDisponibiliVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 12));
+			lblPostiDisponibiliVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
+			lblPostiDisponibiliVeicolo.setBounds(20, y + 30, 250, 14);
+
+			switch (postiDisponibiliVeicolo) {
+				case 1:
+					lblPostiDisponibiliVeicolo.setText("Posti disponibili: TUTTI");
+					break;
+				case 2:
+					lblPostiDisponibiliVeicolo.setText("Posti disponibili: MOLTI");
+					break;
+				case 3:
+					lblPostiDisponibiliVeicolo.setText("Posti disponibili: POCHI");
+					break;
+				case 4:
+					lblPostiDisponibiliVeicolo.setText("Posti disponibili: SOLO IN PIEDI");
+					break;
+				case 5:
+					lblPostiDisponibiliVeicolo.setText("Posti disponibili: POCHI IN PIEDI");
+					break;
+				case 6:
+					lblPostiDisponibiliVeicolo.setText("Posti disponibili: NESSUNO");
+					break;
+				case 7:
+					lblPostiDisponibiliVeicolo.setText("Non accetta passeggeri");
+					break;
+				default:
+					lblPostiDisponibiliVeicolo.setText("Nessuna informazione sui posti disponibili.");
+					lblPostiDisponibiliVeicolo.setFont(new Font("Arial Nova", Font.ITALIC, 12));
+					lblPostiDisponibiliVeicolo.setForeground(new Color(202, 203, 202));
+					break;
+			}
+
+
+			// Aggiunta delle varie componenti a veicoliPanel
+			veicoliPanel.add(lblIdTargaVeicolo);
+			veicoliPanel.add(lblStatusFermataVeicolo);
+			veicoliPanel.add(lblPostiDisponibiliVeicolo);
+		}
+
+
+		// Creazione del pannello veicoliScrollPane, necessario per ospitare veicoliPanel e rendere quest'ultimo "scrollabile"
+		veicoliScrollPane = new JScrollPane(veicoliPanel);
+
+		veicoliScrollPane.setBorder(null);
+		veicoliScrollPane.setBounds(0, 605, 350, 200);
+
+		veicoliScrollPane.getVerticalScrollBar().setUnitIncrement(12);
+		veicoliScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		veicoliScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+		this.add(veicoliScrollPane);
 
 
 		// Aggiornamento del rendering del routePanel
