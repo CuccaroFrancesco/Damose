@@ -173,6 +173,8 @@ public class DatiGTFS {
 			
 		FeedMessage feed = FeedMessage.parseFrom(url.openStream());
 		this.tripUpdates = feed;
+
+		System.out.println("TripUpdates caricati.");
 	}
 
 
@@ -183,6 +185,8 @@ public class DatiGTFS {
 				
 		FeedMessage feed = FeedMessage.parseFrom(url.openStream());
 		this.vehiclePositions = feed;
+
+		System.out.println("VehiclePositions caricati.");
 	}
 
 
@@ -193,6 +197,8 @@ public class DatiGTFS {
 				
 		FeedMessage feed = FeedMessage.parseFrom(url.openStream());
 		this.alert = feed;
+
+		System.out.println("Alert caricati.");
 	}
 
 
