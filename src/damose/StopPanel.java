@@ -23,7 +23,7 @@ public class StopPanel extends JPanel {
 	private Frame frame;
 	
 	private JLabel nomeFermata, codiceFermata, lblArrivi, lblLineePassanti;
-	private JButton btnClose, btnRefresh, btnStopIcon, btnFavorite, btnCoordinates;
+	private JButton btnClose, btnRefresh, btnStopIcon, btnFavorite, btnCoordinates, btnStats;
 	private JPanel prossimiArriviPanel, lineePassantiPanel;
 	private JScrollPane prossimiArriviScrollPane, lineePassantiScrollPane;
 	private List<StopTime> arriviDaVisualizzare;
@@ -136,6 +136,24 @@ public class StopPanel extends JPanel {
 		btnRefresh.setIcon(newIconRefresh);
 
 		this.add(btnRefresh);
+
+		// Pulsante per vedere il pannello delle statistiche della fermata
+		btnStats = new JButton();
+
+		btnStats.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+		btnStats.setBorderPainted(false);
+		btnStats.setFocusPainted(false);
+		btnStats.setContentAreaFilled(false);
+
+		btnStats.setBounds(280, 4, 30, 30);
+
+		ImageIcon iconStats = new ImageIcon("src/resources/stats.png");
+		Image scaledImageStats = iconStats.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+		ImageIcon newIconStats = new ImageIcon(scaledImageStats);
+		btnStats.setIcon(newIconStats);
+
+		this.add(btnStats);
         
         
         // Pulsante per l'icona di una fermata (non interattivo, serve solo a visualizzare comodamente l'icona)
@@ -215,6 +233,7 @@ public class StopPanel extends JPanel {
 		this.setVisible(true);
 		frame.getMappa().getLineaPainter().setLineaDaDisegnare(new ArrayList<>(), null);
 		frame.getRoutePanel().setVisible(false);
+		frame.getStatsPanel().setVisible(false);
 
 
 		// Rimozione di eventuali lineePassantiScrollPane precedenti (necessario per evitare overlap)
@@ -225,7 +244,14 @@ public class StopPanel extends JPanel {
 		// Rimozione di eventuali ActionListener precedenti da vari pulsanti (necessario per evitare overlap)
 		for (ActionListener a : btnRefresh.getActionListeners()) { btnRefresh.removeActionListener(a); }
 		for (ActionListener a : btnFavorite.getActionListeners()) { btnFavorite.removeActionListener(a); }
+		for (ActionListener a : btnStats.getActionListeners()) { btnStats.removeActionListener(a); }
 
+		// Funzionalità per il pulsante btnStats, che permette di accedere al pannello con le statistiche relative alla linea
+		btnStats.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.getStatsPanel().creaPannelloStatistiche(fermata);
+			}
+		});
 
 		// Ottenimento dei prossimi 10 arrivi alla fermata
 		aggiornaArriviDaVisualizzare(fermata);

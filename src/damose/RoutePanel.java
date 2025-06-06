@@ -31,7 +31,7 @@ public class RoutePanel extends JPanel {
 	private Frame frame;
 
 	private JLabel codiceLinea, agenziaENomeLinea, lblPartenze, lblViaggioVisualizzato, lblViaggioVisualizzatoInfo, lblVeicoli;
-	private JButton btnClose, btnRefresh, btnAgency, btnFavorite, btnWebsite, btnRouteType, btnTripLeft, btnTripRight;
+	private JButton btnClose, btnRefresh, btnStats, btnAgency, btnFavorite, btnWebsite, btnRouteType, btnTripLeft, btnTripRight;
 	private JPanel fermatePanel, veicoliPanel;
 	private JScrollPane fermateScrollPane, veicoliScrollPane;
 	private ImageIcon iconIntermezzo, newIconIntermezzo, iconInizio, newIconInizio, iconFine, newIconFine,
@@ -175,6 +175,25 @@ public class RoutePanel extends JPanel {
 		btnRefresh.setIcon(newIconRefresh);
 
 		this.add(btnRefresh);
+
+
+		// Pulsante per vedere il pannello delle statistiche della linea
+		btnStats = new JButton();
+
+		btnStats.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+		btnStats.setBorderPainted(false);
+		btnStats.setFocusPainted(false);
+		btnStats.setContentAreaFilled(false);
+
+		btnStats.setBounds(280, 4, 30, 30);
+
+		ImageIcon iconStats = new ImageIcon("src/resources/stats.png");
+		Image scaledImageStats = iconStats.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+		ImageIcon newIconStats = new ImageIcon(scaledImageStats);
+		btnStats.setIcon(newIconStats);
+
+		this.add(btnStats);
 
 
 		// Pulsante per il logo dell'agenzia di trasporti che gestisce la linea (non interattivo, serve solo a visualizzare comodamente il logo)
@@ -374,6 +393,7 @@ public class RoutePanel extends JPanel {
 		// Visualizzazione del routePanel e disattivazione di un eventuale stopPanel precedentemente visibile
 		this.setVisible(true);
 		frame.getStopPanel().setVisible(false);
+		frame.getStatsPanel().setVisible(false);
 
 
 		// All'inizializzazione del pannello, viene visualizzato di default il viaggio con la partenza più vicina all'orario attuale
@@ -410,6 +430,14 @@ public class RoutePanel extends JPanel {
 		for (ActionListener a : btnWebsite.getActionListeners()) { btnWebsite.removeActionListener(a); }
 		for (ActionListener a : btnTripRight.getActionListeners()) { btnTripRight.removeActionListener(a); }
 		for (ActionListener a : btnTripLeft.getActionListeners()) { btnTripLeft.removeActionListener(a); }
+		for (ActionListener a : btnStats.getActionListeners()) { btnStats.removeActionListener(a); }
+
+		// Funzionalità per il pulsante btnStats, che permette di accedere al pannello con le statistiche relative alla linea
+		btnStats.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.getStatsPanel().creaPannelloStatistiche(linea);
+			}
+		});
 
 
 		// Funzionalità per il pulsante btnRefresh, che permette di aggiornare i viaggi da visualizzare in base all'orario

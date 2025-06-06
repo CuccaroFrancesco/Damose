@@ -1,7 +1,7 @@
 # Damose
 *Damose* è un'applicazione per desktop che permette a chi la utilizza di visualizzare le varie linee su cui transitano gli autobus di Roma, navigare tra linee e fermate diverse, e individuare in tempo reale determinati mezzi, conoscendone posizione e orari di arrivo.
 
-L'applicazione è interamente sviluppata in *Java*, sfruttando Eclipse come IDE. 
+L'applicazione è interamente sviluppata in *Java*, sfruttando IntelliJ IDEA come IDE. 
 
 ___
 
@@ -58,5 +58,4 @@ ___
 
 ## ⚒️ BUG E MIGLIORAMENTI
 - Creare un WaypointPainter personalizzato, per distinguere tra fermate generiche, fermate preferite (giallo) e fermate selezionate in un determinato momento (rosso)
-- Eliminare l'observer (non più necessario)
 - Rendere interattivi i waypoint delle fermate (se premuto, creare lo stopPanel corrispondente)

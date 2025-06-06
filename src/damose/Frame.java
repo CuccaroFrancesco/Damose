@@ -30,6 +30,7 @@ public class Frame extends JFrame {
 	private RoutePanel routePanel;
 	private StopPanel stopPanel;
 	private UserPanel userPanel;
+	private StatsPanel statsPanel;
 	private Navbar navbar;
 	private Ricerca ricerca;
 	private CompoundPainter<JXMapViewer> painterGroup;
@@ -120,6 +121,12 @@ public class Frame extends JFrame {
 	                
 	                stopPanel.setBounds(0, 70, 350, screenSize.height - 70);
 	                layeredPane.add(stopPanel, Integer.valueOf(101));
+
+					// Aggiunta dello statsPanel alla finestra principale
+					statsPanel = new StatsPanel(Frame.this);
+
+					statsPanel.setBounds(0, 70, 350, screenSize.height - 70);
+					layeredPane.add(statsPanel, Integer.valueOf(101));
 	                
 	                
 	                // Aggiunta del pannello dei risultati di ricerca alla finestra principale
@@ -236,6 +243,10 @@ public class Frame extends JFrame {
 	public StopPanel getStopPanel() {
 		return this.stopPanel;
 	}
+
+
+	// Metodo get per lo statsPanel assegnato all'istanza
+	public StatsPanel getStatsPanel() { return this.statsPanel; }
 	
 	
 	// Metodo get per lo userPanel assegnato all'istanza
