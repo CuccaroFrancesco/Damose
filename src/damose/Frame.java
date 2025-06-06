@@ -31,6 +31,7 @@ public class Frame extends JFrame {
 	private StopPanel stopPanel;
 	private UserPanel userPanel;
 	private StatsPanel statsPanel;
+	private NotificationPanel notificationPanel;
 	private Navbar navbar;
 	private Ricerca ricerca;
 	private CompoundPainter<JXMapViewer> painterGroup;
@@ -122,11 +123,19 @@ public class Frame extends JFrame {
 	                stopPanel.setBounds(0, 70, 350, screenSize.height - 70);
 	                layeredPane.add(stopPanel, Integer.valueOf(101));
 
+
 					// Aggiunta dello statsPanel alla finestra principale
 					statsPanel = new StatsPanel(Frame.this);
 
 					statsPanel.setBounds(0, 70, 350, screenSize.height - 70);
 					layeredPane.add(statsPanel, Integer.valueOf(101));
+
+
+					// Aggiunta del notificationPanel alla finestra principale
+					notificationPanel = new NotificationPanel(Frame.this);
+
+					notificationPanel.setBounds(479, 600, 720, 64);
+					layeredPane.add(notificationPanel, Integer.valueOf(104));
 	                
 	                
 	                // Aggiunta del pannello dei risultati di ricerca alla finestra principale
@@ -185,6 +194,7 @@ public class Frame extends JFrame {
 
 							ScheduledExecutorService schedulerRealTimeData = Executors.newScheduledThreadPool(1);
 							schedulerRealTimeData.scheduleAtFixedRate(() -> {
+
 								try {
 
 									dati.caricaVehiclePositionsGTFS();
@@ -192,6 +202,15 @@ public class Frame extends JFrame {
 									dati.caricaAlertGTFS();
 
 								} catch (Exception e) {
+
+									ImageIcon iconError = new ImageIcon("src/resources/error-notification.png");
+									Image scaledImageError = iconError.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+									ImageIcon newIconError = new ImageIcon(scaledImageError);
+									notificationPanel.getBtnMessage().setIcon(newIconError);
+									notificationPanel.getBtnMessage().setText("<html>&nbsp;&nbsp; Errore nel caricamento dei dati real-time. Controllare la connessione<br>&nbsp;&nbsp; o riprovare più tardi.</html>");
+
+									notificationPanel.attivaNotifica();
+
 									e.printStackTrace();
 								}
 							}, 0, 30, TimeUnit.SECONDS);
@@ -247,6 +266,12 @@ public class Frame extends JFrame {
 
 	// Metodo get per lo statsPanel assegnato all'istanza
 	public StatsPanel getStatsPanel() { return this.statsPanel; }
+
+
+	// Metodo get per il notificationPanel assegnato all'istanza
+	public NotificationPanel getNotificationPanel() {
+		return this.notificationPanel;
+	}
 	
 	
 	// Metodo get per lo userPanel assegnato all'istanza
@@ -292,10 +317,7 @@ public class Frame extends JFrame {
 			if (newWidth - 340 <= 500) navbar.getSearchBar().setBounds(230, 15, newWidth - 340, 40);
 			else navbar.getSearchBar().setBounds(230, 15, 500, 40);
 			
-		} else {
-			
-			navbar.getSearchBar().setBounds((navbar.getWidth() / 2) - 250, 15, 500, 40);
-		}
+		} else navbar.getSearchBar().setBounds((navbar.getWidth() / 2) - 250, 15, 500, 40);
 		
 		navbar.getBtnRicerca().setBounds(460, 8, 30, 25);
 		
@@ -312,6 +334,8 @@ public class Frame extends JFrame {
 			if (stopPanel.isVisible() || routePanel.isVisible()) mapPanel.setBounds(350, 70, newWidth, newHeight - 70);
 			else mapPanel.setBounds(0, 70, newWidth, newHeight - 70);
 		}
+
+		if (notificationPanel.isVisible()) notificationPanel.setBounds(newWidth / 2 - 360, newHeight - 115, notificationPanel.getWidth(), notificationPanel.getHeight());
 	}
 	
 	

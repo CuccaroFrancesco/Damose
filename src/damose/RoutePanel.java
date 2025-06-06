@@ -458,10 +458,33 @@ public class RoutePanel extends JPanel {
 					}
 				}
 
-				aggiornaViaggio(linea, indiceViaggioVisualizzato);
-				lblViaggioVisualizzato.setText(indiceViaggioVisualizzato + 1 + "/" + getViaggiDaVisualizzare().size());
+				try {
 
-				aggiornaVeicoli(linea);
+					aggiornaViaggio(linea, indiceViaggioVisualizzato);
+					lblViaggioVisualizzato.setText(indiceViaggioVisualizzato + 1 + "/" + getViaggiDaVisualizzare().size());
+
+					aggiornaVeicoli(linea);
+
+					ImageIcon iconCheck = new ImageIcon("src/resources/check-notification.png");
+					Image scaledImageCheck = iconCheck.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+					ImageIcon newIconCheck = new ImageIcon(scaledImageCheck);
+					frame.getNotificationPanel().getBtnMessage().setIcon(newIconCheck);
+					frame.getNotificationPanel().getBtnMessage().setText("  Dati aggiornati con successo!");
+
+					frame.getNotificationPanel().attivaNotifica();
+
+				} catch (Exception ex) {
+
+					ImageIcon iconError = new ImageIcon("src/resources/error-notification.png");
+					Image scaledImageError = iconError.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+					ImageIcon newIconError = new ImageIcon(scaledImageError);
+					frame.getNotificationPanel().getBtnMessage().setIcon(newIconError);
+					frame.getNotificationPanel().getBtnMessage().setText("  Errore nell'aggiornamento dei dati. Riprova più tardi.");
+
+					frame.getNotificationPanel().attivaNotifica();
+
+					ex.printStackTrace();
+				}
 			}
 		});
 

@@ -24,7 +24,7 @@ public class NotificationPanel extends JPanel {
 
         g2d.setColor(new Color(255, 180, 9));
         g2d.setStroke(new BasicStroke(2));
-        g2d.drawRect(2, 2, this.getWidth() - 2, this.getHeight() - 2);
+        g2d.drawRect(2, 2, this.getWidth() - 4, this.getHeight() - 4);
     }
 
 
@@ -35,6 +35,7 @@ public class NotificationPanel extends JPanel {
 
         this.setBackground(new Color(130, 36, 51));
         this.setLayout(null);
+        this.setVisible(false);
         this.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
 
         this.setPreferredSize(new Dimension(720, 64));
@@ -54,45 +55,9 @@ public class NotificationPanel extends JPanel {
         btnMessage.setBorderPainted(false);
         btnMessage.setFocusable(false);
 
-        btnMessage.setBounds(10, 10, 700, 44);
+        btnMessage.setBounds(10, 8, 700, 48);
 
         this.add(btnMessage);
-
-
-        // JButton che permetterà di chiudere all'istante il notificationPanel
-        btnClose = new JButton();
-
-        btnClose.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-        btnClose.setBorderPainted(false);
-        btnClose.setFocusPainted(false);
-        btnClose.setContentAreaFilled(false);
-
-        btnClose.setBounds(5, 5, 8, 8);
-
-        ImageIcon iconClose = new ImageIcon("src/resources/close.png");
-        Image scaledImageClose = iconClose.getImage().getScaledInstance(8, 8, Image.SCALE_SMOOTH);
-        ImageIcon newIconClose = new ImageIcon(scaledImageClose);
-        btnClose.setIcon(newIconClose);
-
-        btnClose.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                NotificationPanel.this.setVisible(false);
-            }
-        });
-
-        this.add(btnClose);
-
-
-        // Timer che chiude in automatico il notificationPanel dopo 3 secondi
-        Timer timer = new Timer(3000, (ActionEvent e) -> {
-            this.setVisible(false);
-            this.frame.revalidate();
-            this.frame.repaint();
-        });
-
-        timer.setRepeats(false);
-        timer.start();
     }
 
 
@@ -108,5 +73,23 @@ public class NotificationPanel extends JPanel {
     // Metodo get per il btnClose
     public JButton getBtnClose() {
         return this.btnClose;
+    }
+
+
+// ---------------------------------------------------------------------------------------------
+
+
+    // Metodo che attiva il notificationPanel e lo disattiva dopo 3 secondi
+    public void attivaNotifica() {
+        this.setVisible(true);
+
+        Timer timer = new Timer(3000, (ActionEvent e) -> {
+            this.setVisible(false);
+            this.frame.revalidate();
+            this.frame.repaint();
+        });
+
+        timer.setRepeats(false);
+        timer.start();
     }
 }
