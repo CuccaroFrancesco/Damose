@@ -36,7 +36,7 @@ public class Navbar extends JPanel {
         this.setOpaque(true);
         this.setBackground(new Color(130, 36, 51));
         this.setLayout(null);
-        this.setBorder(new MatteBorder(0, 0, 1, 0, Color.BLACK));;
+        this.setBorder(new MatteBorder(0, 0, 1, 0, Color.BLACK));
 
         
         // Pulsanti per scelta del tipo di mappa (normale, satellitare, mista)

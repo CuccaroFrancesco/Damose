@@ -119,7 +119,7 @@ public class Ricerca extends JPanel{
         	
         	switch (linea.getType()) {
 				case 0:
-					ImageIcon iconTram = new ImageIcon("src/resources/tram-blue.png");
+					ImageIcon iconTram = new ImageIcon("src/resources/tram.png");
 			        Image scaledImageTram = iconTram.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 			        ImageIcon newIconTram = new ImageIcon(scaledImageTram);
 			        btnLinea.setIcon(newIconTram);
@@ -177,7 +177,7 @@ public class Ricerca extends JPanel{
 			        break;
 		        
 				case 3:
-					ImageIcon iconBus = new ImageIcon("src/resources/bus-red.png");
+					ImageIcon iconBus = new ImageIcon("src/resources/bus.png");
 			        Image scaledImageBus = iconBus.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 			        ImageIcon newIconBus = new ImageIcon(scaledImageBus);
 			        btnLinea.setIcon(newIconBus);

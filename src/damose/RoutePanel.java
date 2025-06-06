@@ -249,11 +249,6 @@ public class RoutePanel extends JPanel {
 		btnWebsite.setPreferredSize(new Dimension(20, 20));
 		btnWebsite.setBounds(3, 160, 120, 20);
 
-		ImageIcon iconWebsite = new ImageIcon("src/resources/mondo.png");
-		Image scaledImageWebsite = iconWebsite.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-		ImageIcon newIconWebsite = new ImageIcon(scaledImageWebsite);
-		btnWebsite.setIcon(newIconWebsite);
-
 		this.add(btnWebsite);
 
 
@@ -595,15 +590,15 @@ public class RoutePanel extends JPanel {
 				btnRouteType.setIcon(newIconTram);
 
 				btnRouteType.setText(" Tram");
+
+				ImageIcon iconWebsiteTram = new ImageIcon("src/resources/mondo-tram.png");
+				Image scaledImageWebsiteTram = iconWebsiteTram.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+				ImageIcon newIconWebsiteTram = new ImageIcon(scaledImageWebsiteTram);
+				btnWebsite.setIcon(newIconWebsiteTram);
 				
 				break;
 
 			case 1:
-				ImageIcon iconMetro = new ImageIcon("src/resources/metro.png");
-				Image scaledImageMetro = iconMetro.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-				ImageIcon newIconMetro = new ImageIcon(scaledImageMetro);
-				btnRouteType.setIcon(newIconMetro);
-
 				btnRouteType.setText(" Metropolitana");
 
 				switch (shortName) {
@@ -612,6 +607,16 @@ public class RoutePanel extends JPanel {
 						Image scaledImageMetroA = iconMetroA.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 						ImageIcon newIconMetroA = new ImageIcon(scaledImageMetroA);
 						btnAgency.setIcon(newIconMetroA);
+
+						ImageIcon iconRouteTypeMetroA = new ImageIcon("src/resources/metro-a.png");
+						Image scaledImageRouteTypeMetroA = iconRouteTypeMetroA.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+						ImageIcon newIconRouteTypeMetroA = new ImageIcon(scaledImageRouteTypeMetroA);
+						btnRouteType.setIcon(newIconRouteTypeMetroA);
+
+						ImageIcon iconWebsiteMetroA = new ImageIcon("src/resources/mondo-metro-a.png");
+						Image scaledImageWebsiteMetroA = iconWebsiteMetroA.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+						ImageIcon newIconWebsiteMetroA = new ImageIcon(scaledImageWebsiteMetroA);
+						btnWebsite.setIcon(newIconWebsiteMetroA);
 
 						codiceLinea.setText(" Metro A");
 
@@ -623,6 +628,16 @@ public class RoutePanel extends JPanel {
 						ImageIcon newIconMetroB = new ImageIcon(scaledImageMetroB);
 						btnAgency.setIcon(newIconMetroB);
 
+						ImageIcon iconRouteTypeMetroB = new ImageIcon("src/resources/metro-b.png");
+						Image scaledImageRouteTypeMetroB = iconRouteTypeMetroB.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+						ImageIcon newIconRouteTypeMetroB = new ImageIcon(scaledImageRouteTypeMetroB);
+						btnRouteType.setIcon(newIconRouteTypeMetroB);
+
+						ImageIcon iconWebsiteMetroB = new ImageIcon("src/resources/mondo-metro-b.png");
+						Image scaledImageWebsiteMetroB = iconWebsiteMetroB.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+						ImageIcon newIconWebsiteMetroB = new ImageIcon(scaledImageWebsiteMetroB);
+						btnWebsite.setIcon(newIconWebsiteMetroB);
+
 						codiceLinea.setText(" Metro B");
 
 						break;
@@ -633,6 +648,16 @@ public class RoutePanel extends JPanel {
 						ImageIcon newIconMetroB1 = new ImageIcon(scaledImageMetroB1);
 						btnAgency.setIcon(newIconMetroB1);
 
+						ImageIcon iconRouteTypeMetroB1 = new ImageIcon("src/resources/metro-b.png");
+						Image scaledImageRouteTypeMetroB1 = iconRouteTypeMetroB1.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+						ImageIcon newIconRouteTypeMetroB1 = new ImageIcon(scaledImageRouteTypeMetroB1);
+						btnRouteType.setIcon(newIconRouteTypeMetroB1);
+
+						ImageIcon iconWebsiteMetroB1 = new ImageIcon("src/resources/mondo-metro-b.png");
+						Image scaledImageWebsiteMetroB1 = iconWebsiteMetroB1.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+						ImageIcon newIconWebsiteMetroB1 = new ImageIcon(scaledImageWebsiteMetroB1);
+						btnWebsite.setIcon(newIconWebsiteMetroB1);
+
 						codiceLinea.setText(" Metro B1");
 
 						break;
@@ -642,6 +667,16 @@ public class RoutePanel extends JPanel {
 						Image scaledImageMetroC = iconMetroC.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 						ImageIcon newIconMetroC = new ImageIcon(scaledImageMetroC);
 						btnAgency.setIcon(newIconMetroC);
+
+						ImageIcon iconRouteTypeMetroC = new ImageIcon("src/resources/metro-c.png");
+						Image scaledImageRouteTypeMetroC = iconRouteTypeMetroC.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+						ImageIcon newIconRouteTypeMetroC = new ImageIcon(scaledImageRouteTypeMetroC);
+						btnRouteType.setIcon(newIconRouteTypeMetroC);
+
+						ImageIcon iconWebsiteMetroC = new ImageIcon("src/resources/mondo-metro-c.png");
+						Image scaledImageWebsiteMetroC = iconWebsiteMetroC.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+						ImageIcon newIconWebsiteMetroC = new ImageIcon(scaledImageWebsiteMetroC);
+						btnWebsite.setIcon(newIconWebsiteMetroC);
 
 						codiceLinea.setText(" Metro C");
 
@@ -657,6 +692,12 @@ public class RoutePanel extends JPanel {
 				btnRouteType.setIcon(newIconTreno);
 
 				btnRouteType.setText(" Treno");
+
+				ImageIcon iconWebsiteTreno = new ImageIcon("src/resources/mondo-treno.png");
+				Image scaledImageWebsiteTreno = iconWebsiteTreno.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+				ImageIcon newIconWebsiteTreno = new ImageIcon(scaledImageWebsiteTreno);
+				btnWebsite.setIcon(newIconWebsiteTreno);
+
 				break;
 
 			case 3:
@@ -666,6 +707,12 @@ public class RoutePanel extends JPanel {
 				btnRouteType.setIcon(newIconBus);
 
 				btnRouteType.setText(" Autobus");
+
+				ImageIcon iconWebsiteBus = new ImageIcon("src/resources/mondo-bus.png");
+				Image scaledImageWebsiteBus = iconWebsiteBus.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+				ImageIcon newIconWebsiteBus = new ImageIcon(scaledImageWebsiteBus);
+				btnWebsite.setIcon(newIconWebsiteBus);
+
 				break;
 		}
 
