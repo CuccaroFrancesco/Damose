@@ -786,7 +786,20 @@ public class RoutePanel extends JPanel {
 
 
 		// Chiamata al metodo aggiornaVeicoli per visualizzare i veicoli percorrenti la linea
-		aggiornaVeicoli(linea);
+		try {
+
+			aggiornaVeicoli(linea);
+
+		} catch (Exception ex) {
+
+			ImageIcon iconError = new ImageIcon("src/resources/error-notification.png");
+			Image scaledImageError = iconError.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+			ImageIcon newIconError = new ImageIcon(scaledImageError);
+			frame.getNotificationPanel().getBtnMessage().setIcon(newIconError);
+			frame.getNotificationPanel().getBtnMessage().setText("<html>&nbsp;&nbsp; Errore nel caricamento dei dati relativi ai veicoli. Controllare la<br>&nbsp;&nbsp; connessione e aggiornare il pannello più tardi.</html>");
+
+			frame.getNotificationPanel().attivaNotifica();
+		}
 
 
 		// Aggiornamento del rendering del routePanel

@@ -207,7 +207,7 @@ public class Frame extends JFrame {
 									Image scaledImageError = iconError.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 									ImageIcon newIconError = new ImageIcon(scaledImageError);
 									notificationPanel.getBtnMessage().setIcon(newIconError);
-									notificationPanel.getBtnMessage().setText("<html>&nbsp;&nbsp; Errore nel caricamento dei dati real-time. Controllare la connessione<br>&nbsp;&nbsp; o riprovare più tardi.</html>");
+									notificationPanel.getBtnMessage().setText("<html>&nbsp;&nbsp; Errore nel caricamento dei dati real-time. Controllare la connessione e<br>&nbsp;&nbsp; riprovare più tardi.</html>");
 
 									notificationPanel.attivaNotifica();
 
