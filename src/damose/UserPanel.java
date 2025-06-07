@@ -17,7 +17,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	
 	private Frame frame;
 	
-	private JButton btnProfilePic, btnAccedi, btnRegistrati, btnConfermaLogin, btnConfermaRegistr, btnLogout, btnBack, btnToggleFermate, btnToggleLinee;
+	private JButton btnProfilePic, btnSettings, btnAccedi, btnRegistrati, btnConfermaLogin, btnConfermaRegistr, btnLogout, btnBack, btnToggleFermate, btnToggleLinee;
 	private JLabel titolo, lblNome, lblCognome, lblUsername, lblPassword, lblConfermaPassword, lblNomeCognomeUtente,
 	               erroreNome, erroreCognome, erroreUsername, errorePassword, erroreConfermaPassword, registrazioneEffettuata;
 	private JTextField inputNome, inputCognome, inputUsername;
@@ -80,6 +80,27 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		btnProfilePic.setVisible(false);
 
 		this.add(btnProfilePic);
+
+		// Pulsante per aprire le impostazioni
+		btnSettings = new JButton();
+
+		btnSettings.setBounds(-55, 5, 160, 25);
+		btnSettings.setVisible(false);
+		btnSettings.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+		btnSettings.setFont(new Font("Arial Nova", Font.BOLD, 14));
+		btnSettings.setForeground(Color.WHITE);
+
+		btnSettings.setBorderPainted(false);
+		btnSettings.setFocusPainted(false);
+		btnSettings.setContentAreaFilled(false);
+
+		ImageIcon iconSettings = new ImageIcon("src/resources/settings.png");
+		Image scaledImageSettings = iconSettings.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		ImageIcon newIconSettings = new ImageIcon(scaledImageSettings);
+		btnSettings.setIcon(newIconSettings);
+
+		this.add(btnSettings);
 		
 		
 		// Pulsante per l'accesso (con account già esistente)
@@ -563,6 +584,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		            	UserPanel.this.aggiornaPreferiti();
 		            	UserPanel.this.repaint();
 
+						btnSettings.setVisible(true);
 						btnProfilePic.setVisible(true);
 		                
 		                titolo.setText(frame.getUtente().getUsername());

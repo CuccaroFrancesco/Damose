@@ -24,7 +24,7 @@ public class StatsPanel extends JPanel {
 
 
         // Pulsante per chiudere il lineaPanel
-        btnClose = new JButton(" Chiudi pannello");
+        btnClose = new JButton(" Torna indietro");
 
         btnClose.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
@@ -37,16 +37,10 @@ public class StatsPanel extends JPanel {
 
         btnClose.setBounds(-25, 5, 200, 30);
 
-        ImageIcon iconClose = new ImageIcon("src/resources/close.png");
+        ImageIcon iconClose = new ImageIcon("src/resources/indietro.png");
         Image scaledImageClose = iconClose.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon newIconClose = new ImageIcon(scaledImageClose);
         btnClose.setIcon(newIconClose);
-
-        btnClose.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                StatsPanel.this.setVisible(false);
-            }
-        });
 
         this.add(btnClose);
 
@@ -101,6 +95,27 @@ public class StatsPanel extends JPanel {
         String longName = linea.getLongName();
         String shortName = linea.getShortName();
 
+        // Visualizzazione dei nomi (long name e short name) assegnati alla linea e del nome dell'agenzia che la gestisce
+        codice.setText(" " + shortName);
+        codice.setFont(new Font("Arial Nova", Font.BOLD, 30));
+        codice.setBounds(80, 70, 180, 50);
+
+        agenziaENome.setBounds(20, 125, 300, 20);
+
+        if (longName == null || longName.isEmpty()) {
+            agenziaENome.setText(agencyName);
+        } else {
+            agenziaENome.setText(agencyName + "  -  " + longName);
+        }
+
+        for (ActionListener a : btnClose.getActionListeners()) { btnClose.removeActionListener(a); }
+        btnClose.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                StatsPanel.this.setVisible(false);
+                frame.getRoutePanel().creaPannelloLinea(linea);
+            }
+        });
+
 
         // Visualizzazione dell'eventuale logo dell'agenzia che gestisce la linea in base a agencyName
         switch (agencyName) {
@@ -133,18 +148,6 @@ public class StatsPanel extends JPanel {
                 codice.setBounds(12, 70, 180, 50);
 
                 break;
-        }
-
-
-        // Visualizzazione dei nomi (long name e short name) assegnati alla linea e del nome dell'agenzia che la gestisce
-        codice.setText(" " + shortName);
-        codice.setFont(new Font("Arial Nova", Font.BOLD, 30));
-        codice.setBounds(20, 120, 300, 20);
-
-        if (longName == null || longName.isEmpty()) {
-            agenziaENome.setText(agencyName);
-        } else {
-            agenziaENome.setText(agencyName + "  -  " + longName);
         }
 
         // Visualizzazione del tipo di linea (tram, metropolitana, treno, autobus) in base alla variabile routeType
@@ -201,6 +204,14 @@ public class StatsPanel extends JPanel {
         frame.getRoutePanel().setVisible(false);
         frame.getStopPanel().setVisible(false);
 
+        for (ActionListener a : btnClose.getActionListeners()) { btnClose.removeActionListener(a); }
+        btnClose.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                StatsPanel.this.setVisible(false);
+                frame.getStopPanel().creaPannelloFermata(fermata);
+            }
+        });
+
 
         // Variabili che contengono informazioni sulla fermata (nome, ID)
         String name = fermata.getName();
@@ -209,8 +220,11 @@ public class StatsPanel extends JPanel {
 
         // Visualizzazione del nome e dell'ID della fermata
         agenziaENome.setText("ID: " + id);
+        agenziaENome.setBounds(20, 120, 300, 20);
+
         codice.setText(name);
         codice.setFont(new Font("Arial Nova", Font.BOLD, 22));
+        codice.setBounds(70, 65, 200, 50);
 
         // Configurazione per l'icona della fermata
         btnAgency.setPreferredSize(new Dimension(40, 40));
