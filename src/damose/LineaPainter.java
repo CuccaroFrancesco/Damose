@@ -106,7 +106,7 @@ public class LineaPainter implements Painter<JXMapViewer> {
 
 	 	switch (viaggio.getRoute().getType()) {
 	 	    case 0:
-	 	        colore = new Color(1, 140, 146);
+	 	        colore = new Color(36, 188, 194);
 	 	        break;
 
 	 	    case 1:
@@ -121,11 +121,11 @@ public class LineaPainter implements Painter<JXMapViewer> {
 	 	        break;
 
 	 	    case 2:
-	 	        colore = new Color(30, 27, 9);
+	 	        colore = new Color(207, 166, 120);
 	 	        break;
 
 	 	    case 3:
-	 	        colore = new Color(181, 1, 1);
+	 	        colore = new Color(254, 180, 8);
 	 	        break;
 	 	}
 

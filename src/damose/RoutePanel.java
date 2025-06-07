@@ -716,7 +716,7 @@ public class RoutePanel extends JPanel {
 
 				btnRouteType.setText(" Treno");
 
-				ImageIcon iconWebsiteTreno = new ImageIcon("src/resources/mondo-treno.png");
+				ImageIcon iconWebsiteTreno = new ImageIcon("src/resources/mondo-train.png");
 				Image scaledImageWebsiteTreno = iconWebsiteTreno.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 				ImageIcon newIconWebsiteTreno = new ImageIcon(scaledImageWebsiteTreno);
 				btnWebsite.setIcon(newIconWebsiteTreno);

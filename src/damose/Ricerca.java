@@ -170,7 +170,7 @@ public class Ricerca extends JPanel{
 			        break;
 		        
 				case 2:
-					ImageIcon iconTreno = new ImageIcon("src/resources/train-brown.png");
+					ImageIcon iconTreno = new ImageIcon("src/resources/train.png");
 			        Image scaledImageTreno = iconTreno.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 			        ImageIcon newIconTreno = new ImageIcon(scaledImageTreno);
 			        btnLinea.setIcon(newIconTreno);
