@@ -12,6 +12,7 @@ public class NotificationPanel extends JPanel {
 
     private JFrame frame;
     private JButton btnMessage, btnClose;
+    private Timer currentTimer;
 
 
     // Override del metodo paintComponent, per disegnare ogni volta il notificationPanel con un rettangolo giallo decorativo
@@ -83,13 +84,15 @@ public class NotificationPanel extends JPanel {
     public void attivaNotifica() {
         this.setVisible(true);
 
-        Timer timer = new Timer(3000, (ActionEvent e) -> {
+        if (currentTimer != null && currentTimer.isRunning()) currentTimer.stop();
+
+        currentTimer = new Timer(3000, (ActionEvent e) -> {
             this.setVisible(false);
             this.frame.revalidate();
             this.frame.repaint();
         });
 
-        timer.setRepeats(false);
-        timer.start();
+        currentTimer.setRepeats(false);
+        currentTimer.start();
     }
 }
