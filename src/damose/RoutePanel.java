@@ -34,11 +34,15 @@ public class RoutePanel extends JPanel {
 	private JButton btnClose, btnRefresh, btnStats, btnAgency, btnFavorite, btnWebsite, btnRouteType, btnTripLeft, btnTripRight;
 	private JPanel fermatePanel, veicoliPanel;
 	private JScrollPane fermateScrollPane, veicoliScrollPane;
-	private ImageIcon iconIntermezzo, newIconIntermezzo, iconInizio, newIconInizio, iconFine, newIconFine,
+	private ImageIcon iconIntermezzoBus, newIconIntermezzoBus, iconInizioBus, newIconInizioBus, iconFineBus, newIconFineBus,
+			iconIntermezzoTram, newIconIntermezzoTram, iconInizioTram, newIconInizioTram, iconFineTram, newIconFineTram,
+			iconIntermezzoTreno, newIconIntermezzoTreno, iconInizioTreno, newIconInizioTreno, iconFineTreno, newIconFineTreno,
 			iconIntermezzoMetroA, newIconIntermezzoMetroA, iconInizioMetroA, newIconInizioMetroA, iconFineMetroA, newIconFineMetroA,
 			iconIntermezzoMetroB, newIconIntermezzoMetroB, iconInizioMetroB, newIconInizioMetroB, iconFineMetroB, newIconFineMetroB,
 			iconIntermezzoMetroC, newIconIntermezzoMetroC, iconInizioMetroC, newIconInizioMetroC, iconFineMetroC, newIconFineMetroC;
-	private Image scaledImageIntermezzo, scaledImageFine, scaledImageInizio,
+	private Image scaledImageIntermezzoBus, scaledImageInizioBus, scaledImageFineBus,
+			scaledImageIntermezzoTram, scaledImageInizioTram, scaledImageFineTram,
+			scaledImageIntermezzoTreno, scaledImageInizioTreno, scaledImageFineTreno,
 			scaledImageIntermezzoMetroA, scaledImageInizioMetroA, scaledImageFineMetroA,
 			scaledImageIntermezzoMetroB, scaledImageInizioMetroB, scaledImageFineMetroB,
 			scaledImageIntermezzoMetroC, scaledImageInizioMetroC, scaledImageFineMetroC;
@@ -317,20 +321,53 @@ public class RoutePanel extends JPanel {
 		this.add(btnTripRight);
 
 
-		// Icona per l'intermezzo di una linea generica
-		iconIntermezzo = new ImageIcon("src/resources/linea-default.png");
-		scaledImageIntermezzo = iconIntermezzo.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-		newIconIntermezzo = new ImageIcon(scaledImageIntermezzo);
+		// Icona per l'intermezzo di una linea di bus
+		iconIntermezzoBus = new ImageIcon("src/resources/linea-bus.png");
+		scaledImageIntermezzoBus = iconIntermezzoBus.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		newIconIntermezzoBus = new ImageIcon(scaledImageIntermezzoBus);
 
-		// Icona per l'inizio di una linea generica
-		iconInizio = new ImageIcon("src/resources/linea-default-inizio.png");
-		scaledImageInizio = iconInizio.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-		newIconInizio = new ImageIcon(scaledImageInizio);
+		// Icona per l'inizio di una linea di bus
+		iconInizioBus = new ImageIcon("src/resources/linea-bus-inizio.png");
+		scaledImageInizioBus = iconInizioBus.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		newIconInizioBus = new ImageIcon(scaledImageInizioBus);
 
-		// Icona per la fine di una linea generica
-		iconFine = new ImageIcon("src/resources/linea-default-fine.png");
-		scaledImageFine = iconFine.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-		newIconFine = new ImageIcon(scaledImageFine);
+		// Icona per la fine di una linea di bus
+		iconFineBus = new ImageIcon("src/resources/linea-bus-fine.png");
+		scaledImageFineBus = iconFineBus.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		newIconFineBus = new ImageIcon(scaledImageFineBus);
+
+
+		// Icona per l'intermezzo di una linea di tram
+		iconIntermezzoTram = new ImageIcon("src/resources/linea-tram.png");
+		scaledImageIntermezzoTram = iconIntermezzoTram.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		newIconIntermezzoTram = new ImageIcon(scaledImageIntermezzoTram);
+
+		// Icona per l'inizio di una linea di tram
+		iconInizioTram = new ImageIcon("src/resources/linea-tram-inizio.png");
+		scaledImageInizioTram = iconInizioTram.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		newIconInizioTram = new ImageIcon(scaledImageInizioTram);
+
+		// Icona per la fine di una linea di tram
+		iconFineTram = new ImageIcon("src/resources/linea-tram-fine.png");
+		scaledImageFineTram = iconFineTram.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		newIconFineTram = new ImageIcon(scaledImageFineTram);
+
+
+		// Icona per l'intermezzo di una linea di treno
+		iconIntermezzoTreno = new ImageIcon("src/resources/linea-treno.png");
+		scaledImageIntermezzoTreno = iconIntermezzoTreno.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		newIconIntermezzoTreno = new ImageIcon(scaledImageIntermezzoTreno);
+
+		// Icona per l'inizio di una linea di treno
+		iconInizioTreno = new ImageIcon("src/resources/linea-treno-inizio.png");
+		scaledImageInizioTreno = iconInizioTreno.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		newIconInizioTreno = new ImageIcon(scaledImageInizioTreno);
+
+		// Icona per la fine di una linea di treno
+		iconFineTreno = new ImageIcon("src/resources/linea-treno-fine.png");
+		scaledImageFineTreno = iconFineTreno.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		newIconFineTreno = new ImageIcon(scaledImageFineTreno);
+
 
 		// Icona per l'intermezzo della Metro A
 		iconIntermezzoMetroA = new ImageIcon("src/resources/linea-metroA.png");
@@ -347,6 +384,7 @@ public class RoutePanel extends JPanel {
 		scaledImageFineMetroA = iconFineMetroA.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
 		newIconFineMetroA = new ImageIcon(scaledImageFineMetroA);
 
+
 		// Icona per l'intermezzo della Metro B
 		iconIntermezzoMetroB = new ImageIcon("src/resources/linea-metroB.png");
 		scaledImageIntermezzoMetroB = iconIntermezzoMetroB.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
@@ -361,6 +399,7 @@ public class RoutePanel extends JPanel {
 		iconFineMetroB = new ImageIcon("src/resources/linea-metroB-fine.png");
 		scaledImageFineMetroB = iconFineMetroB.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
 		newIconFineMetroB = new ImageIcon(scaledImageFineMetroB);
+
 
 		// Icona per l'intermezzo della Metro C
 		iconIntermezzoMetroC = new ImageIcon("src/resources/linea-metroC.png");
@@ -913,32 +952,51 @@ public class RoutePanel extends JPanel {
 			stopBtn.setBackground(new Color(130, 36, 51));
 			stopBtn.setBorder(BorderFactory.createEmptyBorder());
 
-			switch (linea.getShortName()) {
-				case "MEA":
-					if (i == 0) stopBtn.setIcon(newIconInizioMetroA);
-					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroA);
-					else stopBtn.setIcon(newIconIntermezzoMetroA);
+			switch (linea.getType()) {
+				case 0:
+					if (i == 0) stopBtn.setIcon(newIconInizioTram);
+					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineTram);
+					else stopBtn.setIcon(newIconIntermezzoTram);
 
 					break;
 
-				case "MEB", "MEB1":
-					if (i == 0) stopBtn.setIcon(newIconInizioMetroB);
-					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroB);
-					else stopBtn.setIcon(newIconIntermezzoMetroB);
+				case 1:
+					switch (linea.getShortName()) {
+						case "MEA":
+							if (i == 0) stopBtn.setIcon(newIconInizioMetroA);
+							else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroA);
+							else stopBtn.setIcon(newIconIntermezzoMetroA);
+
+							break;
+
+						case "MEB", "MEB1":
+							if (i == 0) stopBtn.setIcon(newIconInizioMetroB);
+							else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroB);
+							else stopBtn.setIcon(newIconIntermezzoMetroB);
+
+							break;
+
+						case "MEC":
+							if (i == 0) stopBtn.setIcon(newIconInizioMetroC);
+							else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroC);
+							else stopBtn.setIcon(newIconIntermezzoMetroC);
+
+							break;
+					}
 
 					break;
 
-				case "MEC":
-					if (i == 0) stopBtn.setIcon(newIconInizioMetroC);
-					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineMetroC);
-					else stopBtn.setIcon(newIconIntermezzoMetroC);
+				case 2:
+					if (i == 0) stopBtn.setIcon(newIconInizioTreno);
+					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineTreno);
+					else stopBtn.setIcon(newIconIntermezzoTreno);
 
 					break;
 
-				default:
-					if (i == 0) stopBtn.setIcon(newIconInizio);
-					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFine);
-					else stopBtn.setIcon(newIconIntermezzo);
+				case 3:
+					if (i == 0) stopBtn.setIcon(newIconInizioBus);
+					else if (i == fermate.size() - 1) stopBtn.setIcon(newIconFineBus);
+					else stopBtn.setIcon(newIconIntermezzoBus);
 
 					break;
 			}
