@@ -19,7 +19,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	
 	private JButton btnProfilePic, btnSettings, btnAccedi, btnRegistrati, btnConfermaLogin, btnConfermaRegistr, btnLogout, btnBack, btnToggleFermate, btnToggleLinee;
 	private JLabel titolo, lblNome, lblCognome, lblUsername, lblPassword, lblConfermaPassword, lblNomeCognomeUtente,
-	               erroreNome, erroreCognome, erroreUsername, errorePassword, erroreConfermaPassword, registrazioneEffettuata;
+	               erroreNome, erroreCognome, erroreUsername, errorePassword, erroreConfermaPassword;
 	private JTextField inputNome, inputCognome, inputUsername;
 	private JPasswordField inputPassword, inputConfermaPassword;
 	private JPanel panelLineePreferite, panelFermatePreferite;
@@ -81,6 +81,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 
 		this.add(btnProfilePic);
 
+
 		// Pulsante per aprire le impostazioni
 		btnSettings = new JButton();
 
@@ -119,9 +120,11 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		btnRegistrati.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
 		this.add(btnRegistrati);
-		
+
+
 // ---------------------------------------------------------------------------------------------
-		
+
+
 		// Label per la casella di testo inputNome
 		lblNome = new JLabel("Nome");
 							
@@ -143,8 +146,10 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 					
 		this.add(inputNome);
 
+
 // ---------------------------------------------------------------------------------------------
-		
+
+
 		// Label per la casella di testo inputCognome
 		lblCognome = new JLabel("Cognome");
 									
@@ -165,9 +170,11 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		inputCognome.setVisible(false);
 							
 		this.add(inputCognome);
-			
+
+
 // ---------------------------------------------------------------------------------------------
-		
+
+
 		// Label per la casella di testo inputUsername
 		lblUsername = new JLabel("Username");
 			
@@ -188,9 +195,11 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		inputUsername.setVisible(false);
 		
 		this.add(inputUsername);
-			
+
+
 // ---------------------------------------------------------------------------------------------
-			
+
+
 		// Label per la casella di testo inputPassword
 		lblPassword = new JLabel("Password");
 			
@@ -211,9 +220,11 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		inputPassword.setVisible(false);
 		
 		this.add(inputPassword);
-		
+
+
 // ---------------------------------------------------------------------------------------------
-		
+
+
 		// Label per la casella di testo inputConfirmPassword
 		lblConfermaPassword = new JLabel("Conferma password");
 									
@@ -234,9 +245,11 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		inputConfermaPassword.setVisible(false);
 						
 		this.add(inputConfermaPassword);
-		
+
+
 // ---------------------------------------------------------------------------------------------
-			
+
+
 		// Label che visualizza un eventuale errore nell'inserimento del nome
 		erroreNome = new JLabel();
 		
@@ -300,22 +313,11 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		erroreConfermaPassword.setBounds(50, 510, 250, 20);
 		
 		this.add(erroreConfermaPassword);
-		
-		
-		// Label che viene visualizzata se la registrazione è stata effettuata correttamente
-		registrazioneEffettuata = new JLabel();
-		registrazioneEffettuata.setVisible(false);
-		registrazioneEffettuata.setHorizontalAlignment(SwingConstants.CENTER);
-		registrazioneEffettuata.setHorizontalTextPosition(SwingConstants.CENTER);
-		
-		registrazioneEffettuata.setFont(new Font("Arial Nova", Font.BOLD, 20));
-		registrazioneEffettuata.setForeground(new Color(0, 255, 0));
-		registrazioneEffettuata.setBounds(0, 220, 350, 50);
-		
-		this.add(registrazioneEffettuata);
+
 
 // ---------------------------------------------------------------------------------------------
-		
+
+
 		// Pulsante per confermare le credenziali di login
 		btnConfermaLogin = new JButton("Conferma");
 		
@@ -344,8 +346,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		btnConfermaRegistr.setBounds(75, 600, 200, 45);
 		btnConfermaRegistr.setVisible(false);
 		btnConfermaRegistr.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-				
-		
+
 		Action pressedConfermaRegistr = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				btnConfermaRegistr.doClick();
@@ -359,9 +360,11 @@ public class UserPanel extends JPanel implements PreferitiObserver {
         actionMapRegistr.put("pressed", pressedConfermaRegistr);
         
         this.add(btnConfermaRegistr);
-		
+
+
 // ---------------------------------------------------------------------------------------------
-		
+
+
 		// Pulsante per tornare indietro
 		btnBack = new JButton(" Torna indietro");
 			
@@ -387,7 +390,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		// Pulsante per effettuare il logout
 		btnLogout = new JButton(" Logout");
 		
-		btnLogout.setBounds(220, 5, 120, 25);
+		btnLogout.setBounds(230, 5, 120, 25);
 		btnLogout.setVisible(false);
 		btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
@@ -405,8 +408,10 @@ public class UserPanel extends JPanel implements PreferitiObserver {
         
 		this.add(btnLogout);
 
+
 // ---------------------------------------------------------------------------------------------
-		
+
+
 		// Funzionalità per il pulsante btnAccedi (rende visibile la schermata di login)
 		btnAccedi.addActionListener(new ActionListener() {
 				
@@ -477,12 +482,13 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 				btnRegistrati.setVisible(true);
 			}
 		});
-					
+
+
 // ---------------------------------------------------------------------------------------------	
-				
+
+
 		// Funzionalità per il pulsante "Conferma registrazione"
 		btnConfermaRegistr.addActionListener(new ActionListener() {
-			
 			public void actionPerformed(ActionEvent e) {
 					
 				String newNome = inputNome.getText().trim();
@@ -553,10 +559,20 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 						
 						nascondiTutto();
 						
-						registrazioneEffettuata.setText(Registrazione.addUser(newNome, newCognome, newUsername, newPassword, newConfermaPassword));
-						registrazioneEffettuata.setVisible(true);
-								
+						titolo.setBounds(0, 180, 350, 50);
+						titolo.setText("Ospite");
+						titolo.setVisible(true);
+
 						btnAccedi.setVisible(true);
+						btnRegistrati.setVisible(true);
+
+						ImageIcon iconCheck = new ImageIcon("src/resources/check-notification.png");
+						Image scaledImageCheck = iconCheck.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+						ImageIcon newIconCheck = new ImageIcon(scaledImageCheck);
+						frame.getNotificationPanel().getBtnMessage().setIcon(newIconCheck);
+						frame.getNotificationPanel().getBtnMessage().setText("  Utente registrato con successo!");
+
+						frame.getNotificationPanel().attivaNotifica();
 					}
 							
 				} catch (IOException e1) {
@@ -598,6 +614,14 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		                
 		                frame.getStopPanel().controllaUtente(true);
 		                frame.getRoutePanel().controllaUtente(true);
+
+						ImageIcon iconCheck = new ImageIcon("src/resources/check-notification.png");
+						Image scaledImageCheck = iconCheck.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+						ImageIcon newIconCheck = new ImageIcon(scaledImageCheck);
+						frame.getNotificationPanel().getBtnMessage().setIcon(newIconCheck);
+						frame.getNotificationPanel().getBtnMessage().setText("  Login effettuato con successo!");
+
+						frame.getNotificationPanel().attivaNotifica();
 
 		            } else {
 		            	
@@ -646,6 +670,13 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 				frame.getStopPanel().controllaUtente(false);
 				frame.getRoutePanel().controllaUtente(false);
 
+				ImageIcon iconCheck = new ImageIcon("src/resources/check-notification.png");
+				Image scaledImageCheck = iconCheck.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+				ImageIcon newIconCheck = new ImageIcon(scaledImageCheck);
+				frame.getNotificationPanel().getBtnMessage().setIcon(newIconCheck);
+				frame.getNotificationPanel().getBtnMessage().setText("  Logout effettuato con successo!");
+
+				frame.getNotificationPanel().attivaNotifica();
 			}
 		});
 	}
@@ -682,53 +713,126 @@ public class UserPanel extends JPanel implements PreferitiObserver {
         if (!lineePreferite.toString().equals("[]")) {
 
             for (int i = 0; i < lineePreferite.size(); i++) {
-            	
-            	String routeId = lineePreferite.get(i);
+
                 int y = i * 60;
 
-                JButton lineaBtn = new JButton(routeId);
-                
-                lineaBtn.setBounds(25, y, 50, 50);
-                lineaBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
-                lineaBtn.setBackground(Color.WHITE); 
-                lineaBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                lineaBtn.setBorder(BorderFactory.createEmptyBorder());
+				// Ottenimento della linea da lineePreferite
+            	String routeId = lineePreferite.get(i);
 
-                final Route[] lineaArray = new Route[1];    // Array finale per linea
+                final Route[] lineaArray = new Route[1];      // Array finale per linea
                 lineaArray[0] = frame.getDati().cercaLineaByID(routeId);
-                
-                for (ActionListener a : lineaBtn.getActionListeners()) {
-                	lineaBtn.removeActionListener(a);
-        		}
 
+
+				// JButton associato alla linea
+                JButton lineaBtn = new JButton();
+
+                lineaBtn.setBackground(new Color(130, 36, 51));
+                lineaBtn.setBorder(BorderFactory.createRaisedBevelBorder());
+				lineaBtn.setContentAreaFilled(false);
+				lineaBtn.setFocusPainted(false);
+                lineaBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+                lineaBtn.setBounds(25, y, 50, 50);
+
+
+				// Switch per la scelta dell'icona del lineaBtn in base al tipo di linea
+				switch (lineaArray[0].getType()) {
+					case 0:
+						ImageIcon iconTram = new ImageIcon("src/resources/tram.png");
+						Image scaledImageTram = iconTram.getImage().getScaledInstance(36, 36, Image.SCALE_SMOOTH);
+						ImageIcon newIconTram = new ImageIcon(scaledImageTram);
+						lineaBtn.setIcon(newIconTram);
+
+						break;
+
+					case 1:
+						switch (lineaArray[0].getShortName()) {
+							case "MEA":
+								ImageIcon iconMetroA = new ImageIcon("src/resources/metro-a-logo-withborder.png");
+								Image scaledImageMetroA = iconMetroA.getImage().getScaledInstance(48, 48, Image.SCALE_SMOOTH);
+								ImageIcon newIconMetroA = new ImageIcon(scaledImageMetroA);
+								lineaBtn.setIcon(newIconMetroA);
+
+								break;
+
+							case "MEB", "MEB1":
+								ImageIcon iconMetroB = new ImageIcon("src/resources/metro-b-logo-withborder.png");
+								Image scaledImageMetroB = iconMetroB.getImage().getScaledInstance(48, 48, Image.SCALE_SMOOTH);
+								ImageIcon newIconMetroB = new ImageIcon(scaledImageMetroB);
+								lineaBtn.setIcon(newIconMetroB);
+
+								break;
+
+							case "MEC":
+								ImageIcon iconMetroC = new ImageIcon("src/resources/metro-c-logo-withborder.png");
+								Image scaledImageMetroC = iconMetroC.getImage().getScaledInstance(48, 48, Image.SCALE_SMOOTH);
+								ImageIcon newIconMetroC = new ImageIcon(scaledImageMetroC);
+								lineaBtn.setIcon(newIconMetroC);
+
+								break;
+						}
+
+						break;
+
+					case 2:
+						ImageIcon iconTreno = new ImageIcon("src/resources/train.png");
+						Image scaledImageTreno = iconTreno.getImage().getScaledInstance(36, 36, Image.SCALE_SMOOTH);
+						ImageIcon newIconTreno = new ImageIcon(scaledImageTreno);
+						lineaBtn.setIcon(newIconTreno);
+
+						break;
+
+					case 3:
+						ImageIcon iconBus = new ImageIcon("src/resources/bus.png");
+						Image scaledImageBus = iconBus.getImage().getScaledInstance(36, 36, Image.SCALE_SMOOTH);
+						ImageIcon newIconBus = new ImageIcon(scaledImageBus);
+						lineaBtn.setIcon(newIconBus);
+
+						break;
+				}
+
+
+				// Rimozione di eventuali actionListener precedenti del lineaBtn (necessario per evitare overlap)
+                for (ActionListener a : lineaBtn.getActionListeners()) { lineaBtn.removeActionListener(a); }
+
+
+				// Funzionalità per il lineaBtn, che rimanderà al routePanel associato a tale linea
                 lineaBtn.addActionListener(new ActionListener() {
                 	public void actionPerformed(ActionEvent e) {
+
                 		if (lineaArray[0] != null) {
+
                 			frame.getRoutePanel().creaPannelloLinea(lineaArray[0]);
 							frame.getRoutePanel().controllaUtente(frame.getUtente().getIsLogged());
                             LineaPainter.costruisciLineaDaDisegnare(frame.getDati().getViaggiDaVisualizzare(lineaArray[0]).getFirst(), frame.getMappa(), frame.getDati());
-                        } else {
-                            System.err.println("Linea non trovata");
-                        }
+
+                        } else { System.err.println("Linea non trovata"); }
                     }
                 });
 
-                // Nome della linea o messaggio di errore
-                JLabel nomeLinea = new JLabel(lineaArray[0] != null ? lineaArray[0].getAgency().getName() + " - " + lineaArray[0].getShortName() : "Dati non disponibili");
+
+                // JLabel che ospiterà le informazioni principali della linea
+                JLabel nomeLinea = new JLabel();
+
+				if (lineaArray[0] != null) nomeLinea.setText("<html><font size='5'><b>" + lineaArray[0].getShortName() + "</b></font><br><font size='3'><b>" + lineaArray[0].getAgency().getName() + "</b></font></html>");
+				else nomeLinea.setText("Dati non disponibili.");
                 
                 nomeLinea.setFont(new Font("Arial Nova", Font.PLAIN, 16));
                 nomeLinea.setForeground(Color.WHITE);
-                nomeLinea.setBounds(85, y + 15, 250, 20);
+                nomeLinea.setBounds(85, y + 7, 250, 35);
 
+
+				// Aggiunta delle varie componenti al panelLineePreferite
                 panelLineePreferite.add(lineaBtn);
                 panelLineePreferite.add(nomeLinea);
             }
             
         } else {
-        	
+
+			// JLabel che indica l'assenza di linee preferite
         	JLabel lineeVuote = new JLabel("Nessuna linea preferita.");
         	
-        	lineeVuote.setFont(new Font("Arial Nova", Font.PLAIN, 16));
+        	lineeVuote.setFont(new Font("Arial Nova", Font.BOLD, 16));
         	lineeVuote.setForeground(Color.WHITE);
         	lineeVuote.setBounds(25, 0, 250, 20);
         	
@@ -740,54 +844,80 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 
 	        for (int i = 0; i < fermatePreferite.size(); i++) {
 	        	
-	        	String stopId = fermatePreferite.get(i);
 	            int y = i * 60;
-	
-	            JButton stopBtn = new JButton(stopId);
-	             
-	            stopBtn.setBounds(25, y, 50, 50);
-	            stopBtn.setFocusable(false);
-	            stopBtn.setFont(new Font("Arial Nova", Font.BOLD, 14));
-	            stopBtn.setBackground(Color.WHITE); 
-	            stopBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-	            stopBtn.setBorder(BorderFactory.createEmptyBorder());
-	
-	            final Stop[] fermata = new Stop[1]; // Usa un array per rendere la variabile finale
+
+				// Ottenimento della fermata da fermatePreferite
+	        	String stopId = fermatePreferite.get(i);
+
+	            final Stop[] fermata = new Stop[1];     // Array finale per fermata
 	            fermata[0] = frame.getDati().cercaFermataByID(stopId);
-	
+
+
+				// JButton associato alla fermata
+	            JButton stopBtn = new JButton();
+
+				stopBtn.setBackground(new Color(130, 36, 51));
+				stopBtn.setBorder(BorderFactory.createRaisedBevelBorder());
+				stopBtn.setContentAreaFilled(false);
+				stopBtn.setFocusPainted(false);
+				stopBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+	            stopBtn.setBounds(25, y, 50, 50);
+
+				ImageIcon iconFermata = new ImageIcon("src/resources/fermata-bianco.png");
+				Image scaledImageFermata = iconFermata.getImage().getScaledInstance(27, 36, Image.SCALE_SMOOTH);
+				ImageIcon newIconFermata = new ImageIcon(scaledImageFermata);
+				stopBtn.setIcon(newIconFermata);
+
+
+				// Rimozione di eventuali actionListener precedenti dello stopBtn (necessario per evitare overlap)
+				for (ActionListener a : stopBtn.getActionListeners()) { stopBtn.removeActionListener(a); }
+
+
+				// Funzionalità per lo stopBtn, che rimanderà allo stopPanel associato a tale fermata
 	            stopBtn.addActionListener(new ActionListener() {
 	            	public void actionPerformed(ActionEvent e) {
+
 	            		if (fermata[0] != null) {
+
 	            			frame.getStopPanel().creaPannelloFermata(fermata[0]);
 							frame.getStopPanel().controllaUtente(frame.getUtente().getIsLogged());
 	            			frame.getMappa().centraMappa(fermata[0].getLon(), fermata[0].getLat(), 2);
-	                    } else {
-	                        System.err.println("Fermata non trovata");
-	                    }
+
+	                    } else { System.err.println("Fermata non trovata"); }
 	                }
 	            });
-	
-	            JLabel nomeFermata = new JLabel(fermata[0] != null ? fermata[0].getName() : "Dati non disponibili");
+
+
+				// JLabel che ospiterà le informazioni principali della fermata
+	            JLabel nomeFermata = new JLabel();
+
+				if (fermata[0] != null) nomeFermata.setText("<html><font size='5'><b>" + fermata[0].getName() + "</b></font><br><font size='3'>ID: <b>" + fermata[0].getId().getId() + "</b></font></html>");
+				else nomeFermata.setText("Dati non disponibili.");
 	             
 	            nomeFermata.setFont(new Font("Arial Nova", Font.PLAIN, 16));
 	            nomeFermata.setForeground(Color.WHITE);
-	            nomeFermata.setBounds(85, y + 15, 250, 20);
-	
+	            nomeFermata.setBounds(85, y + 7, 250, 35);
+
+
+				// Aggiunta delle varie componenti al panelFermatePreferite
 	            panelFermatePreferite.add(stopBtn);
 	            panelFermatePreferite.add(nomeFermata);
 	        }
 	        
 	    } else {
-	    	
+
+			// JLabel che indica l'assenza di fermate preferite
 	    	JLabel fermateVuote = new JLabel("Nessuna fermata preferita.");
 	    	
-	    	fermateVuote.setFont(new Font("Arial Nova", Font.PLAIN, 16));
+	    	fermateVuote.setFont(new Font("Arial Nova", Font.BOLD, 16));
 	    	fermateVuote.setForeground(Color.WHITE);
 	    	fermateVuote.setBounds(25, 0, 250, 20);
 	    	
 	    	panelFermatePreferite.setPreferredSize(new Dimension(350, 100));
 	    	panelFermatePreferite.add(fermateVuote);
 	    }
+
 
 	    // JScrollPane che contiene le linee preferite dell'utente
 	    lineeScrollPane = new JScrollPane(panelLineePreferite);
@@ -804,7 +934,8 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	    lineeScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 	    
 	    UserPanel.this.add(lineeScrollPane);
-	
+
+
 	    // JScrollPane che contiene le fermate preferite dell'utente
 	    fermateScrollPane = new JScrollPane(panelFermatePreferite);
 	    
@@ -817,7 +948,8 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	    fermateScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 	    
 	    UserPanel.this.add(fermateScrollPane);
-	
+
+
 	    // Bottoni toggle per mostrare/nascondere i pannelli
 	    btnToggleLinee = new JButton("Linee preferite: ▲");
 	    
@@ -833,7 +965,8 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	
 	    UserPanel.this.add(btnToggleLinee);
 	    UserPanel.this.add(btnToggleFermate);
-	
+
+
 	    // Variabili di stato
 	    final boolean[] mostraLinee = {false};
 	    final boolean[] mostraFermate = {false};

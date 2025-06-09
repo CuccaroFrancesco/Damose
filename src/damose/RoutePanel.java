@@ -1127,11 +1127,11 @@ public class RoutePanel extends JPanel {
 			lblIdTargaVeicolo.setForeground(Color.WHITE);
 			lblIdTargaVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 14));
 			lblIdTargaVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
-			lblIdTargaVeicolo.setBounds(20, y, 150, 10);
+			lblIdTargaVeicolo.setBounds(20, y, 200, 15);
 
 			if (veicolo.getVehicle().hasLicensePlate()) lblIdTargaVeicolo.setText("<html>" +
-					"<div style='width: 150px;'>ID: <b>" + idVeicolo + "</b>   " +
-					"Targa: " + targaVeicolo + "</div>" +
+					"<div style='width: 150px;'>ID: <b>" + idVeicolo + "</b>   -   " +
+					"Targa: <b>" + targaVeicolo + "</b></div>" +
 					"</html>");
 
 			else lblIdTargaVeicolo.setText("<html><div style='width: 150px;'>ID: <b>" + idVeicolo + "</b></div></html>");
@@ -1142,7 +1142,7 @@ public class RoutePanel extends JPanel {
 			lblStatusFermataVeicolo.setForeground(new Color(210, 210, 210));
 			lblStatusFermataVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 12));
 			lblStatusFermataVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
-			lblStatusFermataVeicolo.setBounds(20, y + 13, 250, 14);
+			lblStatusFermataVeicolo.setBounds(20, y + 17, 250, 14);
 
 			switch (statusVeicolo) {
 				case 1:
@@ -1167,7 +1167,7 @@ public class RoutePanel extends JPanel {
 			lblPostiDisponibiliVeicolo.setForeground(new Color(210, 210, 210));
 			lblPostiDisponibiliVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 12));
 			lblPostiDisponibiliVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
-			lblPostiDisponibiliVeicolo.setBounds(20, y + 30, 250, 14);
+			lblPostiDisponibiliVeicolo.setBounds(20, y + 32, 250, 14);
 
 			switch (postiDisponibiliVeicolo) {
 				case 1:
