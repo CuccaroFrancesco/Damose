@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class StatsPanel extends JPanel {
@@ -80,7 +81,7 @@ public class StatsPanel extends JPanel {
     }
 
     // Funzione in caso di statistiche per la linea
-    public void creaPannelloStatistiche(Route linea) {
+    public void creaPannelloStatistiche(Route linea) throws IOException {
         this.setVisible(true);
 
         frame.getRoutePanel().setVisible(false);
@@ -236,5 +237,9 @@ public class StatsPanel extends JPanel {
         btnAgency.setIcon(newIconStop);
 
         this.add(btnAgency);
+    }
+
+    public void ottieniStatistiche(Route linea) {
+
     }
 }

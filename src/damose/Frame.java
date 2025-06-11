@@ -18,7 +18,7 @@ import javax.swing.SwingWorker;
 
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.painter.CompoundPainter;
-
+import org.onebusaway.gtfs.model.Route;
 
 
 public class Frame extends JFrame {
@@ -200,6 +200,7 @@ public class Frame extends JFrame {
 									dati.caricaVehiclePositionsGTFS();
 									dati.caricaTripUpdatesGTFS();
 									dati.caricaAlertGTFS();
+                                    dati.creaStorico();
 
 								} catch (Exception e) {
 
@@ -213,7 +214,7 @@ public class Frame extends JFrame {
 
 									e.printStackTrace();
 								}
-							}, 0, 30, TimeUnit.SECONDS);
+							}, 0, 45, TimeUnit.SECONDS);
 
 							return null;
 						}

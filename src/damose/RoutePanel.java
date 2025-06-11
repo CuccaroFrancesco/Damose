@@ -469,8 +469,12 @@ public class RoutePanel extends JPanel {
 		// Funzionalità per il pulsante btnStats, che permette di accedere al pannello con le statistiche relative alla linea
 		btnStats.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.getStatsPanel().creaPannelloStatistiche(linea);
-			}
+                try {
+                    frame.getStatsPanel().creaPannelloStatistiche(linea);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
 		});
 
 
