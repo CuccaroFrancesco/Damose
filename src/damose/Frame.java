@@ -35,6 +35,10 @@ public class Frame extends JFrame {
 	private Navbar navbar;
 	private Ricerca ricerca;
 	private CompoundPainter<JXMapViewer> painterGroup;
+
+	private int tripUpdatesStatus = 0;
+	private int vehiclePositionsStatus = 0;
+	private int alertStatus = 0;
 	
 	
 	// Costruttore dell'oggetto Frame
@@ -197,18 +201,28 @@ public class Frame extends JFrame {
 
 								try {
 
-									dati.caricaVehiclePositionsGTFS();
 									dati.caricaTripUpdatesGTFS();
+									tripUpdatesStatus = 2;
+
+									dati.caricaVehiclePositionsGTFS();
+									vehiclePositionsStatus = 2;
+
 									dati.caricaAlertGTFS();
+									alertStatus = 2;
+
                                     dati.creaStorico();
 
 								} catch (Exception e) {
+
+									if (Frame.this.dati.getTripUpdates() != null) tripUpdatesStatus = 1;
+									if (Frame.this.dati.getVehiclePositions() != null) vehiclePositionsStatus = 1;
+									if (Frame.this.dati.getAlert() != null) alertStatus = 1;
 
 									ImageIcon iconError = new ImageIcon("src/resources/error-notification.png");
 									Image scaledImageError = iconError.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 									ImageIcon newIconError = new ImageIcon(scaledImageError);
 									notificationPanel.getBtnMessage().setIcon(newIconError);
-									notificationPanel.getBtnMessage().setText("<html>&nbsp;&nbsp; Errore nel caricamento dei dati real-time. Controllare la connessione e<br>&nbsp;&nbsp; riprovare più tardi.</html>");
+									notificationPanel.getBtnMessage().setText("<html>&nbsp;&nbsp; Errore nel caricamento dei dati real-time. Controllare la connessione o<br>&nbsp;&nbsp; riprovare più tardi. Passaggio alla modalità offline...</html>");
 
 									notificationPanel.attivaNotifica();
 
@@ -296,6 +310,24 @@ public class Frame extends JFrame {
 	// Metodo get per il CompoundPainter assegnato all'istanza
 	public CompoundPainter<JXMapViewer> getPainterGroup() {
 		return this.painterGroup;
+	}
+
+
+	// Metodo get per la variabile tripUpdatesStatus
+	public int getTripUpdatesStatus() {
+		return this.tripUpdatesStatus;
+	}
+
+
+	// Metodo get per la variabile vehiclePositionsStatus
+	public int getVehiclePositionsStatus() {
+		return this.vehiclePositionsStatus;
+	}
+
+
+	// Metodo get per la variabile alertStatus
+	public int getAlertStatus() {
+		return this.alertStatus;
 	}
 
 

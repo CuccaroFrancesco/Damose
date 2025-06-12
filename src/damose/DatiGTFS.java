@@ -365,14 +365,6 @@ public class DatiGTFS {
 		return false;
 	}
 
-	// Metodo per capire se siamo online o offline
-	public boolean getConnectionStatus() {
-		if(this.getTripUpdates() == null) return false;
-		if (this.getVehiclePositions() == null) return false;
-		if (this.getAlert() == null) return false;
-		return true;
-	}
-
 
 // ---------------------------------------------------------------------------------------------
 
@@ -398,7 +390,11 @@ public class DatiGTFS {
 	// Metodo che restituisce tutti i mezzi che stanno percorrendo attualmente una linea
 	public List<VehiclePosition> getVeicoliPerLinea(Route linea) {
 
-		FeedMessage veicoli = getVehiclePositions();
+		FeedMessage veicoli;
+
+		if (this.vehiclePositions != null) veicoli = getVehiclePositions();
+		else return null;
+
 		List<VehiclePosition> veicoliDellaLinea = new ArrayList<>();
 
 		for (FeedEntity vp : veicoli.getEntityList()) {
@@ -503,8 +499,8 @@ public class DatiGTFS {
 						if (ritardo > -120 && ritardo < 120) stato = "PUNTUALE";
 
 						if (stopTimeUpdate.hasScheduleRelationship()) {
-							if (stopTimeUpdate.getScheduleRelationship() == TripUpdate.StopTimeUpdate.ScheduleRelationship.SKIPPED) stato = "SALTATA";
-							if (stopTimeUpdate.getScheduleRelationship() == TripUpdate.StopTimeUpdate.ScheduleRelationship.NO_DATA) stato = "NO_DATA";
+							if (stopTimeUpdate.getScheduleRelationship() == StopTimeUpdate.ScheduleRelationship.SKIPPED) stato = "SALTATA";
+							if (stopTimeUpdate.getScheduleRelationship() == StopTimeUpdate.ScheduleRelationship.NO_DATA) stato = "NO_DATA";
 						}
 
 						storicoFermata.put(tripId, stato);

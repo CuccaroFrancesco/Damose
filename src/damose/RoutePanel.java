@@ -23,6 +23,7 @@ import java.time.format.*;
 import org.onebusaway.gtfs.model.*;
 
 import com.google.transit.realtime.GtfsRealtime.*;
+import com.google.transit.realtime.GtfsRealtime.TripUpdate.*;
 
 
 
@@ -466,6 +467,7 @@ public class RoutePanel extends JPanel {
 		for (ActionListener a : btnTripLeft.getActionListeners()) { btnTripLeft.removeActionListener(a); }
 		for (ActionListener a : btnStats.getActionListeners()) { btnStats.removeActionListener(a); }
 
+
 		// Funzionalità per il pulsante btnStats, che permette di accedere al pannello con le statistiche relative alla linea
 		btnStats.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -507,14 +509,6 @@ public class RoutePanel extends JPanel {
 					lblViaggioVisualizzato.setText(indiceViaggioVisualizzato + 1 + "/" + getViaggiDaVisualizzare().size());
 
 					aggiornaVeicoli(linea);
-
-					ImageIcon iconCheck = new ImageIcon("src/resources/check-notification.png");
-					Image scaledImageCheck = iconCheck.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
-					ImageIcon newIconCheck = new ImageIcon(scaledImageCheck);
-					frame.getNotificationPanel().getBtnMessage().setIcon(newIconCheck);
-					frame.getNotificationPanel().getBtnMessage().setText("  Dati aggiornati con successo!");
-
-					frame.getNotificationPanel().attivaNotifica();
 
 				} catch (Exception ex) {
 
@@ -617,11 +611,8 @@ public class RoutePanel extends JPanel {
 		// Visualizzazione dei nomi (long name e short name) assegnati alla linea e del nome dell'agenzia che la gestisce
 		codiceLinea.setText(" " + shortName);
 
-		if (longName == null || longName.isEmpty()) {
-			agenziaENomeLinea.setText(agencyName);
-		} else {
-			agenziaENomeLinea.setText(agencyName + "  -  " + longName);
-		}
+		if (longName == null || longName.isEmpty()) agenziaENomeLinea.setText(agencyName);
+		else agenziaENomeLinea.setText(agencyName + "  -  " + longName);
 
 
 		// Funzionalità per il pulsante btnWebsite, che permette di accedere a un sito web con informazioni relative alla linea
@@ -829,20 +820,7 @@ public class RoutePanel extends JPanel {
 
 
 		// Chiamata al metodo aggiornaVeicoli per visualizzare i veicoli percorrenti la linea
-		try {
-
-			aggiornaVeicoli(linea);
-
-		} catch (Exception ex) {
-
-			ImageIcon iconError = new ImageIcon("src/resources/error-notification.png");
-			Image scaledImageError = iconError.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
-			ImageIcon newIconError = new ImageIcon(scaledImageError);
-			frame.getNotificationPanel().getBtnMessage().setIcon(newIconError);
-			frame.getNotificationPanel().getBtnMessage().setText("<html>&nbsp;&nbsp; Errore nel caricamento dei dati relativi ai veicoli. Controllare la<br>&nbsp;&nbsp; connessione e aggiornare il pannello più tardi.</html>");
-
-			frame.getNotificationPanel().attivaNotifica();
-		}
+		aggiornaVeicoli(linea);
 
 
 		// Aggiornamento del rendering del routePanel
@@ -887,13 +865,33 @@ public class RoutePanel extends JPanel {
 		Trip viaggioDaVisualizzare = viaggi.get(indice);
 
 
-		// Gestione della lista delle fermate associate al viaggioDaVisualizzare
+		// Ottenimento della lista delle fermate associate al viaggioDaVisualizzare
 		List<Stop> fermate = frame.getDati().getFermatePerViaggio(viaggioDaVisualizzare);
 		if (viaggioDaVisualizzare.getDirectionId().equals("1")) fermate = fermate.reversed();
 
 
 		// Ottenimento degli orari associati a ciascuna fermata
 		List<StopTime> listaStopTimes = frame.getDati().getDatiStatici().getStopTimesForTrip(viaggioDaVisualizzare);
+
+
+		// Gestione delle fermate del viaggioDaVisualizzare in base ai dati real-time
+		if (frame.getTripUpdatesStatus() != 0) {
+
+			for (FeedEntity entity : frame.getDati().getTripUpdates().getEntityList()) {
+				if (entity.hasTripUpdate() && entity.getTripUpdate().getTrip().getTripId().equals(viaggioDaVisualizzare.getId().getId())) {
+
+					TripUpdate tripUpdate = entity.getTripUpdate();
+					List<StopTimeUpdate> stopTimeUpdates = tripUpdate.getStopTimeUpdateList();
+
+					for (StopTimeUpdate stopTimeUpdate : stopTimeUpdates) {
+
+						if (stopTimeUpdate.hasScheduleRelationship() && stopTimeUpdate.getScheduleRelationship() == StopTimeUpdate.ScheduleRelationship.SKIPPED) {
+							fermate.remove(frame.getDati().cercaFermataByID(stopTimeUpdate.getStopId()));
+						}
+					}
+				}
+			}
+		}
 
 
 		// Ottenimento delle informazioni principali relative al viaggio visualizzato (capolinea e fascia oraria) e visualizzazione di tali informazioni
@@ -1093,140 +1091,182 @@ public class RoutePanel extends JPanel {
 		if (veicoliScrollPane != null) this.remove(veicoliScrollPane);
 
 
-		// Ottenimento dei veicoli che stanno percorrendo la linea
-		List<VehiclePosition> veicoliDellaLinea = frame.getDati().getVeicoliPerLinea(linea);
+		// Gestione della visualizzazione della sezione "Veicoli" in base a vehiclePositionsStatus
+		if (frame.getVehiclePositionsStatus() == 0) {
+
+			lblVeicoli.setVisible(false);
+
+			ImageIcon iconError = new ImageIcon("src/resources/error-notification.png");
+			Image scaledImageError = iconError.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+			ImageIcon newIconError = new ImageIcon(scaledImageError);
+			frame.getNotificationPanel().getBtnMessage().setIcon(newIconError);
+			frame.getNotificationPanel().getBtnMessage().setText("<html>&nbsp;&nbsp; Errore nel caricamento dei dati relativi ai veicoli. Controllare la connessione<br>&nbsp;&nbsp; e aggiornare il pannello più tardi.</html>");
+
+			frame.getNotificationPanel().attivaNotifica();
+
+		} else {
+
+			lblVeicoli.setVisible(true);
+
+			// Ottenimento dei veicoli che stanno percorrendo la linea
+			List<VehiclePosition> veicoliDellaLinea = frame.getDati().getVeicoliPerLinea(linea);
 
 
-		// Creazione del pannello veicoliPanel, che ospiterà la lista dei veicoli percorrenti la linea e le relative informazioni
-		veicoliPanel = new JPanel();
-		veicoliPanel.setLayout(null);
-		veicoliPanel.setBackground(new Color(130, 36, 51));
-		veicoliPanel.setPreferredSize(new Dimension(350, Math.max(150, veicoliDellaLinea.size() * 60 - 10)));
+			// Creazione del pannello veicoliPanel, che ospiterà la lista dei veicoli percorrenti la linea e le relative informazioni
+			veicoliPanel = new JPanel();
+			veicoliPanel.setLayout(null);
+			veicoliPanel.setBackground(new Color(130, 36, 51));
+			veicoliPanel.setPreferredSize(new Dimension(350, Math.max(150, veicoliDellaLinea.size() * 60 - 10)));
+
+			for (int i = 0; i < veicoliDellaLinea.size(); i++) {
+
+				int y = i * 60;
+
+				// Ottenimento del veicolo all'indice i
+				VehiclePosition veicolo = veicoliDellaLinea.get(i);
 
 
-		for (int i = 0; i < veicoliDellaLinea.size(); i++) {
-
-			int y = i * 60;
-
-			// Ottenimento del veicolo all'indice i
-			VehiclePosition veicolo = veicoliDellaLinea.get(i);
+				// Ottenimento di ID e targa (se disponibile) del veicolo
+				String idVeicolo = veicolo.getVehicle().getId();
+				String targaVeicolo = veicolo.getVehicle().getLicensePlate();
 
 
-			// Ottenimento di ID e targa (se disponibile) del veicolo
-			String idVeicolo = veicolo.getVehicle().getId();
-			String targaVeicolo = veicolo.getVehicle().getLicensePlate();
+				// Ottenimento dello status (fermo, in arrivo, ecc. ecc.) del veicolo e della fermata verso cui sta andando o nella quale sta sostando
+				int statusVeicolo = veicolo.getCurrentStatus().getNumber();
+				String fermataVeicolo = frame.getDati().cercaFermataByID(veicolo.getStopId()).getName();
 
 
-			// Ottenimento dello status (fermo, in arrivo, ecc. ecc.) del veicolo e della fermata verso cui sta andando o nella quale sta sostando
-			int statusVeicolo = veicolo.getCurrentStatus().getNumber();
-			String fermataVeicolo = frame.getDati().cercaFermataByID(veicolo.getStopId()).getName();
+				// Ottenimento della quantità di posti disponibili a bordo del veicolo (se disponibile)
+				int postiDisponibiliVeicolo = veicolo.getOccupancyStatus().getNumber();
 
 
-			// Ottenimento della quantità di posti disponibili a bordo del veicolo (se disponibile)
-			int postiDisponibiliVeicolo = veicolo.getOccupancyStatus().getNumber();
+				// JLabel che visualizza l'ID e la targa (se disponibile) del veicolo
+				JLabel lblIdTargaVeicolo = new JLabel();
+				lblIdTargaVeicolo.setForeground(Color.WHITE);
+				lblIdTargaVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 14));
+				lblIdTargaVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
+				lblIdTargaVeicolo.setBounds(20, y, 200, 15);
+
+				if (veicolo.getVehicle().hasLicensePlate() && !veicolo.getVehicle().getLicensePlate().equals("EMPTY")) lblIdTargaVeicolo.setText("<html>" +
+						"<div style='width: 150px;'>ID: <b>" + idVeicolo + "</b>   -   " +
+						"Targa: <b>" + targaVeicolo + "</b></div>" +
+						"</html>");
+				else lblIdTargaVeicolo.setText("<html><div style='width: 150px;'>ID: <b>" + idVeicolo + "</b></div></html>");
 
 
-			// JLabel che visualizza l'ID e la targa (se disponibile) del veicolo
-			JLabel lblIdTargaVeicolo = new JLabel();
-			lblIdTargaVeicolo.setForeground(Color.WHITE);
-			lblIdTargaVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 14));
-			lblIdTargaVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
-			lblIdTargaVeicolo.setBounds(20, y, 200, 15);
+				// JLabel che visualizza lo status e la fermata del veicolo
+				JLabel lblStatusFermataVeicolo = new JLabel();
+				lblStatusFermataVeicolo.setForeground(new Color(210, 210, 210));
+				lblStatusFermataVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 12));
+				lblStatusFermataVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
+				lblStatusFermataVeicolo.setBounds(20, y + 17, 250, 14);
 
-			if (veicolo.getVehicle().hasLicensePlate() && !veicolo.getVehicle().getLicensePlate().equals("EMPTY")) lblIdTargaVeicolo.setText("<html>" +
-																																				"<div style='width: 150px;'>ID: <b>" + idVeicolo + "</b>   -   " +
-																																				"Targa: <b>" + targaVeicolo + "</b></div>" +
-																																			 "</html>");
-			else lblIdTargaVeicolo.setText("<html><div style='width: 150px;'>ID: <b>" + idVeicolo + "</b></div></html>");
+				switch (statusVeicolo) {
+					case 1:
+						lblStatusFermataVeicolo.setText("Sta arrivando a " + fermataVeicolo);
+						break;
+
+					case 2:
+						lblStatusFermataVeicolo.setText("E' fermo a " + fermataVeicolo);
+						break;
+
+					case 3:
+						lblStatusFermataVeicolo.setText("Si dirige verso " + fermataVeicolo);
+						break;
+
+					default:
+						lblStatusFermataVeicolo.setText("Status e fermata sconosciuti.");
+						lblStatusFermataVeicolo.setFont(new Font("Arial Nova", Font.ITALIC, 12));
+						lblStatusFermataVeicolo.setForeground(new Color(202, 203, 202));
+						break;
+				}
 
 
-			// JLabel che visualizza lo status e la fermata del veicolo
-			JLabel lblStatusFermataVeicolo = new JLabel();
-			lblStatusFermataVeicolo.setForeground(new Color(210, 210, 210));
-			lblStatusFermataVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 12));
-			lblStatusFermataVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
-			lblStatusFermataVeicolo.setBounds(20, y + 17, 250, 14);
+				// JLabel che visualizza i posti disponibili a bordo del veicolo
+				JLabel lblPostiDisponibiliVeicolo = new JLabel();
+				lblPostiDisponibiliVeicolo.setForeground(new Color(210, 210, 210));
+				lblPostiDisponibiliVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 12));
+				lblPostiDisponibiliVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
+				lblPostiDisponibiliVeicolo.setBounds(20, y + 32, 250, 14);
 
-			switch (statusVeicolo) {
-				case 1:
-					lblStatusFermataVeicolo.setText("Sta arrivando a " + fermataVeicolo);
-					break;
-				case 2:
-					lblStatusFermataVeicolo.setText("E' fermo a " + fermataVeicolo);
-					break;
-				case 3:
-					lblStatusFermataVeicolo.setText("Si dirige verso " + fermataVeicolo);
-					break;
-				default:
-					lblStatusFermataVeicolo.setText("Status e fermata sconosciuti.");
-					lblStatusFermataVeicolo.setFont(new Font("Arial Nova", Font.ITALIC, 12));
-					lblStatusFermataVeicolo.setForeground(new Color(202, 203, 202));
-					break;
+				switch (postiDisponibiliVeicolo) {
+					case 1:
+						lblPostiDisponibiliVeicolo.setText("Posti disponibili: TUTTI");
+						break;
+
+					case 2:
+						lblPostiDisponibiliVeicolo.setText("Posti disponibili: MOLTI");
+						break;
+
+					case 3:
+						lblPostiDisponibiliVeicolo.setText("Posti disponibili: POCHI");
+						break;
+
+					case 4:
+						lblPostiDisponibiliVeicolo.setText("Posti disponibili: SOLO IN PIEDI");
+						break;
+
+					case 5:
+						lblPostiDisponibiliVeicolo.setText("Posti disponibili: POCHI IN PIEDI");
+						break;
+
+					case 6:
+						lblPostiDisponibiliVeicolo.setText("Posti disponibili: NESSUNO");
+						break;
+
+					case 7:
+						lblPostiDisponibiliVeicolo.setText("Non accetta passeggeri");
+						break;
+
+					default:
+						lblPostiDisponibiliVeicolo.setText("Nessuna informazione sui posti disponibili.");
+						lblPostiDisponibiliVeicolo.setFont(new Font("Arial Nova", Font.ITALIC, 12));
+						lblPostiDisponibiliVeicolo.setForeground(new Color(202, 203, 202));
+						break;
+				}
+
+
+				// Aggiunta delle varie componenti a veicoliPanel
+				veicoliPanel.add(lblIdTargaVeicolo);
+				veicoliPanel.add(lblStatusFermataVeicolo);
+				veicoliPanel.add(lblPostiDisponibiliVeicolo);
 			}
 
 
-			// JLabel che visualizza i posti disponibili a bordo del veicolo
-			JLabel lblPostiDisponibiliVeicolo = new JLabel();
-			lblPostiDisponibiliVeicolo.setForeground(new Color(210, 210, 210));
-			lblPostiDisponibiliVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 12));
-			lblPostiDisponibiliVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
-			lblPostiDisponibiliVeicolo.setBounds(20, y + 32, 250, 14);
+			// Creazione del pannello veicoliScrollPane, necessario per ospitare veicoliPanel e rendere quest'ultimo "scrollabile"
+			veicoliScrollPane = new JScrollPane(veicoliPanel);
 
-			switch (postiDisponibiliVeicolo) {
-				case 1:
-					lblPostiDisponibiliVeicolo.setText("Posti disponibili: TUTTI");
-					break;
+			veicoliScrollPane.setBorder(null);
+			veicoliScrollPane.setBounds(0, 605, 350, 200);
 
-				case 2:
-					lblPostiDisponibiliVeicolo.setText("Posti disponibili: MOLTI");
-					break;
+			veicoliScrollPane.getVerticalScrollBar().setUnitIncrement(12);
+			veicoliScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+			veicoliScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-				case 3:
-					lblPostiDisponibiliVeicolo.setText("Posti disponibili: POCHI");
-					break;
+			this.add(veicoliScrollPane);
 
-				case 4:
-					lblPostiDisponibiliVeicolo.setText("Posti disponibili: SOLO IN PIEDI");
-					break;
 
-				case 5:
-					lblPostiDisponibiliVeicolo.setText("Posti disponibili: POCHI IN PIEDI");
-					break;
+			// Se i vehiclePositions non sono aggiornati, visualizzazione di una notifica
+			if (frame.getVehiclePositionsStatus() == 1) {
 
-				case 6:
-					lblPostiDisponibiliVeicolo.setText("Posti disponibili: NESSUNO");
-					break;
+				ImageIcon iconError = new ImageIcon("src/resources/error-notification.png");
+				Image scaledImageError = iconError.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+				ImageIcon newIconError = new ImageIcon(scaledImageError);
+				frame.getNotificationPanel().getBtnMessage().setIcon(newIconError);
+				frame.getNotificationPanel().getBtnMessage().setText("<html>&nbsp;&nbsp; Dati relativi ai veicoli non aggiornati. Controllare la connessione e aggiornare<br>&nbsp;&nbsp; il pannello più tardi.</html>");
 
-				case 7:
-					lblPostiDisponibiliVeicolo.setText("Non accetta passeggeri");
-					break;
+				frame.getNotificationPanel().attivaNotifica();
+			} else {
 
-				default:
-					lblPostiDisponibiliVeicolo.setText("Nessuna informazione sui posti disponibili.");
-					lblPostiDisponibiliVeicolo.setFont(new Font("Arial Nova", Font.ITALIC, 12));
-					lblPostiDisponibiliVeicolo.setForeground(new Color(202, 203, 202));
-					break;
+				ImageIcon iconCheck = new ImageIcon("src/resources/check-notification.png");
+				Image scaledImageCheck = iconCheck.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+				ImageIcon newIconCheck = new ImageIcon(scaledImageCheck);
+				frame.getNotificationPanel().getBtnMessage().setIcon(newIconCheck);
+				frame.getNotificationPanel().getBtnMessage().setText("  Dati aggiornati con successo!");
+
+				frame.getNotificationPanel().attivaNotifica();
 			}
-
-
-			// Aggiunta delle varie componenti a veicoliPanel
-			veicoliPanel.add(lblIdTargaVeicolo);
-			veicoliPanel.add(lblStatusFermataVeicolo);
-			veicoliPanel.add(lblPostiDisponibiliVeicolo);
 		}
-
-
-		// Creazione del pannello veicoliScrollPane, necessario per ospitare veicoliPanel e rendere quest'ultimo "scrollabile"
-		veicoliScrollPane = new JScrollPane(veicoliPanel);
-
-		veicoliScrollPane.setBorder(null);
-		veicoliScrollPane.setBounds(0, 605, 350, 200);
-
-		veicoliScrollPane.getVerticalScrollBar().setUnitIncrement(12);
-		veicoliScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		veicoliScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-		this.add(veicoliScrollPane);
 
 
 		// Aggiornamento del rendering del routePanel
