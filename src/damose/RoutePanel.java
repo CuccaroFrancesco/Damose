@@ -1133,11 +1133,10 @@ public class RoutePanel extends JPanel {
 			lblIdTargaVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
 			lblIdTargaVeicolo.setBounds(20, y, 200, 15);
 
-			if (veicolo.getVehicle().hasLicensePlate()) lblIdTargaVeicolo.setText("<html>" +
-					"<div style='width: 150px;'>ID: <b>" + idVeicolo + "</b>   -   " +
-					"Targa: <b>" + targaVeicolo + "</b></div>" +
-					"</html>");
-
+			if (veicolo.getVehicle().hasLicensePlate() && !veicolo.getVehicle().getLicensePlate().equals("EMPTY")) lblIdTargaVeicolo.setText("<html>" +
+																																				"<div style='width: 150px;'>ID: <b>" + idVeicolo + "</b>   -   " +
+																																				"Targa: <b>" + targaVeicolo + "</b></div>" +
+																																			 "</html>");
 			else lblIdTargaVeicolo.setText("<html><div style='width: 150px;'>ID: <b>" + idVeicolo + "</b></div></html>");
 
 
@@ -1177,24 +1176,31 @@ public class RoutePanel extends JPanel {
 				case 1:
 					lblPostiDisponibiliVeicolo.setText("Posti disponibili: TUTTI");
 					break;
+
 				case 2:
 					lblPostiDisponibiliVeicolo.setText("Posti disponibili: MOLTI");
 					break;
+
 				case 3:
 					lblPostiDisponibiliVeicolo.setText("Posti disponibili: POCHI");
 					break;
+
 				case 4:
 					lblPostiDisponibiliVeicolo.setText("Posti disponibili: SOLO IN PIEDI");
 					break;
+
 				case 5:
 					lblPostiDisponibiliVeicolo.setText("Posti disponibili: POCHI IN PIEDI");
 					break;
+
 				case 6:
 					lblPostiDisponibiliVeicolo.setText("Posti disponibili: NESSUNO");
 					break;
+
 				case 7:
 					lblPostiDisponibiliVeicolo.setText("Non accetta passeggeri");
 					break;
+
 				default:
 					lblPostiDisponibiliVeicolo.setText("Nessuna informazione sui posti disponibili.");
 					lblPostiDisponibiliVeicolo.setFont(new Font("Arial Nova", Font.ITALIC, 12));

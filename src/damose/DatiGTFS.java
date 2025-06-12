@@ -18,6 +18,7 @@ import org.onebusaway.gtfs.model.*;
 import org.onebusaway.gtfs.serialization.GtfsReader;
 
 import com.google.transit.realtime.GtfsRealtime.*;
+import com.google.transit.realtime.GtfsRealtime.TripUpdate.*;
 
 
 
@@ -415,119 +416,109 @@ public class DatiGTFS {
 	// Metodo che genera gli storici per le fermate e per le linee
 	public void creaStorico() throws IOException {
 
-		// Itero per ogni entità dei tripUpdates
 		for (FeedEntity entity : tripUpdates.getEntityList()) {
 			if (entity.hasTripUpdate()) {
 
-				// Recupero variabili utili per dopo
+				// Ottenimento del singolo TripUpdate e di altre informazioni utili (viaggio, ID del viaggio e ID della linea di appartenenza)
 				TripUpdate tripUpdate = entity.getTripUpdate();
 				TripDescriptor trip = tripUpdate.getTrip();
 				String tripId = trip.getTripId();
 				String routeId = trip.getRouteId();
 
-				// Inizializzo il file della linea attuale trovata
+
+				// Inizializzazione del file di testo relativo alla linea trovata
 				File fileStoricoLinea = new File("files/linee/storico_" + routeId + ".txt");
+				if (!fileStoricoLinea.exists()) fileStoricoLinea.createNewFile();
 
-				if (!fileStoricoLinea.exists()) {
-					fileStoricoLinea.createNewFile();
-				}
 
-				// Riprendo lo storico già esistente per poterlo integrare
+				// Recupero dello storico già esistente
 				Map<String, String> storicoLinea = new HashMap<>();
+
 				try (Scanner sc = new Scanner(fileStoricoLinea)) {
 					while (sc.hasNextLine()) {
 						String riga = sc.nextLine();
 						String[] parole = riga.split(",");
-						if (parole.length == 2) {
-							storicoLinea.put(parole[0], parole[1]); // tripId, stato
-						}
+
+						if (parole.length == 2) storicoLinea.put(parole[0], parole[1]);     // tripId, stato
 					}
 				}
+
 
 				// Se non esiste il viaggio attuale inserisco nel file di testo il tripId con lo stato
 				if (!storicoLinea.containsKey(tripId)) {
 					String stato = "NO_DATA";
 					int ritardo = tripUpdate.getDelay();
+
 					if (ritardo >= 120) stato = "RITARDATO";
 					if (ritardo <= -120) stato = "ANTICIPO";
 					if (ritardo < 120 && ritardo > -120) stato = "PUNTUALE";
+
 					if (trip.hasScheduleRelationship()) {
-						if(trip.getScheduleRelationship() == TripDescriptor.ScheduleRelationship.CANCELED)
-							stato = "CANCELLATO";
-						if(trip.getScheduleRelationship() == TripDescriptor.ScheduleRelationship.ADDED)
-							stato = "EXTRA";
+						if (trip.getScheduleRelationship() == TripDescriptor.ScheduleRelationship.CANCELED) stato = "CANCELLATO";
+						if (trip.getScheduleRelationship() == TripDescriptor.ScheduleRelationship.ADDED) stato = "EXTRA";
 					}
 
 					storicoLinea.put(tripId, stato);
 				}
 
-				// Riscrivo lo storico della linea nel file di testo
+
+				// Riscrittura dello storico della linea nel corrispettivo file di testo
 				try (PrintWriter printWriterLinea = new PrintWriter(fileStoricoLinea)) {
-					for (Map.Entry<String, String> rigaSet : storicoLinea.entrySet()) {
-						printWriterLinea.println(rigaSet.getKey() + "," + rigaSet.getValue());
-					}
+					for (Map.Entry<String, String> entry : storicoLinea.entrySet()) { printWriterLinea.println(entry.getKey() + "," + entry.getValue()); }
 				}
 
-				// Recupero la lista dei stopTimeUpdates di questa entità
-				List<TripUpdate.StopTimeUpdate> stopTimeUpdates = tripUpdate.getStopTimeUpdateList();
 
-				// Vado a iterare su ogni stopTimeUpdate
-				for(TripUpdate.StopTimeUpdate stopTimeUpdate: stopTimeUpdates) {
+				// Recupero della lista di stopTimeUpdates dell'entità considerata
+				List<StopTimeUpdate> stopTimeUpdates = tripUpdate.getStopTimeUpdateList();
+
+
+				// Iterazione su ogni stopTimeUpdate della lista
+				for (StopTimeUpdate stopTimeUpdate: stopTimeUpdates) {
 
 					// Inizializzo il file di testo della fermata attuale a cui si riferisce lo stopTimeUpdates
 					String fermataId = stopTimeUpdate.getStopId();
 					File fileStoricoFermata = new File("files/fermate/storico_" + fermataId + ".txt");
 
-					if (!fileStoricoFermata.exists()) {
-						fileStoricoFermata.createNewFile();
-					}
+					if (!fileStoricoFermata.exists()) fileStoricoFermata.createNewFile();
 
-					// Creo lo storico della fermata attuale formata da tripId, stato
+					// Recupero dello storico già esistente
 					Map<String, String> storicoFermata = new HashMap<>();
+
 					try (Scanner sc = new Scanner(fileStoricoFermata)) {
 						while (sc.hasNextLine()) {
 							String riga = sc.nextLine();
 							String[] parole = riga.split(",");
-							if (parole.length == 2) {
-								storicoFermata.put(parole[0], parole[1]); // tripId, stato
-							}
+
+							if (parole.length == 2) storicoFermata.put(parole[0], parole[1]);     // tripId, stato
 						}
 					}
 
 					// Se non esiste la riga la creo con tripId e stato
-					if(!storicoFermata.containsKey(tripId)) {
+					if (!storicoFermata.containsKey(tripId)) {
 						String stato = "NO_DATA";
-
 						int ritardo = tripUpdate.getDelay();
+
 						if (ritardo >= 120) stato = "RITARDATO";
 						if (ritardo <= -120) stato = "ANTICIPO";
 						if (ritardo > -120 && ritardo < 120) stato = "PUNTUALE";
-						if(stopTimeUpdate.hasScheduleRelationship()) {
-							if(stopTimeUpdate.getScheduleRelationship() == TripUpdate.StopTimeUpdate.ScheduleRelationship.SKIPPED)
-								stato = "SALTATA";
-							if(stopTimeUpdate.getScheduleRelationship() == TripUpdate.StopTimeUpdate.ScheduleRelationship.NO_DATA)
-								stato = "NO_DATA";
+
+						if (stopTimeUpdate.hasScheduleRelationship()) {
+							if (stopTimeUpdate.getScheduleRelationship() == TripUpdate.StopTimeUpdate.ScheduleRelationship.SKIPPED) stato = "SALTATA";
+							if (stopTimeUpdate.getScheduleRelationship() == TripUpdate.StopTimeUpdate.ScheduleRelationship.NO_DATA) stato = "NO_DATA";
 						}
 
 						storicoFermata.put(tripId, stato);
 					}
 
-					// Riscrivo lo storico della fermata attuale nel suo file di testo
+					// Riscrittura dello storico della fermata nel corrispettivo file di testo
 					try (PrintWriter printWriterFermata = new PrintWriter(fileStoricoFermata)) {
-						for (Map.Entry<String, String> rigaSet : storicoFermata.entrySet()) {
-							printWriterFermata.println(rigaSet.getKey() + "," + rigaSet.getValue());
-						}
+						for (Map.Entry<String, String> rigaSet : storicoFermata.entrySet()) { printWriterFermata.println(rigaSet.getKey() + "," + rigaSet.getValue()); }
 					}
-
 				}
-
 			}
 		}
 
 		System.out.println("Storici creati per le fermate");
 		System.out.println("Storici creati per le linee");
-
 	}
-
-
 }

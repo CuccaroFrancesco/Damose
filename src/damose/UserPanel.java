@@ -85,7 +85,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		// Pulsante per aprire le impostazioni
 		btnSettings = new JButton();
 
-		btnSettings.setBounds(-55, 5, 160, 25);
+		btnSettings.setBounds(-55, 4, 160, 30);
 		btnSettings.setVisible(false);
 		btnSettings.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
@@ -97,7 +97,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		btnSettings.setContentAreaFilled(false);
 
 		ImageIcon iconSettings = new ImageIcon("src/resources/settings.png");
-		Image scaledImageSettings = iconSettings.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		Image scaledImageSettings = iconSettings.getImage().getScaledInstance(18, 18, Image.SCALE_SMOOTH);
 		ImageIcon newIconSettings = new ImageIcon(scaledImageSettings);
 		btnSettings.setIcon(newIconSettings);
 
@@ -390,7 +390,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		// Pulsante per effettuare il logout
 		btnLogout = new JButton(" Logout");
 		
-		btnLogout.setBounds(230, 5, 120, 25);
+		btnLogout.setBounds(230, 4, 120, 30);
 		btnLogout.setVisible(false);
 		btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
@@ -402,7 +402,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		btnLogout.setContentAreaFilled(false);
 		
 		ImageIcon iconLogout = new ImageIcon("src/resources/logout.png");
-        Image scaledImageLogout = iconLogout.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        Image scaledImageLogout = iconLogout.getImage().getScaledInstance(18, 18, Image.SCALE_SMOOTH);
         ImageIcon newIconLogout = new ImageIcon(scaledImageLogout);
         btnLogout.setIcon(newIconLogout);
         
