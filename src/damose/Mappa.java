@@ -26,7 +26,7 @@ public class Mappa extends JComponent {
 	
     private JXMapViewer mapViewer;
     private FileBasedLocalCache localCache;
-    private WaypointPainter<Waypoint> fermatePainter;
+    private WaypointPainter<Waypoint> fermateVisibiliPainter;
     private LineaPainter lineaPainter;
 
     
@@ -60,11 +60,11 @@ public class Mappa extends JComponent {
         
         
         // Creazione dei vari painter e aggiunta al painterGroup della mappa
-        this.fermatePainter = new WaypointPainter<Waypoint>();
+        this.fermateVisibiliPainter = new WaypointPainter<Waypoint>();
         this.lineaPainter = new LineaPainter(new ArrayList<>());
         
         this.frame.getPainterGroup().addPainter(lineaPainter);
-        this.frame.getPainterGroup().addPainter(fermatePainter);
+        this.frame.getPainterGroup().addPainter(fermateVisibiliPainter);
 
         
         // Impostazione della posizione e dello zoom iniziale
@@ -83,19 +83,15 @@ public class Mappa extends JComponent {
         mapViewer.addMouseWheelListener(zoomListener);
         
         mapViewer.addPropertyChangeListener("zoom", e -> {
-                if (frame.getRoutePanel().isVisible()) {
-                    aggiornaFermateVisibili(frame.getRoutePanel().getViaggiDaVisualizzare().get(frame.getRoutePanel().getIndiceViaggioVisualizzato()));
-                } else {
-                    aggiornaFermateVisibili();
-                }
+                if (frame.getRoutePanel().isVisible()) aggiornaFermateVisibili(frame.getRoutePanel().getViaggiDaVisualizzare().get(frame.getRoutePanel().getIndiceViaggioVisualizzato()));
+                else if (frame.getStopPanel().isVisible()) aggiornaFermateVisibili(frame.getDati().cercaFermataByID(frame.getStopPanel().getCodiceFermata().substring(4)));
+                else aggiornaFermateVisibili();
             });
 
         mapViewer.addPropertyChangeListener("centerPosition", e -> {
-                if (frame.getRoutePanel().isVisible()) {
-                    aggiornaFermateVisibili(frame.getRoutePanel().getViaggiDaVisualizzare().get(frame.getRoutePanel().getIndiceViaggioVisualizzato()));
-                } else {
-                    aggiornaFermateVisibili();
-                }
+                if (frame.getRoutePanel().isVisible()) aggiornaFermateVisibili(frame.getRoutePanel().getViaggiDaVisualizzare().get(frame.getRoutePanel().getIndiceViaggioVisualizzato()));
+                else if (frame.getStopPanel().isVisible()) aggiornaFermateVisibili(frame.getDati().cercaFermataByID(frame.getStopPanel().getCodiceFermata().substring(4)));
+                else aggiornaFermateVisibili();
             });
         
         
@@ -127,8 +123,8 @@ public class Mappa extends JComponent {
     
     
     // Metodo get per il painterGroup, ossia il gruppo ordinato di painter che disegna sulla mappa
-    public WaypointPainter<Waypoint> getFermatePainter() {
-    	return this.fermatePainter;
+    public WaypointPainter<Waypoint> getFermateVisibiliPainter() {
+    	return this.fermateVisibiliPainter;
     }
     
     
@@ -163,12 +159,6 @@ public class Mappa extends JComponent {
 
         int zoomAttuale = mapViewer.getZoom();
 
-        if (zoomAttuale > 3) {
-            fermatePainter.setWaypoints(Collections.emptySet());
-            mapViewer.repaint();
-            return;
-        }
-
         Set<Waypoint> puntatoriFermate = new HashSet<>();
 
         Rectangle mappaVisibile = mapViewer.getViewportBounds();
@@ -186,11 +176,18 @@ public class Mappa extends JComponent {
                 .filter(stop -> stop.getLon() >= Math.min(ovest, est) && stop.getLon() <= Math.max(ovest, est))
                 .toList();
 
-        for (Stop fermata : fermateVisibili) {
-            if (this.frame.getDati().getFermatePerViaggio(viaggio).contains(fermata)) puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
-        }
+        for (Stop fermata : fermateVisibili) { if (this.frame.getDati().getFermatePerViaggio(viaggio).contains(fermata)) puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon())); }
 
-        fermatePainter.setWaypoints(puntatoriFermate);
+        fermateVisibiliPainter.setWaypoints(puntatoriFermate);
+        mapViewer.repaint();
+    }
+
+    public void aggiornaFermateVisibili(Stop fermata) {
+
+        Set<Waypoint> puntatoreFermata = new HashSet<>();
+        puntatoreFermata.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
+
+        fermateVisibiliPainter.setWaypoints(puntatoreFermata);
         mapViewer.repaint();
     }
 
@@ -199,7 +196,7 @@ public class Mappa extends JComponent {
         int zoomAttuale = mapViewer.getZoom();
 
         if (zoomAttuale > 3) {
-            fermatePainter.setWaypoints(Collections.emptySet());
+            fermateVisibiliPainter.setWaypoints(Collections.emptySet());
             mapViewer.repaint();
             return;
         }
@@ -225,7 +222,7 @@ public class Mappa extends JComponent {
             puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
         }
 
-        fermatePainter.setWaypoints(puntatoriFermate);
+        fermateVisibiliPainter.setWaypoints(puntatoriFermate);
         mapViewer.repaint();
     }
 }

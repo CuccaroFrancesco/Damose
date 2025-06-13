@@ -156,7 +156,10 @@ public class RoutePanel extends JPanel {
 		btnClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RoutePanel.this.setVisible(false);
+
 				RoutePanel.this.frame.getMappa().getLineaPainter().setLineaDaDisegnare(new ArrayList<>(), null);
+				RoutePanel.this.frame.getMappa().aggiornaFermateVisibili();
+				RoutePanel.this.frame.getMappa().getMapViewer().repaint();
 			}
 		});
 

@@ -113,6 +113,9 @@ public class StopPanel extends JPanel {
         btnClose.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		StopPanel.this.setVisible(false);
+
+				StopPanel.this.frame.getMappa().aggiornaFermateVisibili();
+				StopPanel.this.frame.getMappa().getMapViewer().repaint();
         	}
         });
         
@@ -489,6 +492,15 @@ public class StopPanel extends JPanel {
 		// Aggiornamento del rendering dello stopPanel
 		this.revalidate();
 		this.repaint();
+	}
+
+
+// ---------------------------------------------------------------------------------------------
+
+
+	// Metodo get per l'ID della fermata
+	public String getCodiceFermata() {
+		return this.codiceFermata.getText();
 	}
 
 
