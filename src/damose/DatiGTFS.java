@@ -412,45 +412,61 @@ public class DatiGTFS {
 	}
 
 
+// ---------------------------------------------------------------------------------------------
+
+
 	// Metodo che genera gli storici per le fermate e per le linee
 	public void creaStorico() throws IOException {
 
-		// In caso non esiste creo le directory
+		// Creazione delle directory "linee" e "fermate", che ospiteranno gli storici delle rispettive entità
 		new File("files/linee").mkdirs();
 		new File("files/fermate").mkdirs();
 
-		LocalDate dataOggi = LocalDate.now();
-		LocalTime oraAttuale = LocalTime.now();
+
+		// Ottenimento dell'orario e della data attuali
+		LocalDateTime now = LocalDateTime.now();
+
 
 		// Mappa dei TripUpdate per accesso rapido
 		Map<String, TripUpdate> tripUpdatesMap = new HashMap<>();
+
 		for (FeedEntity entity : tripUpdates.getEntityList()) {
-			if (entity.hasTripUpdate())
-				tripUpdatesMap.put(entity.getTripUpdate().getTrip().getTripId(), entity.getTripUpdate());
+			if (entity.hasTripUpdate()) tripUpdatesMap.put(entity.getTripUpdate().getTrip().getTripId(), entity.getTripUpdate());
 		}
 
+
+		// Iterazione su tutte le linee in modo da creare/aggiornare lo storico relativo a ciascuna di esse
 		for (Route linea : this.getLinee()) {
-			Collection<Trip> viaggiProgrammati = this.getViaggiDaVisualizzare(linea);
+
+			// Ottenimento dei viaggi relativi alla linea
+			List<Trip> viaggiProgrammati = this.getViaggiDaVisualizzare(linea);
+
 
 			for (Trip viaggio : viaggiProgrammati) {
+
+				int ritardo = 0;
+				String stato = "NO_DATA";
+
+				// Ottenimento dell'ID del viaggio e degli stopTimes associati ad esso
 				String tripId = viaggio.getId().getId();
 				List<StopTime> stopTimes = datiStatici.getStopTimesForTrip(viaggio);
 
 				if (stopTimes.isEmpty()) continue;
 
+
+				// Ottenimento del primo e dell'ultimo stopTime, e conversione in LocalDateTime
 				StopTime primaFermata = stopTimes.getFirst();
 				StopTime ultimaFermata = stopTimes.getLast();
 
-				LocalTime orarioPartenza = LocalTime.ofSecondOfDay(primaFermata.getDepartureTime() >= 86400 ? primaFermata.getDepartureTime() - 86400 : primaFermata.getDepartureTime());
-				LocalTime orarioArrivo = LocalTime.ofSecondOfDay(ultimaFermata.getArrivalTime() >= 86400 ? ultimaFermata.getArrivalTime() - 86400 : ultimaFermata.getArrivalTime());
+				LocalDateTime orarioPartenza = LocalDate.now().atStartOfDay().plusSeconds(primaFermata.getDepartureTime());
+				LocalDateTime orarioArrivo = LocalDate.now().atStartOfDay().plusSeconds(ultimaFermata.getArrivalTime());
 
-				int ritardo = 0;
-				String stato = "NO_DATA";
 
-				// Verifico se il viaggio è in corso e non si trova nei tripUpdates
-				if (!oraAttuale.isBefore(orarioPartenza) && !oraAttuale.isAfter(orarioArrivo) && !tripUpdatesMap.containsKey(tripId)) {
-					stato = "PUNTUALE";
-				} else if (tripUpdatesMap.containsKey(tripId)) { // Se è presente nei tripUpdates
+				// Gestione dello stato e del ritardo del viaggio, sia in base alla sua presenza o meno nei tripUpdates, sia in base all'informazione eventualmente contenuta nel tripUpdate associato
+				if (!now.isBefore(orarioPartenza) && !now.isAfter(orarioArrivo) && !tripUpdatesMap.containsKey(tripId)) stato = "PUNTUALE";
+
+				else if (tripUpdatesMap.containsKey(tripId)) {
+
 					TripUpdate tripUpdate = tripUpdatesMap.get(tripId);
 					TripDescriptor tripDescriptor = tripUpdate.getTrip();
 
@@ -464,48 +480,60 @@ public class DatiGTFS {
 						if (tripDescriptor.getScheduleRelationship() == TripDescriptor.ScheduleRelationship.CANCELED) stato = "CANCELLATO";
 						if (tripDescriptor.getScheduleRelationship() == TripDescriptor.ScheduleRelationship.ADDED) stato = "EXTRA";
 					}
+
 				} else continue;
 
-				// Se non esiste creo il file
+
+				// Se non esiste già, creazione del file dello storico relativo alla linea
 				File fileLinea = new File("files/linee/storico_" + linea.getId().getId() + ".txt");
 				if (!fileLinea.exists()) fileLinea.createNewFile();
 
-				// Evito duplicati
+
+				// Controllo per evitare duplicati
 				boolean esiste = false;
+
 				try (BufferedReader reader = new BufferedReader(new FileReader(fileLinea))) {
 					String riga;
 					while ((riga = reader.readLine()) != null) {
-						if (riga.startsWith(tripId + "," + dataOggi + "," + orarioPartenza)) {
+						if (riga.startsWith(tripId + "," + now.toLocalDate() + "," + orarioPartenza)) {
 							esiste = true;
 							break;
 						}
 					}
 				}
 
-				// Scrivo tutto il file di testo
+
+				// Riscrittura dell'intero file di testo dello storico
 				if (!esiste) {
 					try (FileWriter fw = new FileWriter(fileLinea, true)) {
-						fw.write(tripId + "," + dataOggi + "," + orarioPartenza + "," + ritardo + "," + stato + "\n");
+						fw.write(tripId + "," + now.toLocalDate() + "," + orarioPartenza.toLocalTime() + "," + ritardo + "," + stato + "\n");
 					}
 				}
 
-				// Creo la mappa degli stopTimesUpdate per ricercare in modo rapido
+
+				// Mappa degli stopTimeUpdate per accesso rapido
 				Map<String, StopTimeUpdate> stopTimeUpdateMap = new HashMap<>();
+
 				if (tripUpdatesMap.containsKey(tripId)) {
-					for (StopTimeUpdate stopTimeUpdate : tripUpdatesMap.get(tripId).getStopTimeUpdateList()) {
-						stopTimeUpdateMap.put(stopTimeUpdate.getStopId(), stopTimeUpdate);
-					}
+					for (StopTimeUpdate stopTimeUpdate : tripUpdatesMap.get(tripId).getStopTimeUpdateList()) { stopTimeUpdateMap.put(stopTimeUpdate.getStopId(), stopTimeUpdate); }
 				}
 
-				for (StopTime stopTime: stopTimes) {
-					String stopId = stopTime.getStop().getId().getId();
-					LocalTime orarioFermata = LocalTime.ofSecondOfDay(stopTime.getArrivalTime() >= 86400 ? stopTime.getArrivalTime() - 86400 : stopTime.getArrivalTime());
+
+				// Iterazione sulla lista degli stopTimes del viaggio considerato
+				for (StopTime stopTime : stopTimes) {
 
 					int ritardoFermata = 0;
 					String statoFermata = "PUNTUALE";
 
-					// Se c'è un stopTimeUpdate per questa fermata e se c'è un tripUpdate per questo trip
-					if(stopTimeUpdateMap.containsKey(stopId) && tripUpdatesMap.containsKey(tripId)) {
+
+					// Ottenimento dell'ID della fermata e dell'orario di arrivo ad essa
+					String stopId = stopTime.getStop().getId().getId();
+					LocalDateTime orarioFermata = LocalDate.now().atStartOfDay().plusSeconds(stopTime.getArrivalTime());
+
+
+					// Gestione dello stato e del ritardo dell'arrivo alla fermata, in base all'informazione contenuta nello stopTimeUpdate associato
+					if (stopTimeUpdateMap.containsKey(stopId) && tripUpdatesMap.containsKey(tripId)) {
+
 						StopTimeUpdate stopTimeUpdate = stopTimeUpdateMap.get(stopId);
 						ritardoFermata = stopTimeUpdate.getArrival().getDelay();
 
@@ -517,35 +545,36 @@ public class DatiGTFS {
 							if (stopTimeUpdate.getScheduleRelationship() == StopTimeUpdate.ScheduleRelationship.SKIPPED) statoFermata = "SALTATA";
 							if (stopTimeUpdate.getScheduleRelationship() == StopTimeUpdate.ScheduleRelationship.NO_DATA) statoFermata = "NO_DATA";
 						}
-					}
-					else if(tripUpdatesMap.containsKey(tripId)) { // Se c'è solamente un tripUpdate, ma non un stopTimeUpdate
-						statoFermata = "NO_DATA";
-					}
 
-					// File della fermata creato se non esiste
+					} else if (tripUpdatesMap.containsKey(tripId))     // Se c'è solamente un tripUpdate, ma non uno stopTimeUpdate
+						statoFermata = "NO_DATA";
+
+
+					// Se non esiste già, creazione del file dello storico relativo alla fermata
 					File fileFermata = new File("files/fermate/storico_" + stopId + ".txt");
 					if (!fileFermata.exists()) fileFermata.createNewFile();
 
-					// Evito duplicati
+
+					// Controllo per evitare duplicati
 					boolean esisteStopTime = false;
+
 					try (BufferedReader reader = new BufferedReader(new FileReader(fileFermata))) {
 						String riga;
 						while ((riga = reader.readLine()) != null) {
-							if (riga.startsWith(tripId + "," + dataOggi + "," + orarioFermata)) {
+							if (riga.startsWith(tripId + "," + now.toLocalDate() + "," + orarioFermata)) {
 								esisteStopTime = true;
 								break;
 							}
 						}
 					}
 
-					// Riscrivo il file di testo
+
+					// Riscrittura dell'intero file di testo dello storico
 					if (!esisteStopTime) {
 						try (FileWriter fw = new FileWriter(fileFermata, true)) {
-							fw.write(tripId + "," + dataOggi + "," + orarioFermata + "," + ritardoFermata + "," + statoFermata + "\n");
+							fw.write(tripId + "," + now.toLocalDate() + "," + orarioFermata.toLocalTime() + "," + ritardoFermata + "," + statoFermata + "\n");
 						}
 					}
-
-
 				}
 			}
 		}
