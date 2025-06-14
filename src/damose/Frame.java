@@ -226,7 +226,7 @@ public class Frame extends JFrame {
 
 									notificationPanel.attivaNotifica();
 
-									e.printStackTrace();
+									System.err.println("Errore nel caricamento dei dati real-time. Controllare la connessione o riprovare più tardi.");
 								}
 							}, 0, 45, TimeUnit.SECONDS);
 

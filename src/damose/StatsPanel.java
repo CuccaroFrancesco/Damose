@@ -1,19 +1,38 @@
 package damose;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.block.BlockBorder;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PieLabelLinkStyle;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.title.LegendTitle;
+import org.jfree.chart.ui.HorizontalAlignment;
+import org.jfree.chart.ui.RectangleEdge;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
 import org.onebusaway.gtfs.model.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class StatsPanel extends JPanel {
 
     private Frame frame;
     private JButton btnClose, btnAgency;
     private JLabel codice, agenziaENome;
+    private ChartPanel chartPanel;
 
     // Costruttore generico
     public StatsPanel(Frame frame) {
@@ -109,7 +128,9 @@ public class StatsPanel extends JPanel {
             agenziaENome.setText(agencyName + "  -  " + longName);
         }
 
-        for (ActionListener a : btnClose.getActionListeners()) { btnClose.removeActionListener(a); }
+        for (ActionListener a : btnClose.getActionListeners()) {
+            btnClose.removeActionListener(a);
+        }
         btnClose.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 StatsPanel.this.setVisible(false);
@@ -195,6 +216,69 @@ public class StatsPanel extends JPanel {
 
                 break;
         }
+
+        if (this.chartPanel != null) {
+            this.remove(this.chartPanel);
+            this.chartPanel = null;
+        }
+
+
+        ArrayList<String> statistiche = this.ottieniStatistiche(linea);
+
+        int puntuali = Integer.valueOf(statistiche.get(2));
+        int ritardati = Integer.valueOf(statistiche.get(3));
+        int cancellati = Integer.valueOf(statistiche.get(4));
+        int duplicati = Integer.valueOf(statistiche.get(5));
+        int anticipati = Integer.valueOf(statistiche.get(6));
+
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        dataset.setValue("PUNTUALI", puntuali);
+        dataset.setValue("RITARDATI", ritardati);
+        dataset.setValue("CANCELLATI", cancellati);
+        dataset.setValue("DUPLICATI", duplicati);
+        dataset.setValue("ANTICIPATI", anticipati);
+
+        JFreeChart chart = ChartFactory.createPieChart(
+                null,
+                dataset,
+                true,
+                false,
+                false
+        );
+
+        PiePlot plot = (PiePlot) chart.getPlot();
+
+        plot.setSectionPaint("PUNTUALI", new Color(144, 238, 144));
+        plot.setSectionPaint("CANCELLATI", new Color(255, 102, 194));
+        plot.setSectionPaint("RITARDATI", new Color(255, 179, 71));
+        plot.setSectionPaint("DUPLICATI", new Color(180, 180, 180));
+        plot.setSectionPaint("ANTICIPATI", new Color(135, 206, 250));
+
+        plot.setShadowPaint(null);
+        plot.setSectionOutlinesVisible(false);
+
+        plot.setLabelFont(new Font("Arial Nova", Font.BOLD, 10));
+        plot.setLabelPaint(Color.WHITE);
+        plot.setLabelBackgroundPaint(null);
+        plot.setLabelOutlinePaint(null);
+        plot.setLabelShadowPaint(null);
+        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({1})"));
+
+        chart.setBackgroundPaint(new Color(130, 36, 51));
+        plot.setBackgroundPaint(new Color(130, 36, 51));
+        plot.setOutlineVisible(false);
+
+        LegendTitle legend = chart.getLegend();
+        legend.setItemPaint(Color.WHITE);
+        legend.setBackgroundPaint(new Color(0, 0, 0, 0));
+        legend.setFrame(BlockBorder.NONE);
+
+        chartPanel = new ChartPanel(chart);
+        chartPanel.setBorder(BorderFactory.createEmptyBorder());
+        chartPanel.setBackground(new Color(130, 36, 51));
+        chartPanel.setBounds(0, 150, 350, 350);
+
+        this.add(chartPanel);
     }
 
 
@@ -212,6 +296,11 @@ public class StatsPanel extends JPanel {
                 frame.getStopPanel().creaPannelloFermata(fermata);
             }
         });
+
+        if (this.chartPanel != null) {
+            this.remove(this.chartPanel);
+            this.chartPanel = null;
+        }
 
 
         // Variabili che contengono informazioni sulla fermata (nome, ID)
@@ -237,9 +326,193 @@ public class StatsPanel extends JPanel {
         btnAgency.setIcon(newIconStop);
 
         this.add(btnAgency);
+
+        ArrayList<String> statistiche = this.ottieniStatistiche(fermata);
+
+        int puntuali = Integer.valueOf(statistiche.get(2));
+        int ritardati = Integer.valueOf(statistiche.get(3));
+        int saltati = Integer.valueOf(statistiche.get(4));
+        int anticipati = Integer.valueOf(statistiche.get(6));
+        int noData = Integer.valueOf(statistiche.get(5));
+
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        dataset.setValue("PUNTUALI", puntuali);
+        dataset.setValue("RITARDATI", ritardati);
+        dataset.setValue("SALTATI", saltati);
+        dataset.setValue("ANTICIPATI", anticipati);
+        dataset.setValue("NO DATA", noData);
+
+        JFreeChart chart = ChartFactory.createPieChart(
+                null,
+                dataset,
+                true,
+                false,
+                false
+        );
+
+        PiePlot plot = (PiePlot) chart.getPlot();
+
+        plot.setSectionPaint("PUNTUALI", new Color(144, 238, 144));
+        plot.setSectionPaint("SALTATI", new Color(255, 102, 194));
+        plot.setSectionPaint("RITARDATI", new Color(255, 179, 71));
+        plot.setSectionPaint("NO DATA", new Color(180, 180, 180));
+        plot.setSectionPaint("ANTICIPATI", new Color(135, 206, 250));
+
+        plot.setShadowPaint(null);
+        plot.setSectionOutlinesVisible(false);
+
+        plot.setLabelFont(new Font("Arial Nova", Font.BOLD, 10));
+        plot.setLabelPaint(Color.WHITE);
+        plot.setLabelBackgroundPaint(null);
+        plot.setLabelOutlinePaint(null);
+        plot.setLabelShadowPaint(null);
+        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({1})"));
+
+        chart.setBackgroundPaint(new Color(130, 36, 51));
+        plot.setBackgroundPaint(new Color(130, 36, 51));
+        plot.setOutlineVisible(false);
+
+        LegendTitle legend = chart.getLegend();
+        legend.setItemPaint(Color.WHITE);
+        legend.setBackgroundPaint(new Color(0, 0, 0, 0));
+        legend.setFrame(BlockBorder.NONE);
+
+        chartPanel = new ChartPanel(chart);
+        chartPanel.setBorder(BorderFactory.createEmptyBorder());
+        chartPanel.setBackground(new Color(130, 36, 51));
+        chartPanel.setBounds(0, 150, 350, 350);
+
+        this.add(chartPanel);
+
+
+
     }
 
-    public void ottieniStatistiche(Route linea) {
+    public ArrayList<String> ottieniStatistiche(Route linea) {
+        File fileLinea = new File("files/linee/storico_" + linea.getId().getId() + ".txt");
+        ArrayList<String> statistiche = new ArrayList<>();
 
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileLinea))) {
+            int count = 0;
+            int sommaRitardi = 0;
+
+            int puntuali = 0;
+            int ritardati = 0;
+            int anticipati = 0;
+            int cancellati = 0;
+            int duplicati = 0;
+
+            String riga;
+            while ((riga = reader.readLine()) != null) {
+                String[] parti = riga.split(",");
+                if (parti.length >= 5) {
+                    String tripId = parti[0];
+                    String data = parti[1];
+                    String orario = parti[2];
+                    String ritardo = parti[3];
+                    String stato = parti[4];
+
+                    sommaRitardi += Integer.parseInt(ritardo);
+                    count += 1;
+
+                    switch (stato) {
+                        case "RITARDATO":
+                            ritardati += 1;
+                            break;
+                        case "PUNTUALE":
+                            puntuali += 1;
+                            break;
+                        case "CANCELLATO":
+                            cancellati += 1;
+                            break;
+                        case "EXTRA":
+                            duplicati += 1;
+                            break;
+                        case "ANTICIPO":
+                            anticipati += 1;
+                            break;
+                    }
+
+                }
+                else System.err.println("Riga non valida: "+ riga);
+            }
+
+            int media = sommaRitardi/count;
+            statistiche.add(String.valueOf(count));
+            statistiche.add(String.valueOf(media));
+            statistiche.add(String.valueOf(puntuali));
+            statistiche.add(String.valueOf(ritardati));
+            statistiche.add(String.valueOf(cancellati));
+            statistiche.add(String.valueOf(duplicati));
+            statistiche.add(String.valueOf(anticipati));
+
+            return statistiche;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ArrayList<String> ottieniStatistiche(Stop fermata) {
+        File fileFermata = new File("files/fermate/storico_" + fermata.getId().getId() + ".txt");
+        ArrayList<String> statistiche = new ArrayList<>();
+
+        int count = 0;
+        int sommaRitardi = 0;
+
+        int puntuali = 0;
+        int ritardati = 0;
+        int anticipati = 0;
+        int saltate = 0;
+        int noData = 0;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileFermata))) {
+            String riga;
+            while ((riga = reader.readLine()) != null) {
+                String[] parti = riga.split(",");
+                if (parti.length >= 5) {
+                    String tripId = parti[0];
+                    String data = parti[1];
+                    String orario = parti[2];
+                    String ritardo = parti[3];
+                    String stato = parti[4];
+
+                    sommaRitardi += Integer.parseInt(ritardo);
+                    count += 1;
+
+                    switch (stato) {
+                        case "RITARDATO":
+                            ritardati += 1;
+                            break;
+                        case "PUNTUALE":
+                            puntuali += 1;
+                            break;
+                        case "SALTATA":
+                            saltate += 1;
+                            break;
+                        case "NO_DATA":
+                            noData += 1;
+                            break;
+                        case "ANTICIPO":
+                            anticipati += 1;
+                            break;
+                    }
+
+                }
+                else System.err.println("Riga non valida: "+ riga);
+            }
+
+            int media = sommaRitardi/count;
+            statistiche.add(String.valueOf(count));
+            statistiche.add(String.valueOf(media));
+            statistiche.add(String.valueOf(puntuali));
+            statistiche.add(String.valueOf(ritardati));
+            statistiche.add(String.valueOf(saltate));
+            statistiche.add(String.valueOf(anticipati));
+            statistiche.add(String.valueOf(noData));
+
+            return statistiche;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
