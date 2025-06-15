@@ -232,8 +232,9 @@ public class StopPanel extends JPanel {
 	// Metodo che gestisce la creazione dello stopPanel
 	public void creaPannelloFermata(Stop fermata) {
 
-		// Visualizzazione dello stopPanel e disattivazione di un eventuale routePanel precedentemente visibile
+		// Visualizzazione dello stopPanel e disattivazione di eventuali routePanel e statsPanel precedentemente visibili
 		this.setVisible(true);
+
 		frame.getMappa().getLineaPainter().setLineaDaDisegnare(new ArrayList<>(), null);
 		frame.getRoutePanel().setVisible(false);
 		frame.getStatsPanel().setVisible(false);

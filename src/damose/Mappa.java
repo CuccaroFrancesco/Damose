@@ -83,15 +83,25 @@ public class Mappa extends JComponent {
         mapViewer.addMouseWheelListener(zoomListener);
         
         mapViewer.addPropertyChangeListener("zoom", e -> {
-                if (frame.getRoutePanel().isVisible()) aggiornaFermateVisibili(frame.getRoutePanel().getViaggiDaVisualizzare().get(frame.getRoutePanel().getIndiceViaggioVisualizzato()));
-                else if (frame.getStopPanel().isVisible()) aggiornaFermateVisibili(frame.getDati().cercaFermataByID(frame.getStopPanel().getCodiceFermata().substring(4)));
-                else aggiornaFermateVisibili();
+                if (frame.getRoutePanel().isVisible()) {
+                    aggiornaFermateVisibili(frame.getRoutePanel().getViaggiDaVisualizzare().get(frame.getRoutePanel().getIndiceViaggioVisualizzato()));
+                } else if (frame.getStopPanel().isVisible()) {
+                    aggiornaFermateVisibili(frame.getDati().cercaFermataByID(frame.getStopPanel().getCodiceFermata().substring(4)));
+                } else if (frame.getStatsPanel().isVisible()) {
+                    if (frame.getStatsPanel().getViaggioDaVisualizzare() != null) aggiornaFermateVisibili(frame.getStatsPanel().getViaggioDaVisualizzare());
+                    else if (frame.getStatsPanel().getFermataDaVisualizzare() != null) aggiornaFermateVisibili(frame.getStatsPanel().getFermataDaVisualizzare());
+                } else aggiornaFermateVisibili();
             });
 
         mapViewer.addPropertyChangeListener("centerPosition", e -> {
-                if (frame.getRoutePanel().isVisible()) aggiornaFermateVisibili(frame.getRoutePanel().getViaggiDaVisualizzare().get(frame.getRoutePanel().getIndiceViaggioVisualizzato()));
-                else if (frame.getStopPanel().isVisible()) aggiornaFermateVisibili(frame.getDati().cercaFermataByID(frame.getStopPanel().getCodiceFermata().substring(4)));
-                else aggiornaFermateVisibili();
+                if (frame.getRoutePanel().isVisible()) {
+                    aggiornaFermateVisibili(frame.getRoutePanel().getViaggiDaVisualizzare().get(frame.getRoutePanel().getIndiceViaggioVisualizzato()));
+                } else if (frame.getStopPanel().isVisible()) {
+                    aggiornaFermateVisibili(frame.getDati().cercaFermataByID(frame.getStopPanel().getCodiceFermata().substring(4)));
+                } else if (frame.getStatsPanel().isVisible()) {
+                    if (frame.getStatsPanel().getViaggioDaVisualizzare() != null) aggiornaFermateVisibili(frame.getStatsPanel().getViaggioDaVisualizzare());
+                    else if (frame.getStatsPanel().getFermataDaVisualizzare() != null) aggiornaFermateVisibili(frame.getStatsPanel().getFermataDaVisualizzare());
+                } else aggiornaFermateVisibili();
             });
         
         

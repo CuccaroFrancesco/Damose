@@ -418,145 +418,194 @@ public class DatiGTFS {
 	// Metodo che genera gli storici per le fermate e per le linee
 	public void creaStorico() throws IOException {
 
+		// Creazione delle directory "linee" e "fermate"
 		new File("files/linee").mkdirs();
 		new File("files/fermate").mkdirs();
 
+
+		// Ottenimento della data e dell'orario attuale
 		LocalDateTime now = LocalDateTime.now();
 
+
+		// Istanziamento di una HashMap per i tripUpdates, per facilitare un accesso rapido ai dati
 		Map<String, TripUpdate> tripUpdatesMap = new HashMap<>();
+
 		for (FeedEntity entity : tripUpdates.getEntityList()) {
-			if (entity.hasTripUpdate()) {
-				tripUpdatesMap.put(entity.getTripUpdate().getTrip().getTripId(), entity.getTripUpdate());
-			}
+			if (entity.hasTripUpdate()) tripUpdatesMap.put(entity.getTripUpdate().getTrip().getTripId(), entity.getTripUpdate());
 		}
 
+
+		// Istanziamento di varie HashMap, che ospiteranno
 		Map<String, Set<String>> lineeStorico = new HashMap<>();
 		Map<String, List<String>> lineeDaScrivere = new HashMap<>();
 
 		Map<String, Set<String>> fermateStorico = new HashMap<>();
 		Map<String, List<String>> fermateDaScrivere = new HashMap<>();
 
+
+		// Iterazione su tutte le linee
 		for (Route linea : this.getLinee()) {
 
+			// Ottenimento dell'ID della linea e del suo relativo file di storico
 			String lineaId = linea.getId().getId();
 			File fileLinea = new File("files/linee/storico_" + lineaId + ".txt");
 
-			// Carica contenuto esistente una sola volta
+
+			// Caricamento del contenuto esistente nel file relativo alla linea considerata
 			Set<String> storicoLinea = new HashSet<>();
+
 			if (fileLinea.exists()) {
+
 				try (BufferedReader reader = new BufferedReader(new FileReader(fileLinea))) {
 					String riga;
+
 					while ((riga = reader.readLine()) != null) {
 						String[] parti = riga.split(",", 4);
-						if (parti.length >= 3) {
-							storicoLinea.add(parti[0] + "," + parti[1] + "," + parti[2]);
-						}
+						if (parti.length >= 3) storicoLinea.add(parti[0] + "," + parti[1] + "," + parti[2]);
 					}
 				}
 			}
+
+
+			// Inserimento delle informazioni ottenute nella HashMap lineeStorico, e preparazione di lineeDaScrivere per l'inserimento di nuovi dati
 			lineeStorico.put(lineaId, storicoLinea);
 			lineeDaScrivere.put(lineaId, new ArrayList<>());
 
+
+			// Ottenimento dei viaggi relativi alla linea considerata
 			List<Trip> viaggiProgrammati = this.getViaggiDaVisualizzare(linea);
 
+
+			// Iterazione su tutti i viaggi della linea
 			for (Trip viaggio : viaggiProgrammati) {
 
+				int ritardo = 0;
+				String stato = "NO_DATA";
+
+
+				// Ottenimento dell'ID del viaggio e degli StopTime relativi ad esso
 				String tripId = viaggio.getId().getId();
 				List<StopTime> stopTimes = datiStatici.getStopTimesForTrip(viaggio);
+
 				if (stopTimes.isEmpty()) continue;
 
+
+				// Ottenimento del primo e dell'ultimo StopTime del viaggio, in modo da ricavare l'orario di inizio e di termine del viaggio
 				StopTime primaFermata = stopTimes.getFirst();
 				StopTime ultimaFermata = stopTimes.getLast();
 
 				LocalDateTime orarioPartenza = LocalDate.now().atStartOfDay().plusSeconds(primaFermata.getDepartureTime());
 				LocalDateTime orarioArrivo = LocalDate.now().atStartOfDay().plusSeconds(ultimaFermata.getArrivalTime());
 
-				int ritardo = 0;
-				String stato = "NO_DATA";
 
-				if (!now.isBefore(orarioPartenza) && !now.isAfter(orarioArrivo) && !tripUpdatesMap.containsKey(tripId)) {
-					stato = "PUNTUALE";
-				} else if (tripUpdatesMap.containsKey(tripId)) {
-					TripUpdate tu = tripUpdatesMap.get(tripId);
-					ritardo = tu.getDelay();
+				// Gestione del ritardo e dello stato del viaggio, sia in base alla sua presenza o meno nei tripUpdates, sia in base alle informazioni contenute nel relativo TripUpdate se presente
+				if (!now.isBefore(orarioPartenza) && !now.isAfter(orarioArrivo) && !tripUpdatesMap.containsKey(tripId)) stato = "PUNTUALE";
+
+				else if (tripUpdatesMap.containsKey(tripId)) {
+
+					TripUpdate tripUpdate = tripUpdatesMap.get(tripId);
+					ritardo = tripUpdate.getDelay();
+
 					if (ritardo >= 120) stato = "RITARDATO";
 					if (ritardo <= -180) stato = "ANTICIPO";
 					if (ritardo < 120 && ritardo > -180) stato = "PUNTUALE";
 
-					TripDescriptor desc = tu.getTrip();
+					TripDescriptor desc = tripUpdate.getTrip();
+
 					if (desc.hasScheduleRelationship()) {
 						switch (desc.getScheduleRelationship()) {
 							case CANCELED -> stato = "CANCELLATO";
 							case ADDED -> stato = "EXTRA";
 						}
 					}
-				} else {
-					continue;
-				}
 
+				} else continue;
+
+
+				// Aggiunta delle informazioni appena ottenute nell'HashMap contenente i dati da scrivere nei file di testo
 				String chiaveLinea = tripId + "," + now.toLocalDate() + "," + orarioPartenza.toLocalTime();
+
 				if (!lineeStorico.get(lineaId).contains(chiaveLinea)) {
 					String riga = chiaveLinea + "," + ritardo + "," + stato;
 					lineeDaScrivere.get(lineaId).add(riga);
 				}
 
+
+				// Istanziamento di una HashMap per gli stopTimeUpdates, per facilitare un accesso rapido ai dati
 				Map<String, StopTimeUpdate> stopTimeUpdateMap = new HashMap<>();
+
 				if (tripUpdatesMap.containsKey(tripId)) {
-					for (StopTimeUpdate stu : tripUpdatesMap.get(tripId).getStopTimeUpdateList()) {
-						stopTimeUpdateMap.put(stu.getStopId(), stu);
-					}
+					for (StopTimeUpdate stopTimeUpdate : tripUpdatesMap.get(tripId).getStopTimeUpdateList()) { stopTimeUpdateMap.put(stopTimeUpdate.getStopId(), stopTimeUpdate); }
 				}
 
+
+				// Iterazione sugli StopTime relativi al viaggio
 				for (StopTime stopTime : stopTimes) {
 
+					// Ottenimento della fermata relativa allo StopTime e del suo relativo file di storico
 					String stopId = stopTime.getStop().getId().getId();
 					File fileFermata = new File("files/fermate/storico_" + stopId + ".txt");
 
+
+					// Caricamento del contenuto esistente nel file relativo alla fermata considerata, e inserimento delle informazioni ottenute nella HashMap fermateStorico
 					fermateStorico.computeIfAbsent(stopId, k -> {
+
 						Set<String> storico = new HashSet<>();
 						if (fileFermata.exists()) {
+
 							try (BufferedReader reader = new BufferedReader(new FileReader(fileFermata))) {
 								String riga;
+
 								while ((riga = reader.readLine()) != null) {
 									String[] parti = riga.split(",", 4);
-									if (parti.length >= 3) {
-										storico.add(parti[0] + "," + parti[1] + "," + parti[2]);
-									}
+									if (parti.length >= 3) storico.add(parti[0] + "," + parti[1] + "," + parti[2]);
 								}
+
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
 						}
+
 						return storico;
 					});
 
+
+					// Preparazione di lineeDaScrivere per l'inserimento di nuovi dati
 					fermateDaScrivere.computeIfAbsent(stopId, k -> new ArrayList<>());
 
+
+					// Ottenimento dell'orario di arrivo alla fermata in relazione al viaggio considerato
 					LocalDateTime orarioFermata = LocalDate.now().atStartOfDay().plusSeconds(stopTime.getArrivalTime());
+
+
+					// Gestione del ritardo e dello stato dell'arrivo alla fermata in base alle informazioni contenute nel relativo StopTimeUpdate, se presente
 					String chiaveFermata = tripId + "," + now.toLocalDate() + "," + orarioFermata.toLocalTime();
 
 					if (!fermateStorico.get(stopId).contains(chiaveFermata)) {
+
 						int ritardoFermata = 0;
 						String statoFermata = "PUNTUALE";
 
 						if (stopTimeUpdateMap.containsKey(stopId)) {
-							StopTimeUpdate stu = stopTimeUpdateMap.get(stopId);
-							ritardoFermata = stu.getArrival().getDelay();
+
+							StopTimeUpdate stopTimeUpdate = stopTimeUpdateMap.get(stopId);
+							ritardoFermata = stopTimeUpdate.getArrival().getDelay();
 
 							if (ritardoFermata >= 120) statoFermata = "RITARDATO";
 							if (ritardoFermata <= -180) statoFermata = "ANTICIPO";
 							if (ritardoFermata < 120 && ritardoFermata > -180) statoFermata = "PUNTUALE";
 
-							if (stu.hasScheduleRelationship()) {
-								switch (stu.getScheduleRelationship()) {
+							if (stopTimeUpdate.hasScheduleRelationship()) {
+								switch (stopTimeUpdate.getScheduleRelationship()) {
 									case SKIPPED -> statoFermata = "SALTATA";
 									case NO_DATA -> statoFermata = "NO_DATA";
 								}
 							}
-						} else if (tripUpdatesMap.containsKey(tripId)) {
-							statoFermata = "NO_DATA";
-						}
 
+						} else if (tripUpdatesMap.containsKey(tripId)) statoFermata = "NO_DATA";
+
+
+						// Aggiunta delle informazioni appena ottenute nell'HashMap contenente i dati da scrivere nei file di testo
 						String riga = chiaveFermata + "," + ritardoFermata + "," + statoFermata;
 						fermateDaScrivere.get(stopId).add(riga);
 					}
@@ -564,10 +613,13 @@ public class DatiGTFS {
 			}
 		}
 
-		// Scrittura linee
+
+		// Scrittura dei dati relativi alle linee nei rispettivi file di testo
 		for (Map.Entry<String, List<String>> entry : lineeDaScrivere.entrySet()) {
+
 			File file = new File("files/linee/storico_" + entry.getKey() + ".txt");
 			if (!file.exists()) file.createNewFile();
+
 			try (FileWriter fw = new FileWriter(file, true)) {
 				for (String riga : entry.getValue()) {
 					fw.write(riga + "\n");
@@ -575,10 +627,13 @@ public class DatiGTFS {
 			}
 		}
 
-		// Scrittura fermate
+
+		// Scrittura dei dati relativi alle fermate nei rispettivi file di testo
 		for (Map.Entry<String, List<String>> entry : fermateDaScrivere.entrySet()) {
+
 			File file = new File("files/fermate/storico_" + entry.getKey() + ".txt");
 			if (!file.exists()) file.createNewFile();
+
 			try (FileWriter fw = new FileWriter(file, true)) {
 				for (String riga : entry.getValue()) {
 					fw.write(riga + "\n");
@@ -588,6 +643,5 @@ public class DatiGTFS {
 
 		System.out.println("\u001B[32mStorici creati per le fermate.\u001B[0m");
 		System.out.println("\u001B[32mStorici creati per le linee.\u001B[0m");
-
 	}
 }

@@ -5,13 +5,9 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
-import org.jfree.chart.plot.PieLabelLinkStyle;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.title.LegendTitle;
-import org.jfree.chart.ui.HorizontalAlignment;
-import org.jfree.chart.ui.RectangleEdge;
 import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.data.general.PieDataset;
 import org.onebusaway.gtfs.model.*;
 
 import javax.swing.*;
@@ -23,19 +19,21 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+
 
 public class StatsPanel extends JPanel {
 
     private Frame frame;
-    private JButton btnClose, btnAgency;
+    private JButton btnBack, btnAgency;
     private JLabel codice, agenziaENome;
     private ChartPanel chartPanel;
+    private Trip viaggioDaVisualizzare;
+    private Stop fermataDaVisualizzare;
 
-    // Costruttore generico
+
+    // Costruttore del pannello statsPanel
     public StatsPanel(Frame frame) {
+
         this.frame = frame;
 
         this.setBackground(new Color(130, 36, 51));
@@ -43,29 +41,29 @@ public class StatsPanel extends JPanel {
         this.setVisible(false);
 
 
-        // Pulsante per chiudere il lineaPanel
-        btnClose = new JButton(" Torna indietro");
+        // Pulsante per chiudere lo statsPanel
+        btnBack = new JButton(" Torna indietro");
 
-        btnClose.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        btnClose.setFont(new Font("Arial Nova", Font.BOLD, 14));
-        btnClose.setForeground(Color.WHITE);
+        btnBack.setFont(new Font("Arial Nova", Font.BOLD, 14));
+        btnBack.setForeground(Color.WHITE);
 
-        btnClose.setBorderPainted(false);
-        btnClose.setFocusPainted(false);
-        btnClose.setContentAreaFilled(false);
+        btnBack.setBorderPainted(false);
+        btnBack.setFocusPainted(false);
+        btnBack.setContentAreaFilled(false);
 
-        btnClose.setBounds(-25, 5, 200, 30);
+        btnBack.setBounds(-25, 5, 200, 30);
 
-        ImageIcon iconClose = new ImageIcon("src/resources/indietro.png");
-        Image scaledImageClose = iconClose.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-        ImageIcon newIconClose = new ImageIcon(scaledImageClose);
-        btnClose.setIcon(newIconClose);
+        ImageIcon iconBack = new ImageIcon("src/resources/indietro.png");
+        Image scaledImageBack = iconBack.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        ImageIcon newIconBack = new ImageIcon(scaledImageBack);
+        btnBack.setIcon(newIconBack);
 
-        this.add(btnClose);
+        this.add(btnBack);
 
 
-        // JLabel che contiene il nome (long name) della linea in questione
+        // JLabel che ospiterà il codice della linea o il nome della fermata relativi allo statsPanel
         codice = new JLabel("Codice linea / fermata");
 
         codice.setForeground(Color.WHITE);
@@ -75,7 +73,8 @@ public class StatsPanel extends JPanel {
 
         this.add(codice);
 
-        // JLabel che contiene il nome dell'agenzia che gestisce la linea in questione
+
+        // JLabel che ospiterà il nome dell'agenzia ed eventualmente il long name (linea), oppure l'ID (fermata)
         agenziaENome = new JLabel("Agenzia  -  Nome linea");
 
         agenziaENome.setForeground(new Color(210, 210, 210));
@@ -86,7 +85,8 @@ public class StatsPanel extends JPanel {
 
         this.add(agenziaENome);
 
-        // Pulsante per il logo dell'agenzia o il puntatore della fermata
+
+        // Pulsante per il logo dell'agenzia (linea), oppure per l'icona del puntatore (fermata)
         btnAgency = new JButton();
 
         btnAgency.setContentAreaFilled(false);
@@ -99,44 +99,70 @@ public class StatsPanel extends JPanel {
         this.add(btnAgency);
     }
 
-    // Funzione in caso di statistiche per la linea
+
+// ---------------------------------------------------------------------------------------------
+
+
+    // Metodo get per il viaggioDaVisualizzare associato allo statsPanel
+    public Trip getViaggioDaVisualizzare() {
+        return this.viaggioDaVisualizzare;
+    }
+
+
+    // Metodo get per la fermataDaVisualizzare associata allo statsPanel
+    public Stop getFermataDaVisualizzare() {
+        return this.fermataDaVisualizzare;
+    }
+
+
+// ---------------------------------------------------------------------------------------------
+
+
+    // Metodo che "costruisce" concretamente lo statsPanel in base alla linea del routePanel associato ad esso
     public void creaPannelloStatistiche(Route linea) throws IOException {
+
+        // Ottenimento del viaggio da visualizzare dal routePanel associato
+        this.viaggioDaVisualizzare = frame.getRoutePanel().getViaggiDaVisualizzare().get(frame.getRoutePanel().getIndiceViaggioVisualizzato());
+        this.fermataDaVisualizzare = null;
+
+
+        // Visualizzazione dello statsPanel e disattivazione di eventuali stopPanel e routePanel precedentemente visibili
         this.setVisible(true);
 
         frame.getRoutePanel().setVisible(false);
         frame.getStopPanel().setVisible(false);
 
+
+        // Rimozione di eventuali chartPanel precedenti (necessario per evitare overlap)
+        if (this.chartPanel != null) {
+            this.remove(this.chartPanel);
+            this.chartPanel = null;
+        }
+
+
+        // Rimozione di eventuali ActionListener precedenti dal btnBack (necessario per evitare overlap)
+        for (ActionListener a : btnBack.getActionListeners()) { btnBack.removeActionListener(a); }
+
+
+        // Funzionalità per il pulsante btnBack, che re-istanzia il routePanel associato
+        btnBack.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                StatsPanel.this.setVisible(false);
+                frame.getRoutePanel().creaPannelloLinea(linea);
+            }
+        });
+
+
         // Configurazione per l'icona dell'agenzia della linea
         btnAgency.setPreferredSize(new Dimension(50, 50));
         btnAgency.setBounds(20, 70, 50, 50);
+
 
         // Variabili che contengono informazioni sulla linea (agenzia, long name e short name)
         String agencyName = linea.getAgency().getName();
         String longName = linea.getLongName();
         String shortName = linea.getShortName();
-
-        // Visualizzazione dei nomi (long name e short name) assegnati alla linea e del nome dell'agenzia che la gestisce
-        codice.setText(" " + shortName);
-        codice.setFont(new Font("Arial Nova", Font.BOLD, 30));
-        codice.setBounds(80, 70, 180, 50);
-
-        agenziaENome.setBounds(20, 125, 300, 20);
-
-        if (longName == null || longName.isEmpty()) {
-            agenziaENome.setText(agencyName);
-        } else {
-            agenziaENome.setText(agencyName + "  -  " + longName);
-        }
-
-        for (ActionListener a : btnClose.getActionListeners()) {
-            btnClose.removeActionListener(a);
-        }
-        btnClose.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                StatsPanel.this.setVisible(false);
-                frame.getRoutePanel().creaPannelloLinea(linea);
-            }
-        });
 
 
         // Visualizzazione dell'eventuale logo dell'agenzia che gestisce la linea in base a agencyName
@@ -172,9 +198,19 @@ public class StatsPanel extends JPanel {
                 break;
         }
 
-        // Visualizzazione del tipo di linea (tram, metropolitana, treno, autobus) in base alla variabile routeType
-        int routeType = linea.getType();
 
+        // Visualizzazione dei nomi (long name e short name) assegnati alla linea e del nome dell'agenzia che la gestisce
+        codice.setText(" " + shortName);
+        codice.setFont(new Font("Arial Nova", Font.BOLD, 30));
+        codice.setBounds(80, 70, 180, 50);
+
+        agenziaENome.setBounds(20, 125, 300, 20);
+
+        if (longName == null || longName.isEmpty()) agenziaENome.setText(agencyName);
+        else agenziaENome.setText(agencyName + "  -  " + longName);
+
+
+        // Assegnamento speciale di icona al btnAgency e di testo a codice in caso la linea sia una metropolitana
         switch (shortName) {
             case "MEA":
                 ImageIcon iconMetroA = new ImageIcon("src/resources/metro-a-logo-withborder.png");
@@ -217,12 +253,8 @@ public class StatsPanel extends JPanel {
                 break;
         }
 
-        if (this.chartPanel != null) {
-            this.remove(this.chartPanel);
-            this.chartPanel = null;
-        }
 
-
+        // Ottenimento delle statistiche da visualizzare relativamente alla linea considerata
         ArrayList<String> statistiche = this.ottieniStatistiche(linea);
 
         int puntuali = Integer.valueOf(statistiche.get(2));
@@ -231,6 +263,8 @@ public class StatsPanel extends JPanel {
         int duplicati = Integer.valueOf(statistiche.get(5));
         int anticipati = Integer.valueOf(statistiche.get(6));
 
+
+        // Configurazione del DefaultPieDataset utilizzando i valori appena ottenuti
         DefaultPieDataset dataset = new DefaultPieDataset();
         dataset.setValue("PUNTUALI", puntuali);
         dataset.setValue("RITARDATI", ritardati);
@@ -238,6 +272,8 @@ public class StatsPanel extends JPanel {
         dataset.setValue("DUPLICATI", duplicati);
         dataset.setValue("ANTICIPATI", anticipati);
 
+
+        // Istanziamento del grafico a torta che ospiterà i dati ottenuti
         JFreeChart chart = ChartFactory.createPieChart(
                 null,
                 dataset,
@@ -248,11 +284,11 @@ public class StatsPanel extends JPanel {
 
         PiePlot plot = (PiePlot) chart.getPlot();
 
-        plot.setSectionPaint("PUNTUALI", new Color(144, 238, 144));
-        plot.setSectionPaint("CANCELLATI", new Color(255, 102, 194));
-        plot.setSectionPaint("RITARDATI", new Color(255, 179, 71));
-        plot.setSectionPaint("DUPLICATI", new Color(180, 180, 180));
-        plot.setSectionPaint("ANTICIPATI", new Color(135, 206, 250));
+        plot.setSectionPaint("PUNTUALI", new Color(57, 194, 57));
+        plot.setSectionPaint("CANCELLATI", new Color(220, 87, 166));
+        plot.setSectionPaint("RITARDATI", new Color(241, 124, 29));
+        plot.setSectionPaint("DUPLICATI", new Color(211, 211, 211));
+        plot.setSectionPaint("ANTICIPATI", new Color(92, 168, 215));
 
         plot.setShadowPaint(null);
         plot.setSectionOutlinesVisible(false);
@@ -282,25 +318,50 @@ public class StatsPanel extends JPanel {
     }
 
 
-    // Funzione in caso di statistiche per la fermata
+    // Metodo che "costruisce" concretamente lo statsPanel in base alla fermata dello stopPanel associato ad esso
     public void creaPannelloStatistiche(Stop fermata) {
+
+        // Ottenimento della fermata da visualizzare dallo stopPanel associato
+        this.viaggioDaVisualizzare = null;
+        this.fermataDaVisualizzare = frame.getDati().cercaFermataByID(frame.getStopPanel().getCodiceFermata().substring(4));
+
+
+        // Visualizzazione dello statsPanel e disattivazione di eventuali stopPanel e routePanel precedentemente visibili
         this.setVisible(true);
 
         frame.getRoutePanel().setVisible(false);
         frame.getStopPanel().setVisible(false);
 
-        for (ActionListener a : btnClose.getActionListeners()) { btnClose.removeActionListener(a); }
-        btnClose.addActionListener(new ActionListener() {
+
+        // Rimozione di eventuali chartPanel precedenti (necessario per evitare overlap)
+        if (this.chartPanel != null) {
+            this.remove(this.chartPanel);
+            this.chartPanel = null;
+        }
+
+
+        // Rimozione di eventuali ActionListener precedenti dal btnBack (necessario per evitare overlap)
+        for (ActionListener a : btnBack.getActionListeners()) { btnBack.removeActionListener(a); }
+
+
+        // Funzionalità per il pulsante btnBack, che re-istanzia lo stopPanel associato
+        btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
                 StatsPanel.this.setVisible(false);
                 frame.getStopPanel().creaPannelloFermata(fermata);
             }
         });
 
-        if (this.chartPanel != null) {
-            this.remove(this.chartPanel);
-            this.chartPanel = null;
-        }
+
+        // Configurazione per l'icona della fermata
+        btnAgency.setPreferredSize(new Dimension(40, 40));
+        btnAgency.setBounds(20, 70, 40, 40);
+
+        ImageIcon iconStop = new ImageIcon("src/resources/fermata-bianco.png");
+        Image scaledImageStop = iconStop.getImage().getScaledInstance(32, 40, Image.SCALE_SMOOTH);
+        ImageIcon newIconStop = new ImageIcon(scaledImageStop);
+        btnAgency.setIcon(newIconStop);
 
 
         // Variabili che contengono informazioni sulla fermata (nome, ID)
@@ -316,17 +377,8 @@ public class StatsPanel extends JPanel {
         codice.setFont(new Font("Arial Nova", Font.BOLD, 22));
         codice.setBounds(70, 65, 200, 50);
 
-        // Configurazione per l'icona della fermata
-        btnAgency.setPreferredSize(new Dimension(40, 40));
-        btnAgency.setBounds(20, 70, 40, 40);
 
-        ImageIcon iconStop = new ImageIcon("src/resources/fermata-bianco.png");
-        Image scaledImageStop = iconStop.getImage().getScaledInstance(32, 40, Image.SCALE_SMOOTH);
-        ImageIcon newIconStop = new ImageIcon(scaledImageStop);
-        btnAgency.setIcon(newIconStop);
-
-        this.add(btnAgency);
-
+        // Ottenimento delle statistiche da visualizzare relativamente alla fermata considerata
         ArrayList<String> statistiche = this.ottieniStatistiche(fermata);
 
         int puntuali = Integer.valueOf(statistiche.get(2));
@@ -335,6 +387,8 @@ public class StatsPanel extends JPanel {
         int anticipati = Integer.valueOf(statistiche.get(6));
         int noData = Integer.valueOf(statistiche.get(5));
 
+
+        // Configurazione del DefaultPieDataset utilizzando i valori appena ottenuti
         DefaultPieDataset dataset = new DefaultPieDataset();
         dataset.setValue("PUNTUALI", puntuali);
         dataset.setValue("RITARDATI", ritardati);
@@ -342,6 +396,8 @@ public class StatsPanel extends JPanel {
         dataset.setValue("ANTICIPATI", anticipati);
         dataset.setValue("NO DATA", noData);
 
+
+        // Istanziamento del grafico a torta che ospiterà i dati ottenuti
         JFreeChart chart = ChartFactory.createPieChart(
                 null,
                 dataset,
@@ -352,11 +408,11 @@ public class StatsPanel extends JPanel {
 
         PiePlot plot = (PiePlot) chart.getPlot();
 
-        plot.setSectionPaint("PUNTUALI", new Color(144, 238, 144));
-        plot.setSectionPaint("SALTATI", new Color(255, 102, 194));
-        plot.setSectionPaint("RITARDATI", new Color(255, 179, 71));
-        plot.setSectionPaint("NO DATA", new Color(180, 180, 180));
-        plot.setSectionPaint("ANTICIPATI", new Color(135, 206, 250));
+        plot.setSectionPaint("PUNTUALI", new Color(57, 194, 57));
+        plot.setSectionPaint("SALTATI", new Color(220, 87, 166));
+        plot.setSectionPaint("RITARDATI", new Color(241, 124, 29));
+        plot.setSectionPaint("NO DATA", new Color(211, 211, 211));
+        plot.setSectionPaint("ANTICIPATI", new Color(92, 168, 215));
 
         plot.setShadowPaint(null);
         plot.setSectionOutlinesVisible(false);
@@ -383,16 +439,24 @@ public class StatsPanel extends JPanel {
         chartPanel.setBounds(0, 150, 350, 350);
 
         this.add(chartPanel);
-
-
-
     }
 
+
+// ---------------------------------------------------------------------------------------------
+
+
+    // Metodo che restituisce le statistiche relative a una determinata linea
     public ArrayList<String> ottieniStatistiche(Route linea) {
+
+        // Ottenimento del file relativo alla linea, e istanziamento di un ArrayList che ospiterà le statistiche della stessa
         File fileLinea = new File("files/linee/storico_" + linea.getId().getId() + ".txt");
         ArrayList<String> statistiche = new ArrayList<>();
 
+
+        // Lettura del file relativo alla linea
         try (BufferedReader reader = new BufferedReader(new FileReader(fileLinea))) {
+
+            // Istanziamento di varie variabili che verranno utilizzate per il conteggio delle statistiche
             int count = 0;
             int sommaRitardi = 0;
 
@@ -402,10 +466,15 @@ public class StatsPanel extends JPanel {
             int cancellati = 0;
             int duplicati = 0;
 
+
+            // Lettura delle varie righe del file, e parsing dei dati trovati su di esse
             String riga;
+
             while ((riga = reader.readLine()) != null) {
+
                 String[] parti = riga.split(",");
                 if (parti.length >= 5) {
+
                     String tripId = parti[0];
                     String data = parti[1];
                     String orario = parti[2];
@@ -419,27 +488,34 @@ public class StatsPanel extends JPanel {
                         case "RITARDATO":
                             ritardati += 1;
                             break;
+
                         case "PUNTUALE":
                             puntuali += 1;
                             break;
+
                         case "CANCELLATO":
                             cancellati += 1;
                             break;
+
                         case "EXTRA":
                             duplicati += 1;
                             break;
+
                         case "ANTICIPO":
                             anticipati += 1;
                             break;
                     }
-
-                }
-                else System.err.println("Riga non valida: "+ riga);
+                } else System.err.println("Riga non valida: "+ riga);
             }
 
-            int media = sommaRitardi/count;
+
+            // Ottenimento del ritardo medio effettuato dai viaggi relativi alla linea considerata
+            int mediaRitardi = sommaRitardi / count;
+
+
+            // Aggiunta delle informazioni ottenute all'ArrayList statistiche, e restituzione di quest'ultimo
             statistiche.add(String.valueOf(count));
-            statistiche.add(String.valueOf(media));
+            statistiche.add(String.valueOf(mediaRitardi));
             statistiche.add(String.valueOf(puntuali));
             statistiche.add(String.valueOf(ritardati));
             statistiche.add(String.valueOf(cancellati));
@@ -447,29 +523,43 @@ public class StatsPanel extends JPanel {
             statistiche.add(String.valueOf(anticipati));
 
             return statistiche;
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+
+    // Metodo che restituisce le statistiche relative a una determinata fermata
     public ArrayList<String> ottieniStatistiche(Stop fermata) {
+
+        // Ottenimento del file relativo alla fermata, e istanziamento di un ArrayList che ospiterà le statistiche della stessa
         File fileFermata = new File("files/fermate/storico_" + fermata.getId().getId() + ".txt");
         ArrayList<String> statistiche = new ArrayList<>();
 
-        int count = 0;
-        int sommaRitardi = 0;
 
-        int puntuali = 0;
-        int ritardati = 0;
-        int anticipati = 0;
-        int saltate = 0;
-        int noData = 0;
-
+        // Lettura del file relativo alla fermata
         try (BufferedReader reader = new BufferedReader(new FileReader(fileFermata))) {
+
+            // Istanziamento di varie variabili che verranno utilizzate per il conteggio delle statistiche
+            int count = 0;
+            int sommaRitardi = 0;
+
+            int puntuali = 0;
+            int ritardati = 0;
+            int anticipati = 0;
+            int saltate = 0;
+            int noData = 0;
+
+
+            // Lettura delle varie righe del file, e parsing dei dati trovati su di esse
             String riga;
+
             while ((riga = reader.readLine()) != null) {
+
                 String[] parti = riga.split(",");
                 if (parti.length >= 5) {
+
                     String tripId = parti[0];
                     String data = parti[1];
                     String orario = parti[2];
@@ -483,27 +573,34 @@ public class StatsPanel extends JPanel {
                         case "RITARDATO":
                             ritardati += 1;
                             break;
+
                         case "PUNTUALE":
                             puntuali += 1;
                             break;
+
                         case "SALTATA":
                             saltate += 1;
                             break;
+
                         case "NO_DATA":
                             noData += 1;
                             break;
+
                         case "ANTICIPO":
                             anticipati += 1;
                             break;
                     }
-
-                }
-                else System.err.println("Riga non valida: "+ riga);
+                } else System.err.println("Riga non valida: "+ riga);
             }
 
-            int media = sommaRitardi/count;
+
+            // Ottenimento del ritardo medio effettuato dai viaggi relativi alla linea considerata
+            int mediaRitardi = sommaRitardi / count;
+
+
+            // Aggiunta delle informazioni ottenute all'ArrayList statistiche, e restituzione di quest'ultimo
             statistiche.add(String.valueOf(count));
-            statistiche.add(String.valueOf(media));
+            statistiche.add(String.valueOf(mediaRitardi));
             statistiche.add(String.valueOf(puntuali));
             statistiche.add(String.valueOf(ritardati));
             statistiche.add(String.valueOf(saltate));
@@ -511,6 +608,7 @@ public class StatsPanel extends JPanel {
             statistiche.add(String.valueOf(noData));
 
             return statistiche;
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

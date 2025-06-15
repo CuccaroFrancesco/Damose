@@ -428,8 +428,9 @@ public class RoutePanel extends JPanel {
 	// Metodo che "costruisce" concretamente il routePanel in base alla linea in questione
 	public void creaPannelloLinea(Route linea) {
 
-		// Visualizzazione del routePanel e disattivazione di un eventuale stopPanel precedentemente visibile
+		// Visualizzazione del routePanel e disattivazione di eventuali stopPanel e statsPanel precedentemente visibili
 		this.setVisible(true);
+
 		frame.getStopPanel().setVisible(false);
 		frame.getStatsPanel().setVisible(false);
 
