@@ -746,6 +746,7 @@ public class StopPanel extends JPanel {
 	public void controllaUtente(boolean isLogged) {
 		
 		if (isLogged) {
+
 			btnFavorite.setEnabled(true);
 			btnFavorite.setVisible(true);
 			
@@ -762,8 +763,15 @@ public class StopPanel extends JPanel {
 		    ImageIcon iconCuore = new ImageIcon(iconCuorePath);
 		    Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		    btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
-		    
+
+			btnFavorite.revalidate();
 		    btnFavorite.repaint();
+
+		} else {
+
+			btnFavorite.setEnabled(false);
+			btnFavorite.setVisible(false);
+			StopPanel.this.repaint();
 		}
 	}
 }

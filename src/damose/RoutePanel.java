@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import java.util.Iterator;
 import java.util.List;
 
 import java.time.*;
@@ -31,7 +32,7 @@ public class RoutePanel extends JPanel {
 
 	private Frame frame;
 
-	private JLabel codiceLinea, agenziaENomeLinea, lblPartenze, lblViaggioVisualizzato, lblViaggioVisualizzatoInfo, lblVeicoli;
+	private JLabel codiceLinea, agenziaENomeLinea, lblPartenze, lblViaggioVisualizzato, lblViaggioVisualizzatoInfo, lblVeicoli, lblNoInfoVeicoli;
 	private JButton btnClose, btnRefresh, btnStats, btnAgency, btnFavorite, btnWebsite, btnRouteType, btnTripLeft, btnTripRight;
 	private JPanel fermatePanel, veicoliPanel;
 	private JScrollPane fermateScrollPane, veicoliScrollPane;
@@ -111,7 +112,7 @@ public class RoutePanel extends JPanel {
 
 
 		// JLabel per le informazioni relative al viaggio visualizzato
-		lblViaggioVisualizzatoInfo = new JLabel("<html><div style='width: 280px;'>Capolinea:<br>Fascia oraria:</div></html");
+		lblViaggioVisualizzatoInfo = new JLabel();
 
 		lblViaggioVisualizzatoInfo.setForeground(new Color(210, 210, 210));
 		lblViaggioVisualizzatoInfo.setFont(new Font("Arial Nova", Font.ITALIC, 12));
@@ -132,6 +133,19 @@ public class RoutePanel extends JPanel {
 		lblVeicoli.setBounds(20, 550, 150, 50);
 
 		this.add(lblVeicoli);
+
+
+		// JLabel per il testo "Nessuna informazione sui veicoli della linea."
+		lblNoInfoVeicoli = new JLabel("<html>Nessuna informazione sui veicoli<br> della linea.</html>");
+
+		lblNoInfoVeicoli.setForeground(Color.WHITE);
+		lblNoInfoVeicoli.setFont(new Font("Arial Nova", Font.BOLD, 14));
+		lblNoInfoVeicoli.setFocusable(false);
+		lblNoInfoVeicoli.setHorizontalAlignment(SwingConstants.LEADING);
+
+		lblNoInfoVeicoli.setBounds(30, 605, 280, 30);
+
+		this.add(lblNoInfoVeicoli);
 
 
 		// Pulsante per chiudere il lineaPanel
@@ -538,7 +552,7 @@ public class RoutePanel extends JPanel {
 
 
 		// Chiamata al metodo controllaUtente() per verificare se visualizzare o meno il pulsante btnFavorite
-		this.controllaUtente(this.frame.getUtente().getIsLogged());
+		controllaUtente(this.frame.getUtente().getIsLogged());
 
 
 		// Funzionalità per il pulsante btnFavorite
@@ -878,7 +892,9 @@ public class RoutePanel extends JPanel {
 		List<StopTime> listaStopTimes = frame.getDati().getDatiStatici().getStopTimesForTrip(viaggioDaVisualizzare);
 
 
-		// Gestione delle fermate del viaggioDaVisualizzare in base ai dati real-time
+		// Gestione delle fermate e degli orari del viaggioDaVisualizzare in base ai dati real-time
+		int ritardo = 0;
+
 		if (frame.getTripUpdatesStatus() != 0) {
 
 			for (FeedEntity entity : frame.getDati().getTripUpdates().getEntityList()) {
@@ -887,12 +903,26 @@ public class RoutePanel extends JPanel {
 					TripUpdate tripUpdate = entity.getTripUpdate();
 					List<StopTimeUpdate> stopTimeUpdates = tripUpdate.getStopTimeUpdateList();
 
+					ritardo = tripUpdate.getDelay();
+
 					for (StopTimeUpdate stopTimeUpdate : stopTimeUpdates) {
 
 						if (stopTimeUpdate.hasScheduleRelationship() && stopTimeUpdate.getScheduleRelationship() == StopTimeUpdate.ScheduleRelationship.SKIPPED) {
-							fermate.remove(frame.getDati().cercaFermataByID(stopTimeUpdate.getStopId()));
+							String skippedStopId = stopTimeUpdate.getStopId();
+
+							Iterator<Stop> iterator = fermate.iterator();
+							while (iterator.hasNext()) {
+
+								Stop fermata = iterator.next();
+								if (fermata.getId().getId().equals(skippedStopId)) {
+									iterator.remove();
+									break;
+								}
+							}
 						}
 					}
+
+					break;
 				}
 			}
 		}
@@ -904,11 +934,11 @@ public class RoutePanel extends JPanel {
 		LocalTime orarioPartenza;
 		LocalTime orarioArrivo;
 
-		if (listaStopTimes.getFirst().getArrivalTime() >= 86400) orarioPartenza = LocalTime.ofSecondOfDay(listaStopTimes.getFirst().getArrivalTime() - 86400);
-		else orarioPartenza = LocalTime.ofSecondOfDay(listaStopTimes.getFirst().getArrivalTime());
+		if (listaStopTimes.getFirst().getArrivalTime() + ritardo >= 86400) orarioPartenza = LocalTime.ofSecondOfDay(listaStopTimes.getFirst().getArrivalTime() + ritardo - 86400);
+		else orarioPartenza = LocalTime.ofSecondOfDay(listaStopTimes.getFirst().getArrivalTime() + ritardo);
 
-		if (listaStopTimes.getLast().getArrivalTime() >= 86400) orarioArrivo = LocalTime.ofSecondOfDay(listaStopTimes.getLast().getArrivalTime() - 86400);
-		else orarioArrivo = LocalTime.ofSecondOfDay(listaStopTimes.getLast().getArrivalTime());
+		if (listaStopTimes.getLast().getArrivalTime() + ritardo >= 86400) orarioArrivo = LocalTime.ofSecondOfDay(listaStopTimes.getLast().getArrivalTime() + ritardo - 86400);
+		else orarioArrivo = LocalTime.ofSecondOfDay(listaStopTimes.getLast().getArrivalTime() + ritardo);
 
 		String fasciaOraria = orarioPartenza
 				.format(DateTimeFormatter.ofPattern("HH:mm"))
@@ -916,14 +946,36 @@ public class RoutePanel extends JPanel {
 				+ orarioArrivo
 				.format(DateTimeFormatter.ofPattern("HH:mm"));
 
-		lblViaggioVisualizzatoInfo.setText(String.format(
-				"<html><div style='width: 280px;'>"
-						+ "<b>Partenza</b>: %s<br>"
-						+ "<b>Arrivo</b>: %s<br>"
-						+ "<b>Fascia oraria</b>: %s"
-						+ "</div></html>",
-				partenza, arrivo, fasciaOraria
-		));
+		if (ritardo >= 120) {
+			lblViaggioVisualizzatoInfo.setText(String.format(
+					"<html><div style='width: 280px;'>"
+							+ "<b>Partenza</b>: %s<br>"
+							+ "<b>Arrivo</b>: %s<br>"
+							+ "<b>Fascia oraria</b>: %s"
+							+ "     (ritardo di %s minuti)"
+							+ "</div></html>",
+					partenza, arrivo, fasciaOraria, ritardo / 60
+			));
+		} else if (ritardo <= -120) {
+			lblViaggioVisualizzatoInfo.setText(String.format(
+					"<html><div style='width: 280px;'>"
+							+ "<b>Partenza</b>: %s<br>"
+							+ "<b>Arrivo</b>: %s<br>"
+							+ "<b>Fascia oraria</b>: %s"
+							+ "     (anticipo di %s minuti)"
+							+ "</div></html>",
+					partenza, arrivo, fasciaOraria, - ritardo / 60
+			));
+		} else {
+			lblViaggioVisualizzatoInfo.setText(String.format(
+					"<html><div style='width: 280px;'>"
+							+ "<b>Partenza</b>: %s<br>"
+							+ "<b>Arrivo</b>: %s<br>"
+							+ "<b>Fascia oraria</b>: %s"
+							+ "</div></html>",
+					partenza, arrivo, fasciaOraria
+			));
+		}
 
 
 		// Creazione e gestione del pannello fermatePanel, che ospiterà la lista delle fermate con i relativi orari
@@ -1027,7 +1079,7 @@ public class RoutePanel extends JPanel {
 
 							controllati.add(verifica);
 
-							int orarioArrivoFermataInSecondi = stopTime.getArrivalTime();
+							int orarioArrivoFermataInSecondi = stopTime.getArrivalTime() + ritardo;
 							LocalDateTime orarioArrivoFermata = LocalDate.now().atStartOfDay().plusSeconds(orarioArrivoFermataInSecondi);
 
 							if (!orarioArrivoFermata.isAfter(timeNow)) {
@@ -1050,7 +1102,7 @@ public class RoutePanel extends JPanel {
 
 						if (IdStopName.equals(verifica)) {
 
-							int orarioArrivoFermataInSecondi = stopTime.getArrivalTime();
+							int orarioArrivoFermataInSecondi = stopTime.getArrivalTime() + ritardo;
 							LocalDateTime orarioArrivoFermata = LocalDate.now().atStartOfDay().plusSeconds(orarioArrivoFermataInSecondi);
 
 							if (!orarioArrivoFermata.isAfter(timeNow)) {
@@ -1099,6 +1151,7 @@ public class RoutePanel extends JPanel {
 		if (frame.getVehiclePositionsStatus() == 0) {
 
 			lblVeicoli.setVisible(false);
+			lblNoInfoVeicoli.setVisible(false);
 
 			ImageIcon iconError = new ImageIcon("src/resources/error-notification.png");
 			Image scaledImageError = iconError.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
@@ -1117,137 +1170,146 @@ public class RoutePanel extends JPanel {
 
 
 			// Creazione del pannello veicoliPanel, che ospiterà la lista dei veicoli percorrenti la linea e le relative informazioni
-			veicoliPanel = new JPanel();
-			veicoliPanel.setLayout(null);
-			veicoliPanel.setBackground(new Color(130, 36, 51));
-			veicoliPanel.setPreferredSize(new Dimension(350, Math.max(150, veicoliDellaLinea.size() * 60 - 10)));
+			if (!veicoliDellaLinea.isEmpty()) {
 
-			for (int i = 0; i < veicoliDellaLinea.size(); i++) {
+				lblNoInfoVeicoli.setVisible(false);
 
-				int y = i * 60;
+				veicoliPanel = new JPanel();
+				veicoliPanel.setLayout(null);
+				veicoliPanel.setBackground(new Color(130, 36, 51));
+				veicoliPanel.setPreferredSize(new Dimension(350, Math.max(150, veicoliDellaLinea.size() * 60 - 10)));
 
-				// Ottenimento del veicolo all'indice i
-				VehiclePosition veicolo = veicoliDellaLinea.get(i);
+				for (int i = 0; i < veicoliDellaLinea.size(); i++) {
 
+					int y = i * 60;
 
-				// Ottenimento di ID e targa (se disponibile) del veicolo
-				String idVeicolo = veicolo.getVehicle().getId();
-				String targaVeicolo = veicolo.getVehicle().getLicensePlate();
-
-
-				// Ottenimento dello status (fermo, in arrivo, ecc. ecc.) del veicolo e della fermata verso cui sta andando o nella quale sta sostando
-				int statusVeicolo = veicolo.getCurrentStatus().getNumber();
-				String fermataVeicolo = frame.getDati().cercaFermataByID(veicolo.getStopId()).getName();
+					// Ottenimento del veicolo all'indice i
+					VehiclePosition veicolo = veicoliDellaLinea.get(i);
 
 
-				// Ottenimento della quantità di posti disponibili a bordo del veicolo (se disponibile)
-				int postiDisponibiliVeicolo = veicolo.getOccupancyStatus().getNumber();
+					// Ottenimento di ID e targa (se disponibile) del veicolo
+					String idVeicolo = veicolo.getVehicle().getId();
+					String targaVeicolo = veicolo.getVehicle().getLicensePlate();
 
 
-				// JLabel che visualizza l'ID e la targa (se disponibile) del veicolo
-				JLabel lblIdTargaVeicolo = new JLabel();
-				lblIdTargaVeicolo.setForeground(Color.WHITE);
-				lblIdTargaVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 14));
-				lblIdTargaVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
-				lblIdTargaVeicolo.setBounds(20, y, 200, 15);
-
-				if (veicolo.getVehicle().hasLicensePlate() && !veicolo.getVehicle().getLicensePlate().equals("EMPTY")) lblIdTargaVeicolo.setText("<html>" +
-						"<div style='width: 150px;'>ID: <b>" + idVeicolo + "</b>   -   " +
-						"Targa: <b>" + targaVeicolo + "</b></div>" +
-						"</html>");
-				else lblIdTargaVeicolo.setText("<html><div style='width: 150px;'>ID: <b>" + idVeicolo + "</b></div></html>");
+					// Ottenimento dello status (fermo, in arrivo, ecc. ecc.) del veicolo e della fermata verso cui sta andando o nella quale sta sostando
+					int statusVeicolo = veicolo.getCurrentStatus().getNumber();
+					String fermataVeicolo = frame.getDati().cercaFermataByID(veicolo.getStopId()).getName();
 
 
-				// JLabel che visualizza lo status e la fermata del veicolo
-				JLabel lblStatusFermataVeicolo = new JLabel();
-				lblStatusFermataVeicolo.setForeground(new Color(210, 210, 210));
-				lblStatusFermataVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 12));
-				lblStatusFermataVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
-				lblStatusFermataVeicolo.setBounds(20, y + 17, 250, 14);
+					// Ottenimento della quantità di posti disponibili a bordo del veicolo (se disponibile)
+					int postiDisponibiliVeicolo = veicolo.getOccupancyStatus().getNumber();
 
-				switch (statusVeicolo) {
-					case 1:
-						lblStatusFermataVeicolo.setText("Sta arrivando a " + fermataVeicolo);
-						break;
 
-					case 2:
-						lblStatusFermataVeicolo.setText("E' fermo a " + fermataVeicolo);
-						break;
+					// JLabel che visualizza l'ID e la targa (se disponibile) del veicolo
+					JLabel lblIdTargaVeicolo = new JLabel();
+					lblIdTargaVeicolo.setForeground(Color.WHITE);
+					lblIdTargaVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 14));
+					lblIdTargaVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
+					lblIdTargaVeicolo.setBounds(20, y, 200, 15);
 
-					case 3:
-						lblStatusFermataVeicolo.setText("Si dirige verso " + fermataVeicolo);
-						break;
+					if (veicolo.getVehicle().hasLicensePlate() && !veicolo.getVehicle().getLicensePlate().equals("EMPTY")) lblIdTargaVeicolo.setText("<html>" +
+							"<div style='width: 150px;'>ID: <b>" + idVeicolo + "</b>   -   " +
+							"Targa: <b>" + targaVeicolo + "</b></div>" +
+							"</html>");
+					else lblIdTargaVeicolo.setText("<html><div style='width: 150px;'>ID: <b>" + idVeicolo + "</b></div></html>");
 
-					default:
-						lblStatusFermataVeicolo.setText("Status e fermata sconosciuti.");
-						lblStatusFermataVeicolo.setFont(new Font("Arial Nova", Font.ITALIC, 12));
-						lblStatusFermataVeicolo.setForeground(new Color(202, 203, 202));
-						break;
+
+					// JLabel che visualizza lo status e la fermata del veicolo
+					JLabel lblStatusFermataVeicolo = new JLabel();
+					lblStatusFermataVeicolo.setForeground(new Color(210, 210, 210));
+					lblStatusFermataVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 12));
+					lblStatusFermataVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
+					lblStatusFermataVeicolo.setBounds(20, y + 17, 250, 14);
+
+					switch (statusVeicolo) {
+						case 1:
+							lblStatusFermataVeicolo.setText("Sta arrivando a " + fermataVeicolo);
+							break;
+
+						case 2:
+							lblStatusFermataVeicolo.setText("E' fermo a " + fermataVeicolo);
+							break;
+
+						case 3:
+							lblStatusFermataVeicolo.setText("Si dirige verso " + fermataVeicolo);
+							break;
+
+						default:
+							lblStatusFermataVeicolo.setText("Status e fermata sconosciuti.");
+							lblStatusFermataVeicolo.setFont(new Font("Arial Nova", Font.ITALIC, 12));
+							lblStatusFermataVeicolo.setForeground(new Color(202, 203, 202));
+							break;
+					}
+
+
+					// JLabel che visualizza i posti disponibili a bordo del veicolo
+					JLabel lblPostiDisponibiliVeicolo = new JLabel();
+					lblPostiDisponibiliVeicolo.setForeground(new Color(210, 210, 210));
+					lblPostiDisponibiliVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 12));
+					lblPostiDisponibiliVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
+					lblPostiDisponibiliVeicolo.setBounds(20, y + 32, 250, 14);
+
+					switch (postiDisponibiliVeicolo) {
+						case 1:
+							lblPostiDisponibiliVeicolo.setText("Posti disponibili: TUTTI");
+							break;
+
+						case 2:
+							lblPostiDisponibiliVeicolo.setText("Posti disponibili: MOLTI");
+							break;
+
+						case 3:
+							lblPostiDisponibiliVeicolo.setText("Posti disponibili: POCHI");
+							break;
+
+						case 4:
+							lblPostiDisponibiliVeicolo.setText("Posti disponibili: SOLO IN PIEDI");
+							break;
+
+						case 5:
+							lblPostiDisponibiliVeicolo.setText("Posti disponibili: POCHI IN PIEDI");
+							break;
+
+						case 6:
+							lblPostiDisponibiliVeicolo.setText("Posti disponibili: NESSUNO");
+							break;
+
+						case 7:
+							lblPostiDisponibiliVeicolo.setText("Non accetta passeggeri");
+							break;
+
+						default:
+							lblPostiDisponibiliVeicolo.setText("Nessuna informazione sui posti disponibili.");
+							lblPostiDisponibiliVeicolo.setFont(new Font("Arial Nova", Font.ITALIC, 12));
+							lblPostiDisponibiliVeicolo.setForeground(new Color(202, 203, 202));
+							break;
+					}
+
+
+					// Aggiunta delle varie componenti a veicoliPanel
+					veicoliPanel.add(lblIdTargaVeicolo);
+					veicoliPanel.add(lblStatusFermataVeicolo);
+					veicoliPanel.add(lblPostiDisponibiliVeicolo);
 				}
 
 
-				// JLabel che visualizza i posti disponibili a bordo del veicolo
-				JLabel lblPostiDisponibiliVeicolo = new JLabel();
-				lblPostiDisponibiliVeicolo.setForeground(new Color(210, 210, 210));
-				lblPostiDisponibiliVeicolo.setFont(new Font("Arial Nova", Font.PLAIN, 12));
-				lblPostiDisponibiliVeicolo.setHorizontalAlignment(SwingConstants.LEADING);
-				lblPostiDisponibiliVeicolo.setBounds(20, y + 32, 250, 14);
+				// Creazione del pannello veicoliScrollPane, necessario per ospitare veicoliPanel e rendere quest'ultimo "scrollabile"
+				veicoliScrollPane = new JScrollPane(veicoliPanel);
 
-				switch (postiDisponibiliVeicolo) {
-					case 1:
-						lblPostiDisponibiliVeicolo.setText("Posti disponibili: TUTTI");
-						break;
+				veicoliScrollPane.setBorder(null);
+				veicoliScrollPane.setBounds(0, 605, 350, 200);
 
-					case 2:
-						lblPostiDisponibiliVeicolo.setText("Posti disponibili: MOLTI");
-						break;
+				veicoliScrollPane.getVerticalScrollBar().setUnitIncrement(12);
+				veicoliScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+				veicoliScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-					case 3:
-						lblPostiDisponibiliVeicolo.setText("Posti disponibili: POCHI");
-						break;
+				this.add(veicoliScrollPane);
 
-					case 4:
-						lblPostiDisponibiliVeicolo.setText("Posti disponibili: SOLO IN PIEDI");
-						break;
+			} else {
 
-					case 5:
-						lblPostiDisponibiliVeicolo.setText("Posti disponibili: POCHI IN PIEDI");
-						break;
-
-					case 6:
-						lblPostiDisponibiliVeicolo.setText("Posti disponibili: NESSUNO");
-						break;
-
-					case 7:
-						lblPostiDisponibiliVeicolo.setText("Non accetta passeggeri");
-						break;
-
-					default:
-						lblPostiDisponibiliVeicolo.setText("Nessuna informazione sui posti disponibili.");
-						lblPostiDisponibiliVeicolo.setFont(new Font("Arial Nova", Font.ITALIC, 12));
-						lblPostiDisponibiliVeicolo.setForeground(new Color(202, 203, 202));
-						break;
-				}
-
-
-				// Aggiunta delle varie componenti a veicoliPanel
-				veicoliPanel.add(lblIdTargaVeicolo);
-				veicoliPanel.add(lblStatusFermataVeicolo);
-				veicoliPanel.add(lblPostiDisponibiliVeicolo);
+				lblNoInfoVeicoli.setVisible(true);
 			}
-
-
-			// Creazione del pannello veicoliScrollPane, necessario per ospitare veicoliPanel e rendere quest'ultimo "scrollabile"
-			veicoliScrollPane = new JScrollPane(veicoliPanel);
-
-			veicoliScrollPane.setBorder(null);
-			veicoliScrollPane.setBounds(0, 605, 350, 200);
-
-			veicoliScrollPane.getVerticalScrollBar().setUnitIncrement(12);
-			veicoliScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-			veicoliScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-			this.add(veicoliScrollPane);
 
 
 			// Se i vehiclePositions non sono aggiornati, visualizzazione di una notifica
@@ -1260,7 +1322,8 @@ public class RoutePanel extends JPanel {
 				frame.getNotificationPanel().getBtnMessage().setText("<html>&nbsp;&nbsp; Dati relativi ai veicoli non aggiornati. Controllare la connessione e aggiornare<br>&nbsp;&nbsp; il pannello più tardi.</html>");
 
 				frame.getNotificationPanel().attivaNotifica();
-			} else {
+
+			} else if (frame.getVehiclePositionsStatus() == 2) {
 
 				ImageIcon iconCheck = new ImageIcon("src/resources/check-notification.png");
 				Image scaledImageCheck = iconCheck.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
@@ -1323,6 +1386,7 @@ public class RoutePanel extends JPanel {
 			Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 			btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
 
+			btnFavorite.revalidate();
 			btnFavorite.repaint();
 
 		} else {
