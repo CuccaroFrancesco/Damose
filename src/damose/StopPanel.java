@@ -14,8 +14,15 @@ import java.awt.event.ActionListener;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import java.util.Map;
+
+import com.google.transit.realtime.GtfsRealtime.FeedEntity;
+import com.google.transit.realtime.GtfsRealtime.TripUpdate;
+import com.google.transit.realtime.GtfsRealtime.TripUpdate.StopTimeUpdate;
+
 
 
 public class StopPanel extends JPanel {
@@ -537,14 +544,45 @@ public class StopPanel extends JPanel {
 				if (i + 2 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 2));
 				if (i + 3 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 3));
 				if (i + 4 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 4));
-				if (i + 5 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 4));
-				if (i + 6 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 4));
-				if (i + 7 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 4));
-				if (i + 8 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 4));
-				if (i + 9 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 4));
+				if (i + 5 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 5));
+				if (i + 6 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 6));
+				if (i + 7 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 7));
+				if (i + 8 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 8));
+				if (i + 9 < arriviCopy.size()) arriviDaVisualizzare.add(arriviCopy.get(i + 9));
 
 				break;
 			}
+		}
+
+
+		// Aggiornamento degli arrivi in base ai dati real-time, se presenti
+		if (frame.getTripUpdatesStatus() != 0) {
+			Map<StopTime, Integer> ritardi = new HashMap<>();
+
+			for (StopTime arrivo : arriviDaVisualizzare) {
+
+				int ritardo = 0;
+
+				for (FeedEntity entity : frame.getDati().getTripUpdates().getEntityList()) {
+					if (entity.hasTripUpdate() && entity.getTripUpdate().getTrip().getTripId().equals(arrivo.getTrip().getId().getId())) {
+
+						TripUpdate tripUpdate = entity.getTripUpdate();
+
+						for (StopTimeUpdate stopTimeUpdate : tripUpdate.getStopTimeUpdateList()) {
+							if (stopTimeUpdate.getStopId().equals(arrivo.getStop().getId().getId()) && stopTimeUpdate.hasArrival() && stopTimeUpdate.getArrival().hasDelay()) {
+								ritardo = stopTimeUpdate.getArrival().getDelay();
+								break;
+							}
+						}
+
+						break;
+					}
+				}
+
+				ritardi.put(arrivo, ritardo);
+			}
+
+			arriviDaVisualizzare.sort((s1, s2) -> LocalDate.now().atStartOfDay().plusSeconds(s1.getArrivalTime() + ritardi.getOrDefault(s1, 0)).compareTo(LocalDate.now().atStartOfDay().plusSeconds(s2.getArrivalTime() + ritardi.getOrDefault(s2, 0))));
 		}
 
 
@@ -597,15 +635,22 @@ public class StopPanel extends JPanel {
 													"<span style='font-size:8px;'>MINUTI</span>" +
 												"</div>" +
 											  "</html>");
+			} else {
+				if (tempoMancante.toHours() < 2) lblTempoMancante.setText("<html>" +
+																			"<div style='text-align:center;'>" +
+																				"<span style='font-size:8px;'>TRA</span><br>" +
+																				"<span style='font-size:14px;'>1</span><br>" +
+																				"<span style='font-size:8px;'>ORA</span>" +
+																			"</div>" +
+						                                                  "</html>");
+				else lblTempoMancante.setText("<html>" +
+												"<div style='text-align:center;'>" +
+													"<span style='font-size:8px;'>TRA</span><br>" +
+													"<span style='font-size:14px;'>" + tempoMancante.toMinutes() + "</span><br>" +
+													"<span style='font-size:8px;'>ORE</span>" +
+												"</div>" +
+											  "</html>");
 			}
-
-			else lblTempoMancante.setText("<html>" +
-											"<div style='text-align:center;'>" +
-												"<span style='font-size:8px;'>TRA</span><br>" +
-												"<span style='font-size:14px;'>" + tempoMancante.toHours() + "</span><br>" +
-												"<span style='font-size:8px;'>ORE</span>" +
-											"</div>" +
-										  "</html>");
 
 			JLabel lblCodiceLinea = new JLabel();
 			lblCodiceLinea.setForeground(Color.WHITE);
