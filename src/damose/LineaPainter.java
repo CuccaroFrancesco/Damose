@@ -9,6 +9,7 @@ package damose;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ import org.jxmapviewer.painter.*;
 public class LineaPainter implements Painter<JXMapViewer> {
 	
 	private Color colore;
-	private boolean antiAlias = true;
 	private List<GeoPosition> linea;
 	
 	
@@ -66,9 +66,7 @@ public class LineaPainter implements Painter<JXMapViewer> {
         Rectangle rect = mappa.getViewportBounds();
         g.translate(-rect.x, -rect.y);
 
-        if (antiAlias) {
-        	g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        }
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         g.setColor(Color.BLACK);
         g.setStroke(new BasicStroke(5));
@@ -93,9 +91,7 @@ public class LineaPainter implements Painter<JXMapViewer> {
 		List<GeoPosition> puntiDaDisegnare = new ArrayList<>();
 
 		List<ShapePoint> shapePoints = new ArrayList<>(dati.getDatiStatici().getShapePointsForShapeId(viaggio.getShapeId()));
-	 	for (ShapePoint sp : shapePoints) {
-	 		puntiDaDisegnare.add(new GeoPosition(sp.getLat(), sp.getLon()));
-	 	}
+	 	for (ShapePoint sp : shapePoints) { puntiDaDisegnare.add(new GeoPosition(sp.getLat(), sp.getLon())); }
 
 	 	if (puntiDaDisegnare.isEmpty()) {
 	 	    System.out.println("Dati non ancora disponibili.");
@@ -131,11 +127,8 @@ public class LineaPainter implements Painter<JXMapViewer> {
 
 	 	if (colore != null) mapPanel.getLineaPainter().setLineaDaDisegnare(puntiDaDisegnare, colore);
 	 	else System.out.println("Colore non definito per la linea: " + viaggio.getRoute().getShortName());
-	
-    	int centro = puntiDaDisegnare.size() / 2;
-    	GeoPosition puntoCentrale = puntiDaDisegnare.get(centro);
-    	mapPanel.centraMappa(puntoCentrale.getLongitude(), puntoCentrale.getLatitude(), 4);
-    			
+
+		mapPanel.getMapViewer().zoomToBestFit(new HashSet<GeoPosition>(puntiDaDisegnare), 0.7);
         mapPanel.repaint();
     }
 	

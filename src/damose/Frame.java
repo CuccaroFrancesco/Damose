@@ -368,6 +368,8 @@ public class Frame extends JFrame {
 			else mapPanel.setBounds(0, 70, newWidth, newHeight - 70);
 		}
 
+		mapPanel.getMapViewer().setBounds(0, 0, mapPanel.getWidth(), mapPanel.getHeight());
+
 		if (notificationPanel.isVisible()) notificationPanel.setBounds(newWidth / 2 - 360, newHeight - 115, notificationPanel.getWidth(), notificationPanel.getHeight());
 	}
 	

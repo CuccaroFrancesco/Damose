@@ -28,6 +28,7 @@ public class Mappa extends JComponent {
     private FileBasedLocalCache localCache;
     private WaypointPainter<Waypoint> fermateVisibiliPainter;
     private LineaPainter lineaPainter;
+    private VeicoliPainter veicoliPainter;
 
     
     // Costruttore dell'oggetto Mappa
@@ -62,9 +63,11 @@ public class Mappa extends JComponent {
         // Creazione dei vari painter e aggiunta al painterGroup della mappa
         this.fermateVisibiliPainter = new WaypointPainter<Waypoint>();
         this.lineaPainter = new LineaPainter(new ArrayList<>());
+        this.veicoliPainter = new VeicoliPainter(new ArrayList<>());
         
         this.frame.getPainterGroup().addPainter(lineaPainter);
         this.frame.getPainterGroup().addPainter(fermateVisibiliPainter);
+        this.frame.getPainterGroup().addPainter(veicoliPainter);
 
         
         // Impostazione della posizione e dello zoom iniziale
@@ -132,15 +135,21 @@ public class Mappa extends JComponent {
     }
     
     
-    // Metodo get per il painterGroup, ossia il gruppo ordinato di painter che disegna sulla mappa
+    // Metodo get per il fermateVisibiliPainter
     public WaypointPainter<Waypoint> getFermateVisibiliPainter() {
     	return this.fermateVisibiliPainter;
     }
     
     
-    // Metodo get per il painterGroup, ossia il gruppo ordinato di painter che disegna sulla mappa
+    // Metodo get per il lineaPainter
     public LineaPainter getLineaPainter() {
     	return this.lineaPainter;
+    }
+
+
+    // Metodo get per il veicoliPainter
+    public VeicoliPainter getVeicoliPainter() {
+        return this.veicoliPainter;
     }
 
 
@@ -186,7 +195,9 @@ public class Mappa extends JComponent {
                 .filter(stop -> stop.getLon() >= Math.min(ovest, est) && stop.getLon() <= Math.max(ovest, est))
                 .toList();
 
-        for (Stop fermata : fermateVisibili) { if (this.frame.getDati().getFermatePerViaggio(viaggio).contains(fermata)) puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon())); }
+        for (Stop fermata : fermateVisibili) {
+            if (this.frame.getDati().getFermatePerViaggio(viaggio).contains(fermata)) puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
+        }
 
         fermateVisibiliPainter.setWaypoints(puntatoriFermate);
         mapViewer.repaint();

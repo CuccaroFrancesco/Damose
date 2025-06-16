@@ -21,6 +21,7 @@ import java.util.List;
 import java.time.*;
 import java.time.format.*;
 
+import org.jxmapviewer.viewer.GeoPosition;
 import org.onebusaway.gtfs.model.*;
 
 import com.google.transit.realtime.GtfsRealtime.*;
@@ -169,9 +170,12 @@ public class RoutePanel extends JPanel {
 
 		btnClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
 				RoutePanel.this.setVisible(false);
 
 				RoutePanel.this.frame.getMappa().getLineaPainter().setLineaDaDisegnare(new ArrayList<>(), null);
+				RoutePanel.this.frame.getMappa().getVeicoliPainter().setVeicoliDaDisegnare(new ArrayList<>());
+
 				RoutePanel.this.frame.getMappa().aggiornaFermateVisibili();
 				RoutePanel.this.frame.getMappa().getMapViewer().repaint();
 			}
@@ -1305,6 +1309,22 @@ public class RoutePanel extends JPanel {
 				veicoliScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 				this.add(veicoliScrollPane);
+
+
+				// Disegno dei veicoli sulla mappa
+				List<VeicoliWaypoint> veicoliDaDisegnare = new ArrayList<>();
+
+				for (VehiclePosition veicolo : veicoliDellaLinea) {
+
+					double latitudine = veicolo.getPosition().getLatitude();
+					double longitudine = veicolo.getPosition().getLongitude();
+					GeoPosition posizione = new GeoPosition(latitudine, longitudine);
+
+					VeicoliWaypoint veicoloDaDisegnare = new VeicoliWaypoint(veicolo, posizione, frame.getDati());
+					veicoliDaDisegnare.add(veicoloDaDisegnare);
+				}
+
+				frame.getMappa().getVeicoliPainter().setVeicoliDaDisegnare(veicoliDaDisegnare);
 
 			} else {
 

@@ -474,7 +474,10 @@ public class StopPanel extends JPanel {
 
 			btnLinea.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+
 					frame.getRoutePanel().creaPannelloLinea(linea);
+					frame.getRoutePanel().controllaUtente(frame.getUtente().getIsLogged());
+					LineaPainter.costruisciLineaDaDisegnare(frame.getDati().getViaggiDaVisualizzare(linea).get(frame.getRoutePanel().getIndiceViaggioVisualizzato()), frame.getMappa(), frame.getDati());
 				}
 			});
 
