@@ -1,3 +1,3 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:2aac9c029e0b72d7f5caf788e30718ee4ef27ee4050a9ff4c6d2c7e19bb8873a
-size 111
+0#4701-1,2025-06-16,01:30,0,PUNTUALE
+1#4382-1,2025-06-16,01:30,0,PUNTUALE
+1#4381-1,2025-06-16,01:30,0,PUNTUALE

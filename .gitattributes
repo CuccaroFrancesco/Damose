@@ -1,3 +1,9 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-*.txt filter=lfs diff=lfs merge=lfs -text
+staticGTFS/agency.txt filter=lfs diff=lfs merge=lfs -text
+staticGTFS/calendar_dates.txt filter=lfs diff=lfs merge=lfs -text
+staticGTFS/routes.txt filter=lfs diff=lfs merge=lfs -text
+staticGTFS/shapes.txt filter=lfs diff=lfs merge=lfs -text
+staticGTFS/stop_times.txt filter=lfs diff=lfs merge=lfs -text
+staticGTFS/stops.txt filter=lfs diff=lfs merge=lfs -text
+staticGTFS/trips.txt filter=lfs diff=lfs merge=lfs -text

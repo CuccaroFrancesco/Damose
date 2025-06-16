@@ -1,3 +1,6 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f6054392f367c81385df37b0c3e09c775890e06a1943a8bf5ba71dd602b5f05c
-size 358
+Nova,Francesco,Cuccaro,Banana04$,01-024-71-211-665,80785-70133
+rauliscu,Raul,Iscu Lacatusu,MiPiaceJava$01,01-211-024-92-71,70133-80785
+Rob,Roberta,Loreti,amoRaul!<3,53-71-92-01-211-024,70133-80785
+admin,admin,admin,admin,024-01-71-211-88-766-665-MEA-MEB-MEB1-MEC-3,80785-70133
+vuoto,vuoto,vuoto,vuoto,,
+DaniCal05,Daniele,Calisti,Banana04$,-60-344-337,
