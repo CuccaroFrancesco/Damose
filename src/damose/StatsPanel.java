@@ -25,7 +25,7 @@ public class StatsPanel extends JPanel {
 
     private Frame frame;
     private JButton btnBack, btnAgency;
-    private JLabel codice, agenziaENome;
+    private JLabel codice, agenziaENome, lblDettagli, lblExtra;
     private ChartPanel chartPanel;
     private Trip viaggioDaVisualizzare;
     private Stop fermataDaVisualizzare;
@@ -97,6 +97,29 @@ public class StatsPanel extends JPanel {
         btnAgency.setFocusable(false);
 
         this.add(btnAgency);
+
+
+        // Titolo per statistiche extra
+        lblDettagli = new JLabel("Dettagli:");
+
+        lblDettagli.setForeground(Color.WHITE);
+        lblDettagli.setFont(new Font("Arial Nova", Font.BOLD, 22));
+        lblDettagli.setFocusable(false);
+
+        lblDettagli.setBounds(10, 520, 300, 30);
+
+        this.add(lblDettagli);
+
+        // Testo per i dettagli extra
+        lblExtra= new JLabel();
+
+        lblExtra.setForeground(Color.WHITE);
+        lblExtra.setFont(new Font("Arial Nova", Font.PLAIN, 15));
+        lblExtra.setFocusable(false);
+
+        lblExtra.setBounds(10, 550, 300, 200);
+
+        this.add(lblExtra);
     }
 
 
@@ -257,11 +280,15 @@ public class StatsPanel extends JPanel {
         // Ottenimento delle statistiche da visualizzare relativamente alla linea considerata
         ArrayList<String> statistiche = this.ottieniStatistiche(linea);
 
+        int numero = Integer.valueOf(statistiche.get(0));
+        int media = Integer.valueOf(statistiche.get(1));
         int puntuali = Integer.valueOf(statistiche.get(2));
         int ritardati = Integer.valueOf(statistiche.get(3));
         int cancellati = Integer.valueOf(statistiche.get(4));
         int duplicati = Integer.valueOf(statistiche.get(5));
         int anticipati = Integer.valueOf(statistiche.get(6));
+        int minimo = Integer.valueOf(statistiche.get(7));
+        int massimo = Integer.valueOf(statistiche.get(8));
 
 
         // Configurazione del DefaultPieDataset utilizzando i valori appena ottenuti
@@ -298,7 +325,7 @@ public class StatsPanel extends JPanel {
         plot.setLabelBackgroundPaint(null);
         plot.setLabelOutlinePaint(null);
         plot.setLabelShadowPaint(null);
-        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({1})"));
+        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})"));
 
         chart.setBackgroundPaint(new Color(130, 36, 51));
         plot.setBackgroundPaint(new Color(130, 36, 51));
@@ -315,6 +342,65 @@ public class StatsPanel extends JPanel {
         chartPanel.setBounds(0, 150, 350, 350);
 
         this.add(chartPanel);
+
+        String mediaString = "", minString = "", maxString = "";
+
+        // Stringa per la media
+        int absMedia = Math.abs(media);
+        int mediaMinuti = absMedia / 60;
+        int mediaSecondi = absMedia % 60;
+
+        if (mediaMinuti > 0 && mediaSecondi > 0) {
+            mediaString = (media < 0 ? "-" : "") + mediaMinuti + (mediaMinuti == 1 ? " minuto" : " minuti") +
+                            " e " + mediaSecondi + (mediaSecondi == 1 ? " secondo." : " secondi.");
+        } else if (mediaMinuti > 0) {
+            mediaString = (media < 0 ? "-" : "") + mediaMinuti + (mediaMinuti == 1 ? " minuto." : " minuti.");
+        } else {
+            mediaString = (media < 0 ? "-" : "") + mediaSecondi + (mediaSecondi == 1 ? " secondo." : " secondi.");
+        }
+
+        // Stringa per il minimo
+        int absMin = Math.abs(minimo);
+        int minMinuti = absMin / 60;
+        int minSecondi = absMin % 60;
+
+        if (minMinuti > 0 && minSecondi > 0) {
+            minString = (minimo < 0 ? "-" : "") + minMinuti + (minMinuti == 1 ? " minuto" : " minuti") +
+                            " e " + minSecondi + (minSecondi == 1 ? " secondo." : " secondi.");
+        } else if (minMinuti > 0) {
+            minString = (minimo < 0 ? "-" : "") + minMinuti + (minMinuti == 1 ? " minuto." : " minuti.");
+        } else {
+            minString = (minimo < 0 ? "-" : "") + minSecondi + (minSecondi == 1 ? " secondo." : " secondi.");
+        }
+
+        // Stringa per il massimo
+        int absMax = Math.abs(massimo);
+        int maxMinuti = absMax / 60;
+        int maxSecondi = absMax % 60;
+
+        if (maxMinuti > 0 && maxSecondi > 0) {
+            maxString = (massimo < 0 ? "-" : "") + maxMinuti + (maxMinuti == 1 ? " minuto" : " minuti") +
+                            " e " + maxSecondi + (maxSecondi == 1 ? " secondo." : " secondi.");
+        } else if (maxMinuti > 0) {
+            maxString = (massimo < 0 ? "-" : "") + maxMinuti + (maxMinuti == 1 ? " minuto." : " minuti.");
+        } else {
+            maxString = (massimo < 0 ? "-" : "") + maxSecondi + (maxSecondi == 1 ? " secondo." : " secondi.");
+        }
+
+
+
+        this.lblExtra.setText("<html>" +
+                                    "<div style='font-size:10px; font-style:italic; margin-bottom:20px;'>Statistiche ottenute su <b>" + numero + "</b> viaggi totali.</div>" +
+                                    "<div><b>Ritardo medio:</b> " + mediaString + "</div>" +
+                                    "<div><b>Ritardo minore:</b> " + minString + "</div>" +
+                                    "<div style='padding-bottom:15px;'><b>Ritardo maggiore:</b> " + maxString + "</div>" +
+                                    "<div><b>Numero viaggi puntuali:</b> " + puntuali + "</div>" +
+                                    "<div><b>Numero viaggi in ritardo:</b> " + ritardati + "</div>" +
+                                    "<div><b>Numero viaggi in anticipo:</b> " + anticipati + "</div>" +
+                                    "<div><b>Numero viaggi cancellati:</b> " + cancellati + "</div>" +
+                                    "<div><b>Numero viaggi duplicati:</b> " + duplicati + "</div>" +
+                                "</html>");
+
     }
 
 
@@ -459,6 +545,8 @@ public class StatsPanel extends JPanel {
             // Istanziamento di varie variabili che verranno utilizzate per il conteggio delle statistiche
             int count = 0;
             int sommaRitardi = 0;
+            int minimo = 0;
+            int massimo = 0;
 
             int puntuali = 0;
             int ritardati = 0;
@@ -478,11 +566,14 @@ public class StatsPanel extends JPanel {
                     String tripId = parti[0];
                     String data = parti[1];
                     String orario = parti[2];
-                    String ritardo = parti[3];
+                    int ritardo = Integer.parseInt(parti[3]);
                     String stato = parti[4];
 
-                    sommaRitardi += Integer.parseInt(ritardo);
+                    sommaRitardi += ritardo;
                     count += 1;
+
+                    if(ritardo >= massimo) massimo = ritardo;
+                    if(ritardo < minimo) minimo = ritardo;
 
                     switch (stato) {
                         case "RITARDATO":
@@ -521,6 +612,8 @@ public class StatsPanel extends JPanel {
             statistiche.add(String.valueOf(cancellati));
             statistiche.add(String.valueOf(duplicati));
             statistiche.add(String.valueOf(anticipati));
+            statistiche.add(String.valueOf(minimo));
+            statistiche.add(String.valueOf(massimo));
 
             return statistiche;
 
