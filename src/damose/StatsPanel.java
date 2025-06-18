@@ -346,6 +346,9 @@ public class StatsPanel extends JPanel {
 
         this.add(chartPanel);
 
+        this.chartPanel.repaint();
+        this.chartPanel.revalidate();
+
         String ritardoMinString = formattaTempo(minimoRitardo);
         String ritardoMedioString = formattaTempo(mediaRitardi);
         String ritardoMaxString = formattaTempo(massimoRitardo);
@@ -359,9 +362,9 @@ public class StatsPanel extends JPanel {
                 "<div><b>Ritardo minore:</b> " + ritardoMinString + "</div>" +
                 "<div><b>Ritardo maggiore:</b> " + ritardoMaxString + "</div>" +
                 "<div style='padding-bottom:15px;'><b>Ritardo medio:</b> " + ritardoMedioString + "</div>" +
-                "<div><b>Anticipo minore:</b> - " + anticipoMaxString + "</div>" +
-                "<div><b>Anticipo maggiore:</b> - " + anticipoMinString + "</div>" +
-                "<div style='padding-bottom:15px;'><b>Anticipo medio:</b> - " + anticipoMedioString + "</div>" +
+                "<div><b>Anticipo minore:</b> " + anticipoMaxString + "</div>" +
+                "<div><b>Anticipo maggiore:</b> " + anticipoMinString + "</div>" +
+                "<div style='padding-bottom:15px;'><b>Anticipo medio:</b> " + anticipoMedioString + "</div>" +
                 "<div><b>Numero viaggi puntuali:</b> " + puntuali + "</div>" +
                 "<div><b>Numero viaggi in ritardo:</b> " + ritardati + "</div>" +
                 "<div><b>Numero viaggi in anticipo:</b> " + anticipati + "</div>" +
@@ -371,10 +374,9 @@ public class StatsPanel extends JPanel {
 
         this.lblExtra.repaint();
         this.lblExtra.revalidate();
-        this.chartPanel.repaint();
-        this.chartPanel.revalidate();
 
         this.repaint();
+
     }
 
 
@@ -441,11 +443,18 @@ public class StatsPanel extends JPanel {
         // Ottenimento delle statistiche da visualizzare relativamente alla fermata considerata
         ArrayList<String> statistiche = this.ottieniStatistiche(fermata);
 
-        int puntuali = Integer.valueOf(statistiche.get(2));
-        int ritardati = Integer.valueOf(statistiche.get(3));
-        int saltati = Integer.valueOf(statistiche.get(4));
-        int anticipati = Integer.valueOf(statistiche.get(6));
-        int noData = Integer.valueOf(statistiche.get(5));
+        int numero = Integer.valueOf(statistiche.get(0));
+        int mediaRitardi = Integer.valueOf(statistiche.get(1));
+        int mediaAnticipi = Integer.valueOf(statistiche.get(2));
+        int puntuali = Integer.valueOf(statistiche.get(3));
+        int ritardati = Integer.valueOf(statistiche.get(4));
+        int saltati = Integer.valueOf(statistiche.get(5));
+        int noData = Integer.valueOf(statistiche.get(6));
+        int anticipati = Integer.valueOf(statistiche.get(7));
+        int minimoRitardo = Integer.valueOf(statistiche.get(8));
+        int minimoAnticipo = Integer.valueOf(statistiche.get(9));
+        int massimoRitardo = Integer.valueOf(statistiche.get(10));
+        int massimoAnticipo = Integer.valueOf(statistiche.get(11));
 
 
         // Configurazione del DefaultPieDataset utilizzando i valori appena ottenuti
@@ -482,7 +491,7 @@ public class StatsPanel extends JPanel {
         plot.setLabelBackgroundPaint(null);
         plot.setLabelOutlinePaint(null);
         plot.setLabelShadowPaint(null);
-        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({1})"));
+        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})"));
 
         chart.setBackgroundPaint(new Color(130, 36, 51));
         plot.setBackgroundPaint(new Color(130, 36, 51));
@@ -499,15 +508,46 @@ public class StatsPanel extends JPanel {
         chartPanel.setBounds(0, 150, 350, 350);
 
         this.add(chartPanel);
+
+        this.chartPanel.repaint();
+        this.chartPanel.revalidate();
+
+        String ritardoMinString = formattaTempo(minimoRitardo);
+        String ritardoMedioString = formattaTempo(mediaRitardi);
+        String ritardoMaxString = formattaTempo(massimoRitardo);
+
+        String anticipoMinString = formattaTempo(minimoAnticipo);
+        String anticipoMedioString = formattaTempo(mediaAnticipi);
+        String anticipoMaxString = formattaTempo(massimoAnticipo);
+
+        this.lblExtra.setText("<html>" +
+                "<div style='font-size:10px; font-style:italic; margin-bottom:20px;'>Statistiche ottenute su <b>" + numero + "</b> arrivi totali.</div>" +
+                "<div><b>Ritardo minore:</b> " + ritardoMinString + "</div>" +
+                "<div><b>Ritardo maggiore:</b> " + ritardoMaxString + "</div>" +
+                "<div style='padding-bottom:15px;'><b>Ritardo medio:</b> " + ritardoMedioString + "</div>" +
+                "<div><b>Anticipo minore:</b> " + anticipoMaxString + "</div>" +
+                "<div><b>Anticipo maggiore:</b> " + anticipoMinString + "</div>" +
+                "<div style='padding-bottom:15px;'><b>Anticipo medio:</b> " + anticipoMedioString + "</div>" +
+                "<div><b>Numero arrivi puntuali:</b> " + puntuali + "</div>" +
+                "<div><b>Numero arrivi in ritardo:</b> " + ritardati + "</div>" +
+                "<div><b>Numero arrivi in anticipo:</b> " + anticipati + "</div>" +
+                "<div><b>Numero arrivi cancellati:</b> " + saltati + "</div>" +
+                "<div><b>Numero arrivi senza dati:</b> " + noData + "</div>" +
+                "</html>");
+
+        this.lblExtra.repaint();
+        this.lblExtra.revalidate();
+
+        this.repaint();
+
     }
 
 
 // ---------------------------------------------------------------------------------------------
 
-
     // Metodo per formattare velocemente da secondi a minuti avendo la stringa stritta per bene
     private String formattaTempo(int secondiTotali) {
-        int secondiAssoluti = Math.abs(secondiTotali);     // rimuove segno negativo se presente
+        int secondiAssoluti = Math.abs(secondiTotali); // rimuove segno negativo se presente
 
         int minuti = secondiAssoluti / 60;
         int secondi = secondiAssoluti % 60;
@@ -529,6 +569,9 @@ public class StatsPanel extends JPanel {
 
         return sb.toString();
     }
+
+
+
 
 
     // Metodo che restituisce le statistiche relative a una determinata linea
@@ -614,14 +657,18 @@ public class StatsPanel extends JPanel {
 
                             break;
                     }
-
                 } else System.err.println("Riga non valida: "+ riga);
             }
 
 
             // Ottenimento del ritardo medio effettuato dai viaggi relativi alla linea considerata
-            int mediaRitardi = sommaRitardi / ritardati;
-            int mediaAnticipi = sommaAnticipi / anticipati;
+            int mediaRitardi = ritardati != 0 ? sommaRitardi / ritardati : 0;
+            int mediaAnticipi = anticipati != 0 ? sommaAnticipi / anticipati : 0;
+
+            minimoAnticipo = anticipati == 0 ? 0 : minimoAnticipo;
+            massimoAnticipo = anticipati == 0 ? 0 : massimoAnticipo;
+            minimoRitardo = ritardati == 0 ? 0 : minimoRitardo;
+            massimoRitardo = ritardati == 0 ? 0 : massimoRitardo;
 
 
             // Aggiunta delle informazioni ottenute all'ArrayList statistiche, e restituzione di quest'ultimo
@@ -660,6 +707,13 @@ public class StatsPanel extends JPanel {
             // Istanziamento di varie variabili che verranno utilizzate per il conteggio delle statistiche
             int count = 0;
             int sommaRitardi = 0;
+            int sommaAnticipi = 0;
+
+            int massimoRitardo = Integer.MIN_VALUE;
+            int minimoRitardo = Integer.MAX_VALUE;
+
+            int massimoAnticipo = Integer.MIN_VALUE;
+            int minimoAnticipo = Integer.MAX_VALUE;
 
             int puntuali = 0;
             int ritardati = 0;
@@ -679,15 +733,22 @@ public class StatsPanel extends JPanel {
                     String tripId = parti[0];
                     String data = parti[1];
                     String orario = parti[2];
-                    String ritardo = parti[3];
+                    int ritardo = Integer.parseInt(parti[3]);
                     String stato = parti[4];
 
-                    sommaRitardi += Integer.parseInt(ritardo);
                     count += 1;
 
                     switch (stato) {
                         case "RITARDATO":
                             ritardati += 1;
+
+                            sommaRitardi += ritardo;
+
+                            if (ritardo > 0) {
+                                if (ritardo > massimoRitardo) massimoRitardo = ritardo;
+                                if (ritardo < minimoRitardo) minimoRitardo = ritardo;
+                            }
+
                             break;
 
                         case "PUNTUALE":
@@ -704,25 +765,44 @@ public class StatsPanel extends JPanel {
 
                         case "ANTICIPO":
                             anticipati += 1;
+
+                            sommaAnticipi += ritardo;
+
+                            if (ritardo < 0) {
+                                if (ritardo > massimoAnticipo) massimoAnticipo = ritardo; // Es: -10 > -30
+                                if (ritardo < minimoAnticipo) minimoAnticipo = ritardo;    // Es: -30 < -10
+                            }
+
                             break;
                     }
-
                 } else System.err.println("Riga non valida: "+ riga);
             }
 
 
             // Ottenimento del ritardo medio effettuato dai viaggi relativi alla linea considerata
-            int mediaRitardi = sommaRitardi / count;
+            int mediaRitardi = ritardati != 0 ? sommaRitardi / ritardati : 0;
+            int mediaAnticipi = anticipati != 0 ? sommaAnticipi / anticipati : 0;
+
+            minimoAnticipo = anticipati == 0 ? 0 : minimoAnticipo;
+            massimoAnticipo = anticipati == 0 ? 0 : massimoAnticipo;
+            minimoRitardo = ritardati == 0 ? 0 : minimoRitardo;
+            massimoRitardo = ritardati == 0 ? 0 : massimoRitardo;
+
 
 
             // Aggiunta delle informazioni ottenute all'ArrayList statistiche, e restituzione di quest'ultimo
             statistiche.add(String.valueOf(count));
             statistiche.add(String.valueOf(mediaRitardi));
+            statistiche.add(String.valueOf(mediaAnticipi));
             statistiche.add(String.valueOf(puntuali));
             statistiche.add(String.valueOf(ritardati));
             statistiche.add(String.valueOf(saltate));
-            statistiche.add(String.valueOf(anticipati));
             statistiche.add(String.valueOf(noData));
+            statistiche.add(String.valueOf(anticipati));
+            statistiche.add(String.valueOf(minimoRitardo));
+            statistiche.add(String.valueOf(minimoAnticipo));
+            statistiche.add(String.valueOf(massimoRitardo));
+            statistiche.add(String.valueOf(massimoAnticipo));
 
             return statistiche;
 
