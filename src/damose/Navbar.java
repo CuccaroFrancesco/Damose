@@ -61,17 +61,17 @@ public class Navbar extends JPanel {
         mappaSatellitare.setPreferredSize(buttonDimension);
         mappaMista.setPreferredSize(buttonDimension);
         
-        ImageIcon mappaNormaleIcon = new ImageIcon("src/resources/assets/mappaNormale.png");
+        ImageIcon mappaNormaleIcon = new ImageIcon(getClass().getResource("/assets/mappaNormale.png"));
         Image mappaNormaleScaled = mappaNormaleIcon.getImage().getScaledInstance(44, 44, Image.SCALE_SMOOTH);
         ImageIcon mappaNormaleNewIcon = new ImageIcon(mappaNormaleScaled);
         mappaNormale.setIcon(mappaNormaleNewIcon);
         
-        ImageIcon mappaSatellitareIcon = new ImageIcon("src/resources/assets/mappaSatellitare.png");
+        ImageIcon mappaSatellitareIcon = new ImageIcon(getClass().getResource("/assets/mappaSatellitare.png"));
         Image mappaSatellitareScaled = mappaSatellitareIcon.getImage().getScaledInstance(44, 44, Image.SCALE_SMOOTH);
         ImageIcon mappaSatellitareNewIcon = new ImageIcon(mappaSatellitareScaled);
         mappaSatellitare.setIcon(mappaSatellitareNewIcon);
         
-        ImageIcon mappaMistaIcon = new ImageIcon("src/resources/assets/mappaMista.png");
+        ImageIcon mappaMistaIcon = new ImageIcon(getClass().getResource("/assets/mappaMista.png"));
         Image mappaMistaScaled = mappaMistaIcon.getImage().getScaledInstance(44, 44, Image.SCALE_SMOOTH);
         ImageIcon mappaMistaNewIcon = new ImageIcon(mappaMistaScaled);
         mappaMista.setIcon(mappaMistaNewIcon);
@@ -155,7 +155,7 @@ public class Navbar extends JPanel {
         
         btnRicerca.setPreferredSize(new Dimension(30, 25));
         
-        ImageIcon iconRicerca = new ImageIcon("src/resources/assets/ricerca.png");
+        ImageIcon iconRicerca = new ImageIcon(getClass().getResource("/assets/ricerca.png"));
         Image scaledImageRicerca = iconRicerca.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
         ImageIcon newIconRicerca = new ImageIcon(scaledImageRicerca);
         btnRicerca.setIcon(newIconRicerca);
@@ -267,7 +267,7 @@ public class Navbar extends JPanel {
         btnLogin.setPreferredSize(new Dimension(50, 50));
         btnLogin.setBounds(getWidth() - btnLogin.getWidth() - 40, 10, 50, 50);
         
-        ImageIcon icon = new ImageIcon("src/resources/assets/user_placeholder.png");
+        ImageIcon icon = new ImageIcon(getClass().getResource("/assets/user_placeholder.png"));
         Image scaledImage = icon.getImage().getScaledInstance(44, 44, Image.SCALE_SMOOTH);
         ImageIcon newIcon = new ImageIcon(scaledImage);
         btnLogin.setIcon(newIcon);

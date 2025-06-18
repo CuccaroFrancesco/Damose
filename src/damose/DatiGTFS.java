@@ -2,10 +2,10 @@ package damose;
 
 import java.awt.*;
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.List;
 
@@ -15,7 +15,6 @@ import javax.swing.JProgressBar;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import com.google.protobuf.Descriptors;
 import org.onebusaway.gtfs.impl.GtfsRelationalDaoImpl;
 import org.onebusaway.gtfs.model.*;
 import org.onebusaway.gtfs.serialization.GtfsReader;
@@ -118,13 +117,13 @@ public class DatiGTFS {
 
 
 	// Metodo che permette di caricare dei dati GTFS statici da file di testo contenuti in una cartella
-	public void caricaDatiStaticiGTFS(String path) throws Exception {
+	public void caricaDatiStaticiGTFS(File path) throws Exception {
 
 		// Istanziamento del lettore di dati GTFS e configurazione della variabile di destinazione degli stessi
 		GtfsReader reader = new GtfsReader();
 		GtfsRelationalDaoImpl dati = new GtfsRelationalDaoImpl();
 			
-		reader.setInputLocation(new File(path));
+		reader.setInputLocation(path);
 		reader.setEntityStore(dati);
 
 
@@ -416,11 +415,11 @@ public class DatiGTFS {
 
 
 	// Metodo che genera gli storici per le fermate e per le linee
-	public void creaStorico() throws IOException {
+	public void creaStorico() throws IOException, URISyntaxException {
 
 		// Creazione delle directory "linee" e "fermate"
-		new File("src/resources/files/linee").mkdirs();
-		new File("src/resources/files/fermate").mkdirs();
+		new File(Frame.getDamoseDirectory(),"files/linee").mkdirs();
+		new File(Frame.getDamoseDirectory(),"files/fermate").mkdirs();
 
 
 		// Ottenimento della data e dell'orario attuale
@@ -448,7 +447,7 @@ public class DatiGTFS {
 
 			// Ottenimento dell'ID della linea e del suo relativo file di storico
 			String lineaId = linea.getId().getId();
-			File fileLinea = new File("src/resources/files/linee/storico_" + lineaId + ".txt");
+			File fileLinea = new File(Frame.getDamoseDirectory(), "files/linee/storico_" + lineaId + ".txt");
 
 
 			// Caricamento del contenuto esistente nel file relativo alla linea considerata
@@ -535,7 +534,9 @@ public class DatiGTFS {
 				Map<String, StopTimeUpdate> stopTimeUpdateMap = new HashMap<>();
 
 				if (tripUpdatesMap.containsKey(tripId)) {
-					for (StopTimeUpdate stopTimeUpdate : tripUpdatesMap.get(tripId).getStopTimeUpdateList()) { stopTimeUpdateMap.put(stopTimeUpdate.getStopId(), stopTimeUpdate); }
+					for (StopTimeUpdate stopTimeUpdate : tripUpdatesMap.get(tripId).getStopTimeUpdateList()) {
+						stopTimeUpdateMap.put(stopTimeUpdate.getStopId(), stopTimeUpdate);
+					}
 				}
 
 
@@ -544,7 +545,7 @@ public class DatiGTFS {
 
 					// Ottenimento della fermata relativa allo StopTime e del suo relativo file di storico
 					String stopId = stopTime.getStop().getId().getId();
-					File fileFermata = new File("src/resources/files/fermate/storico_" + stopId + ".txt");
+					File fileFermata = new File(Frame.getDamoseDirectory(), "files/fermate/storico_" + stopId + ".txt");
 
 
 					// Caricamento del contenuto esistente nel file relativo alla fermata considerata, e inserimento delle informazioni ottenute nella HashMap fermateStorico
@@ -617,7 +618,7 @@ public class DatiGTFS {
 		// Scrittura dei dati relativi alle linee nei rispettivi file di testo
 		for (Map.Entry<String, List<String>> entry : lineeDaScrivere.entrySet()) {
 
-			File file = new File("src/resources/files/linee/storico_" + entry.getKey() + ".txt");
+			File file = new File(Frame.getDamoseDirectory(), "files/linee/storico_" + entry.getKey() + ".txt");
 			if (!file.exists()) file.createNewFile();
 
 			try (FileWriter fw = new FileWriter(file, true)) {
@@ -631,7 +632,7 @@ public class DatiGTFS {
 		// Scrittura dei dati relativi alle fermate nei rispettivi file di testo
 		for (Map.Entry<String, List<String>> entry : fermateDaScrivere.entrySet()) {
 
-			File file = new File("src/resources/files/fermate/storico_" + entry.getKey() + ".txt");
+			File file = new File(Frame.getDamoseDirectory(), "files/fermate/storico_" + entry.getKey() + ".txt");
 			if (!file.exists()) file.createNewFile();
 
 			try (FileWriter fw = new FileWriter(file, true)) {

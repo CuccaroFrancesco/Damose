@@ -1,7 +1,7 @@
 package damose;
 
 import java.io.*;
-
+import java.net.URISyntaxException;
 
 
 public class Registrazione {
@@ -21,28 +21,28 @@ public class Registrazione {
 	
 	
 	// Metodo che controlla la validità dello username inserito
-	public static String checkUsername(String newUsername) throws IOException {
-		
-		BufferedReader reader = new BufferedReader(new FileReader("src/resources/files/utenti.txt"));
-        String riga;
-        
-        if (newUsername.isBlank()) {        	
-        	reader.close();
-        	return "Username non inserito.";
-        }
-        
-        while ((riga = reader.readLine()) != null) {
-            String[] dati = riga.split(",");
-            
-            if (dati.length > 0 && dati[0].trim().equals(newUsername.trim())) {
-                reader.close();
-                return "Username già in uso.";
-            }
-        }
+	public static String checkUsername(String newUsername) throws IOException, URISyntaxException {
+
+		BufferedReader reader = new BufferedReader(new FileReader(new File(Frame.getDamoseDirectory(), "files/utenti.txt")));
+		String riga;
+
+		if (newUsername.isBlank()) {
+			reader.close();
+			return "Username non inserito.";
+		}
+
+		while ((riga = reader.readLine()) != null) {
+			String[] dati = riga.split(",");
+
+			if (dati.length > 0 && dati[0].trim().equals(newUsername.trim())) {
+				reader.close();
+				return "Username già in uso.";
+			}
+		}
 
 		reader.close();
-		
-        return "Verificata.";
+
+		return "Verificata.";
 	}
 	
 	
@@ -89,13 +89,11 @@ public class Registrazione {
 
 
 	// Metodo che gestisce l'aggiunta di nuovi user al file di testo che svolge il ruolo di "database"
-	public static String addUser(String nome, String cognome, String username, String password, String confirmPass) throws IOException {
-		
-		BufferedWriter writer = new BufferedWriter(new FileWriter("src/resources/files/utenti.txt", true));
+	public static void addUser(String nome, String cognome, String username, String password) throws IOException, URISyntaxException {
+
+		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Frame.getDamoseDirectory(), "files/utenti.txt"), true));
 		writer.write(username + "," + nome + "," + cognome + "," + password + ", , \n");
 		writer.flush();
 		writer.close();
-		
-		return "Utente registrato correttamente!";
 	}	
 }

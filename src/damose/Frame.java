@@ -5,6 +5,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -18,7 +20,7 @@ import javax.swing.SwingWorker;
 
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.painter.CompoundPainter;
-import org.onebusaway.gtfs.model.Route;
+
 
 
 public class Frame extends JFrame {
@@ -66,7 +68,7 @@ public class Frame extends JFrame {
         Image newIconaDamose16 = iconaDamose.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         Image newIconaDamose32 = iconaDamose.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
         Image newIconaDamose64 = iconaDamose.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
-        
+
         List<Image> listIconeDamose = new ArrayList<>();
         listIconeDamose.add(newIconaDamose16);
         listIconeDamose.add(newIconaDamose32);
@@ -95,7 +97,7 @@ public class Frame extends JFrame {
         	@Override
             protected Void doInBackground() throws Exception {
                 
-        		dati.caricaDatiStaticiGTFS("src/resources/staticGTFS");
+        		dati.caricaDatiStaticiGTFS(new File(Frame.getDamoseDirectory(), "staticGTFS"));
                 return null;
             }
 
@@ -218,7 +220,7 @@ public class Frame extends JFrame {
 									if (Frame.this.dati.getVehiclePositions() != null) vehiclePositionsStatus = 1;
 									if (Frame.this.dati.getAlert() != null) alertStatus = 1;
 
-									ImageIcon iconError = new ImageIcon("src/resources/assets/error-notification.png");
+									ImageIcon iconError = new ImageIcon(getClass().getResource("/assets/error-notification.png"));
 									Image scaledImageError = iconError.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 									ImageIcon newIconError = new ImageIcon(scaledImageError);
 									notificationPanel.getBtnMessage().setIcon(newIconError);
@@ -334,6 +336,19 @@ public class Frame extends JFrame {
 // ---------------------------------------------------------------------------------------------
 
 
+	// Metodo che permette di ottenere la directory di base dell'applicazione come percorso assoluto
+	public static File getDamoseDirectory() throws URISyntaxException {
+
+		File path = new File(Frame.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+
+		if (path.isFile() && path.getName().endsWith(".jar")) return path.getParentFile();
+		else return path.getParentFile().getParentFile();
+	}
+
+
+// ---------------------------------------------------------------------------------------------
+
+
 	// Metodo che gestisce l'adattamento dinamico delle componenti della finestra principale
 	private void calibra() {
 		
@@ -359,12 +374,12 @@ public class Frame extends JFrame {
 		
 		if (userPanel.isVisible()) {
 			
-			if (stopPanel.isVisible() || routePanel.isVisible()) mapPanel.setBounds(350, 70, newWidth - 350, newHeight - 70);
+			if (stopPanel.isVisible() || routePanel.isVisible() || statsPanel.isVisible()) mapPanel.setBounds(350, 70, newWidth - 350, newHeight - 70);
 			else mapPanel.setBounds(0, 70, newWidth - 350, newHeight - 70);
 			
 		} else {
 			
-			if (stopPanel.isVisible() || routePanel.isVisible()) mapPanel.setBounds(350, 70, newWidth, newHeight - 70);
+			if (stopPanel.isVisible() || routePanel.isVisible() || statsPanel.isVisible()) mapPanel.setBounds(350, 70, newWidth, newHeight - 70);
 			else mapPanel.setBounds(0, 70, newWidth, newHeight - 70);
 		}
 

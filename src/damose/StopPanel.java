@@ -11,6 +11,7 @@ import javax.swing.*;
 import org.onebusaway.gtfs.model.*;
 
 import java.awt.event.ActionListener;
+import java.net.URISyntaxException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -112,7 +113,7 @@ public class StopPanel extends JPanel {
         
         btnClose.setBounds(-25, 5, 200, 30);
         
-        ImageIcon iconClose = new ImageIcon("src/resources/assets/close.png");
+        ImageIcon iconClose = new ImageIcon(getClass().getResource("/assets/close.png"));
         Image scaledImageClose = iconClose.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon newIconClose = new ImageIcon(scaledImageClose);
         btnClose.setIcon(newIconClose);
@@ -140,7 +141,7 @@ public class StopPanel extends JPanel {
 
 		btnRefresh.setBounds(313, 4, 30, 30);
 
-		ImageIcon iconRefresh = new ImageIcon("src/resources/assets/refresh.png");
+		ImageIcon iconRefresh = new ImageIcon(getClass().getResource("/assets/refresh.png"));
 		Image scaledImageRefresh = iconRefresh.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
 		ImageIcon newIconRefresh = new ImageIcon(scaledImageRefresh);
 		btnRefresh.setIcon(newIconRefresh);
@@ -158,7 +159,7 @@ public class StopPanel extends JPanel {
 
 		btnStats.setBounds(280, 4, 30, 30);
 
-		ImageIcon iconStats = new ImageIcon("src/resources/assets/stats.png");
+		ImageIcon iconStats = new ImageIcon(getClass().getResource("/assets/stats.png"));
 		Image scaledImageStats = iconStats.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
 		ImageIcon newIconStats = new ImageIcon(scaledImageStats);
 		btnStats.setIcon(newIconStats);
@@ -179,7 +180,7 @@ public class StopPanel extends JPanel {
         btnStopIcon.setPreferredSize(new Dimension(40, 40));
         btnStopIcon.setBounds(20, 70, 40, 40);
         
-        ImageIcon iconStop = new ImageIcon("src/resources/assets/fermata-bianco.png");
+        ImageIcon iconStop = new ImageIcon(getClass().getResource("/assets/fermata-bianco.png"));
         Image scaledImageStop = iconStop.getImage().getScaledInstance(32, 40, Image.SCALE_SMOOTH);
         ImageIcon newIconStop = new ImageIcon(scaledImageStop);
         btnStopIcon.setIcon(newIconStop);
@@ -224,7 +225,7 @@ public class StopPanel extends JPanel {
         btnCoordinates.setPreferredSize(new Dimension(20, 20));
         btnCoordinates.setBounds(145, 119, 180, 20);
         
-        ImageIcon iconCoordinates = new ImageIcon("src/resources/assets/coordinates.png");
+        ImageIcon iconCoordinates = new ImageIcon(getClass().getResource("/assets/coordinates.png"));
         Image scaledImageCoordinates = iconCoordinates.getImage().getScaledInstance(20, 18, Image.SCALE_SMOOTH);
         ImageIcon newIconCoordinates = new ImageIcon(scaledImageCoordinates);
         btnCoordinates.setIcon(newIconCoordinates);
@@ -260,7 +261,11 @@ public class StopPanel extends JPanel {
 		// Funzionalità per il pulsante btnStats, che permette di accedere al pannello con le statistiche relative alla linea
 		btnStats.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.getStatsPanel().creaPannelloStatistiche(fermata);
+				try {
+					frame.getStatsPanel().creaPannelloStatistiche(fermata);
+				} catch (URISyntaxException e1) {
+					throw new RuntimeException(e1);
+				}
 			}
 		});
 
@@ -276,7 +281,7 @@ public class StopPanel extends JPanel {
 
 					aggiornaArriviDaVisualizzare(fermata);
 
-					ImageIcon iconCheck = new ImageIcon("src/resources/assets/check-notification.png");
+					ImageIcon iconCheck = new ImageIcon(getClass().getResource("/assets/check-notification.png"));
 					Image scaledImageCheck = iconCheck.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 					ImageIcon newIconCheck = new ImageIcon(scaledImageCheck);
 					frame.getNotificationPanel().getBtnMessage().setIcon(newIconCheck);
@@ -286,7 +291,7 @@ public class StopPanel extends JPanel {
 
 				} catch (Exception ex) {
 
-					ImageIcon iconError = new ImageIcon("src/resources/assets/error-notification.png");
+					ImageIcon iconError = new ImageIcon(getClass().getResource("/assets/error-notification.png"));
 					Image scaledImageError = iconError.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 					ImageIcon newIconError = new ImageIcon(scaledImageError);
 					frame.getNotificationPanel().getBtnMessage().setIcon(newIconError);
@@ -301,8 +306,7 @@ public class StopPanel extends JPanel {
 
 
 		// Assegnamento dell'icona di default per il pulsante btnFavorite
-		String iconCuorePath = "src/resources/assets/cuore-vuoto.png";
-		ImageIcon iconCuore = new ImageIcon(iconCuorePath);
+		ImageIcon iconCuore = new ImageIcon(getClass().getResource("/assets/cuore-vuoto.png"));
 		Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
 
@@ -334,8 +338,8 @@ public class StopPanel extends JPanel {
 					e1.printStackTrace();
 				}
 		        
-		        String iconCuorePath = isOraPreferita ? "src/resources/assets/cuore.png" : "src/resources/assets/cuore-vuoto.png";
-		        ImageIcon iconCuore = new ImageIcon(iconCuorePath);
+		        String iconCuorePath = isOraPreferita ? "/assets/cuore.png" : "/assets/cuore-vuoto.png";
+		        ImageIcon iconCuore = new ImageIcon(getClass().getResource(iconCuorePath));
 		        Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		        btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
 		    }
@@ -390,7 +394,7 @@ public class StopPanel extends JPanel {
             
             switch (linea.getType()) {
 				case 0:
-					ImageIcon iconTram = new ImageIcon("src/resources/assets/tram.png");
+					ImageIcon iconTram = new ImageIcon(getClass().getResource("/assets/tram.png"));
 			        Image scaledImageTram = iconTram.getImage().getScaledInstance(38, 38, Image.SCALE_SMOOTH);
 			        ImageIcon newIconTram = new ImageIcon(scaledImageTram);
 			        btnInfoLinea.setIcon(newIconTram);
@@ -400,7 +404,7 @@ public class StopPanel extends JPanel {
 				case 1:
 					switch (linea.getShortName()) {
 			        	case "MEA":
-			        		ImageIcon iconMetroA = new ImageIcon("src/resources/assets/metro-a-logo-withborder.png");
+			        		ImageIcon iconMetroA = new ImageIcon(getClass().getResource("/assets/metro-a-logo-withborder.png"));
 					        Image scaledImageMetroA = iconMetroA.getImage().getScaledInstance(38, 38, Image.SCALE_SMOOTH);
 					        ImageIcon newIconMetroA = new ImageIcon(scaledImageMetroA);
 					        btnInfoLinea.setIcon(newIconMetroA);
@@ -410,7 +414,7 @@ public class StopPanel extends JPanel {
 					        break;
 					    
 			        	case "MEB":
-			        		ImageIcon iconMetroB = new ImageIcon("src/resources/assets/metro-b-logo-withborder.png");
+			        		ImageIcon iconMetroB = new ImageIcon(getClass().getResource("/assets/metro-b-logo-withborder.png"));
 					        Image scaledImageMetroB = iconMetroB.getImage().getScaledInstance(38, 38, Image.SCALE_SMOOTH);
 					        ImageIcon newIconMetroB = new ImageIcon(scaledImageMetroB);
 					        btnInfoLinea.setIcon(newIconMetroB);
@@ -420,7 +424,7 @@ public class StopPanel extends JPanel {
 					        break;
 					        
 			        	case "MEB1":
-			        		ImageIcon iconMetroB1 = new ImageIcon("src/resources/assets/metro-b-logo-withborder.png");
+			        		ImageIcon iconMetroB1 = new ImageIcon(getClass().getResource("/assets/metro-b-logo-withborder.png"));
 					        Image scaledImageMetroB1 = iconMetroB1.getImage().getScaledInstance(38, 38, Image.SCALE_SMOOTH);
 					        ImageIcon newIconMetroB1 = new ImageIcon(scaledImageMetroB1);
 					        btnInfoLinea.setIcon(newIconMetroB1);
@@ -429,7 +433,7 @@ public class StopPanel extends JPanel {
 					        break;
 					        
 			        	case "MEC":
-			        		ImageIcon iconMetroC = new ImageIcon("src/resources/assets/metro-c-logo-withborder.png");
+			        		ImageIcon iconMetroC = new ImageIcon(getClass().getResource("/assets/metro-c-logo-withborder.png"));
 					        Image scaledImageMetroC = iconMetroC.getImage().getScaledInstance(38, 38, Image.SCALE_SMOOTH);
 					        ImageIcon newIconMetroC = new ImageIcon(scaledImageMetroC);
 					        btnInfoLinea.setIcon(newIconMetroC);
@@ -442,7 +446,7 @@ public class StopPanel extends JPanel {
 			        break;
 			        
 				case 2:
-					ImageIcon iconTreno = new ImageIcon("src/resources/assets/train.png");
+					ImageIcon iconTreno = new ImageIcon(getClass().getResource("/assets/train.png"));
 			        Image scaledImageTreno = iconTreno.getImage().getScaledInstance(38, 38, Image.SCALE_SMOOTH);
 			        ImageIcon newIconTreno = new ImageIcon(scaledImageTreno);
 			        btnInfoLinea.setIcon(newIconTreno);
@@ -450,7 +454,7 @@ public class StopPanel extends JPanel {
 			        break;
 			        
 				case 3:
-					ImageIcon iconBus = new ImageIcon("src/resources/assets/bus.png");
+					ImageIcon iconBus = new ImageIcon(getClass().getResource("/assets/bus.png"));
 			        Image scaledImageBus = iconBus.getImage().getScaledInstance(38, 38, Image.SCALE_SMOOTH);
 			        ImageIcon newIconBus = new ImageIcon(scaledImageBus);
 			        btnInfoLinea.setIcon(newIconBus);
@@ -467,7 +471,7 @@ public class StopPanel extends JPanel {
 
 			btnLinea.setBounds(280, y + 10, 30, 30);
 
-			ImageIcon iconBtnLinea = new ImageIcon("src/resources/assets/lineabtn-icon.png");
+			ImageIcon iconBtnLinea = new ImageIcon(getClass().getResource("/assets/lineabtn-icon.png"));
 			Image scaledImageBtnLinea = iconBtnLinea.getImage().getScaledInstance(16, 20, Image.SCALE_SMOOTH);
 			ImageIcon newIconBtnLinea = new ImageIcon(scaledImageBtnLinea);
 			btnLinea.setIcon(newIconBtnLinea);
@@ -675,7 +679,7 @@ public class StopPanel extends JPanel {
 
 			switch (lineaDiAppartenenza.getType()) {
 				case 0:
-					ImageIcon iconTram = new ImageIcon("src/resources/assets/tram.png");
+					ImageIcon iconTram = new ImageIcon(getClass().getResource("/assets/tram.png"));
 					Image scaledImageTram = iconTram.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
 					ImageIcon newIconTram = new ImageIcon(scaledImageTram);
 					btnIconaLinea.setIcon(newIconTram);
@@ -685,7 +689,7 @@ public class StopPanel extends JPanel {
 				case 1:
 					switch (lineaDiAppartenenza.getShortName()) {
 						case "MEA":
-							ImageIcon iconMetroA = new ImageIcon("src/resources/assets/metro-a-logo-withborder.png");
+							ImageIcon iconMetroA = new ImageIcon(getClass().getResource("/assets/metro-a-logo-withborder.png"));
 							Image scaledImageMetroA = iconMetroA.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
 							ImageIcon newIconMetroA = new ImageIcon(scaledImageMetroA);
 							btnIconaLinea.setIcon(newIconMetroA);
@@ -695,7 +699,7 @@ public class StopPanel extends JPanel {
 							break;
 
 						case "MEB":
-							ImageIcon iconMetroB = new ImageIcon("src/resources/assets/metro-b-logo-withborder.png");
+							ImageIcon iconMetroB = new ImageIcon(getClass().getResource("/assets/metro-b-logo-withborder.png"));
 							Image scaledImageMetroB = iconMetroB.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
 							ImageIcon newIconMetroB = new ImageIcon(scaledImageMetroB);
 							btnIconaLinea.setIcon(newIconMetroB);
@@ -705,7 +709,7 @@ public class StopPanel extends JPanel {
 							break;
 
 						case "MEB1":
-							ImageIcon iconMetroB1 = new ImageIcon("src/resources/assets/metro-b-logo-withborder.png");
+							ImageIcon iconMetroB1 = new ImageIcon(getClass().getResource("/assets/metro-b-logo-withborder.png"));
 							Image scaledImageMetroB1 = iconMetroB1.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
 							ImageIcon newIconMetroB1 = new ImageIcon(scaledImageMetroB1);
 							btnIconaLinea.setIcon(newIconMetroB1);
@@ -715,7 +719,7 @@ public class StopPanel extends JPanel {
 							break;
 
 						case "MEC":
-							ImageIcon iconMetroC = new ImageIcon("src/resources/assets/metro-c-logo-withborder.png");
+							ImageIcon iconMetroC = new ImageIcon(getClass().getResource("/assets/metro-c-logo-withborder.png"));
 							Image scaledImageMetroC = iconMetroC.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
 							ImageIcon newIconMetroC = new ImageIcon(scaledImageMetroC);
 							btnIconaLinea.setIcon(newIconMetroC);
@@ -728,7 +732,7 @@ public class StopPanel extends JPanel {
 					break;
 
 				case 2:
-					ImageIcon iconTreno = new ImageIcon("src/resources/assets/train.png");
+					ImageIcon iconTreno = new ImageIcon(getClass().getResource("/assets/train.png"));
 					Image scaledImageTreno = iconTreno.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
 					ImageIcon newIconTreno = new ImageIcon(scaledImageTreno);
 					btnIconaLinea.setIcon(newIconTreno);
@@ -736,7 +740,7 @@ public class StopPanel extends JPanel {
 					break;
 
 				case 3:
-					ImageIcon iconBus = new ImageIcon("src/resources/assets/bus.png");
+					ImageIcon iconBus = new ImageIcon(getClass().getResource("/assets/bus.png"));
 					Image scaledImageBus = iconBus.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
 					ImageIcon newIconBus = new ImageIcon(scaledImageBus);
 					btnIconaLinea.setIcon(newIconBus);
@@ -807,8 +811,8 @@ public class StopPanel extends JPanel {
 		        }
 		    }
 
-		    String iconCuorePath = isPreferita ? "src/resources/assets/cuore.png" : "src/resources/assets/cuore-vuoto.png";
-		    ImageIcon iconCuore = new ImageIcon(iconCuorePath);
+		    String iconCuorePath = isPreferita ? "/assets/cuore.png" : "/assets/cuore-vuoto.png";
+		    ImageIcon iconCuore = new ImageIcon(getClass().getResource(iconCuorePath));
 		    Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		    btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
 

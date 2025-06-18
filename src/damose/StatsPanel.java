@@ -18,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 
@@ -55,7 +56,7 @@ public class StatsPanel extends JPanel {
 
         btnBack.setBounds(-25, 5, 200, 30);
 
-        ImageIcon iconBack = new ImageIcon("src/resources/assets/indietro.png");
+        ImageIcon iconBack = new ImageIcon(getClass().getResource("/assets/indietro.png"));
         Image scaledImageBack = iconBack.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon newIconBack = new ImageIcon(scaledImageBack);
         btnBack.setIcon(newIconBack);
@@ -142,7 +143,7 @@ public class StatsPanel extends JPanel {
 
 
     // Metodo che "costruisce" concretamente lo statsPanel in base alla linea del routePanel associato ad esso
-    public void creaPannelloStatistiche(Route linea) throws IOException {
+    public void creaPannelloStatistiche(Route linea) throws URISyntaxException {
 
         // Ottenimento del viaggio da visualizzare dal routePanel associato
         this.viaggioDaVisualizzare = frame.getRoutePanel().getViaggiDaVisualizzare().get(frame.getRoutePanel().getIndiceViaggioVisualizzato());
@@ -193,7 +194,7 @@ public class StatsPanel extends JPanel {
             case "Atac":
                 btnAgency.setVisible(true);
 
-                ImageIcon iconAtac = new ImageIcon("src/resources/assets/atac-logo.png");
+                ImageIcon iconAtac = new ImageIcon(getClass().getResource("/assets/atac-logo.png"));
                 Image scaledImageAtac = iconAtac.getImage().getScaledInstance(65, 45, Image.SCALE_SMOOTH);
                 ImageIcon newIconAtac = new ImageIcon(scaledImageAtac);
                 btnAgency.setIcon(newIconAtac);
@@ -205,7 +206,7 @@ public class StatsPanel extends JPanel {
             case "Autoservizi Troiani":
                 btnAgency.setVisible(true);
 
-                ImageIcon iconTroiani = new ImageIcon("src/resources/assets/autoservizi-troiani-logo.png");
+                ImageIcon iconTroiani = new ImageIcon(getClass().getResource("/assets/autoservizi-troiani-logo.png"));
                 Image scaledImageTroiani = iconTroiani.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 ImageIcon newIconTroiani = new ImageIcon(scaledImageTroiani);
                 btnAgency.setIcon(newIconTroiani);
@@ -236,7 +237,7 @@ public class StatsPanel extends JPanel {
         // Assegnamento speciale di icona al btnAgency e di testo a codice in caso la linea sia una metropolitana
         switch (shortName) {
             case "MEA":
-                ImageIcon iconMetroA = new ImageIcon("src/resources/assets/metro-a-logo-withborder.png");
+                ImageIcon iconMetroA = new ImageIcon(getClass().getResource("/assets/metro-a-logo-withborder.png"));
                 Image scaledImageMetroA = iconMetroA.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 ImageIcon newIconMetroA = new ImageIcon(scaledImageMetroA);
                 btnAgency.setIcon(newIconMetroA);
@@ -246,7 +247,7 @@ public class StatsPanel extends JPanel {
                 break;
 
             case "MEB":
-                ImageIcon iconMetroB = new ImageIcon("src/resources/assets/metro-b-logo-withborder.png");
+                ImageIcon iconMetroB = new ImageIcon(getClass().getResource("/assets/metro-b-logo-withborder.png"));
                 Image scaledImageMetroB = iconMetroB.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 ImageIcon newIconMetroB = new ImageIcon(scaledImageMetroB);
                 btnAgency.setIcon(newIconMetroB);
@@ -256,7 +257,7 @@ public class StatsPanel extends JPanel {
                 break;
 
             case "MEB1":
-                ImageIcon iconMetroB1 = new ImageIcon("src/resources/assets/metro-b-logo-withborder.png");
+                ImageIcon iconMetroB1 = new ImageIcon(getClass().getResource("/assets/metro-b-logo-withborder.png"));
                 Image scaledImageMetroB1 = iconMetroB1.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 ImageIcon newIconMetroB1 = new ImageIcon(scaledImageMetroB1);
                 btnAgency.setIcon(newIconMetroB1);
@@ -266,7 +267,7 @@ public class StatsPanel extends JPanel {
                 break;
 
             case "MEC":
-                ImageIcon iconMetroC = new ImageIcon("src/resources/assets/metro-c-logo-withborder.png");
+                ImageIcon iconMetroC = new ImageIcon(getClass().getResource("/assets/metro-c-logo-withborder.png"));
                 Image scaledImageMetroC = iconMetroC.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 ImageIcon newIconMetroC = new ImageIcon(scaledImageMetroC);
                 btnAgency.setIcon(newIconMetroC);
@@ -376,12 +377,11 @@ public class StatsPanel extends JPanel {
         this.lblExtra.revalidate();
 
         this.repaint();
-
     }
 
 
     // Metodo che "costruisce" concretamente lo statsPanel in base alla fermata dello stopPanel associato ad esso
-    public void creaPannelloStatistiche(Stop fermata) {
+    public void creaPannelloStatistiche(Stop fermata) throws URISyntaxException {
 
         // Ottenimento della fermata da visualizzare dallo stopPanel associato
         this.viaggioDaVisualizzare = null;
@@ -420,7 +420,7 @@ public class StatsPanel extends JPanel {
         btnAgency.setPreferredSize(new Dimension(40, 40));
         btnAgency.setBounds(20, 70, 40, 40);
 
-        ImageIcon iconStop = new ImageIcon("src/resources/assets/fermata-bianco.png");
+        ImageIcon iconStop = new ImageIcon(getClass().getResource("/assets/fermata-bianco.png"));
         Image scaledImageStop = iconStop.getImage().getScaledInstance(32, 40, Image.SCALE_SMOOTH);
         ImageIcon newIconStop = new ImageIcon(scaledImageStop);
         btnAgency.setIcon(newIconStop);
@@ -539,14 +539,15 @@ public class StatsPanel extends JPanel {
         this.lblExtra.revalidate();
 
         this.repaint();
-
     }
 
 
 // ---------------------------------------------------------------------------------------------
 
+
     // Metodo per formattare velocemente da secondi a minuti avendo la stringa stritta per bene
     private String formattaTempo(int secondiTotali) {
+
         int secondiAssoluti = Math.abs(secondiTotali); // rimuove segno negativo se presente
 
         int minuti = secondiAssoluti / 60;
@@ -554,31 +555,24 @@ public class StatsPanel extends JPanel {
 
         StringBuilder sb = new StringBuilder();
 
-        if (minuti > 0) {
-            sb.append(minuti).append(" ").append(minuti == 1 ? "minuto" : "minuti");
-        }
+        if (minuti > 0) sb.append(minuti).append(" ").append(minuti == 1 ? "minuto" : "minuti");
 
         if (secondi > 0) {
             if (minuti > 0) sb.append(" e ");
             sb.append(secondi).append(" ").append(secondi == 1 ? "secondo" : "secondi");
         }
 
-        if (minuti == 0 && secondi == 0) {
-            sb.append("0 secondi");
-        }
+        if (minuti == 0 && secondi == 0) sb.append("0 secondi");
 
         return sb.toString();
     }
 
 
-
-
-
     // Metodo che restituisce le statistiche relative a una determinata linea
-    public ArrayList<String> ottieniStatistiche(Route linea) {
+    public ArrayList<String> ottieniStatistiche(Route linea) throws URISyntaxException {
 
         // Ottenimento del file relativo alla linea, e istanziamento di un ArrayList che ospiterà le statistiche della stessa
-        File fileLinea = new File("src/resources/files/linee/storico_" + linea.getId().getId() + ".txt");
+        File fileLinea = new File(Frame.getDamoseDirectory(), "files/linee/storico_" + linea.getId().getId() + ".txt");
         ArrayList<String> statistiche = new ArrayList<>();
 
 
@@ -619,7 +613,6 @@ public class StatsPanel extends JPanel {
                     String stato = parti[4];
 
                     count += 1;
-
 
 
                     switch (stato) {
@@ -694,10 +687,10 @@ public class StatsPanel extends JPanel {
 
 
     // Metodo che restituisce le statistiche relative a una determinata fermata
-    public ArrayList<String> ottieniStatistiche(Stop fermata) {
+    public ArrayList<String> ottieniStatistiche(Stop fermata) throws URISyntaxException {
 
         // Ottenimento del file relativo alla fermata, e istanziamento di un ArrayList che ospiterà le statistiche della stessa
-        File fileFermata = new File("src/resources/files/fermate/storico_" + fermata.getId().getId() + ".txt");
+        File fileFermata = new File(Frame.getDamoseDirectory(), "files/fermate/storico_" + fermata.getId().getId() + ".txt");
         ArrayList<String> statistiche = new ArrayList<>();
 
 
@@ -787,7 +780,6 @@ public class StatsPanel extends JPanel {
             massimoAnticipo = anticipati == 0 ? 0 : massimoAnticipo;
             minimoRitardo = ritardati == 0 ? 0 : minimoRitardo;
             massimoRitardo = ritardati == 0 ? 0 : massimoRitardo;
-
 
 
             // Aggiunta delle informazioni ottenute all'ArrayList statistiche, e restituzione di quest'ultimo

@@ -35,12 +35,12 @@ public class VeicoliWaypoint extends DefaultWaypoint {
 
         switch (dati.cercaLineaByID(vehiclePosition.getTrip().getRouteId()).getType()) {
             case 0:
-                ImageIcon iconTram = new ImageIcon("src/resources/assets/tram_waypoint.png");
+                ImageIcon iconTram = new ImageIcon(getClass().getResource("/assets/tram_waypoint.png"));
                 this.waypointIcon = iconTram.getImage().getScaledInstance(48, 48, Image.SCALE_SMOOTH);
                 break;
 
             case 3:
-                ImageIcon iconBus = new ImageIcon("src/resources/assets/bus_waypoint.png");
+                ImageIcon iconBus = new ImageIcon(getClass().getResource("/assets/bus_waypoint.png"));
                 this.waypointIcon = iconBus.getImage().getScaledInstance(48, 48, Image.SCALE_SMOOTH);
                 break;
 

@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -88,7 +90,9 @@ public class Utente {
 		return this.isLogged;
 	}
 
+
 // ---------------------------------------------------------------------------------------------
+
 
 	// Metodo set per l'observer dei preferiti dell'utente
 	public void setObserver(PreferitiObserver observer) {
@@ -98,13 +102,13 @@ public class Utente {
 		
 	// Metodo che notifica l'observer di un determinato cambiamento nei preferiti
 	private void notificaObserver() {
-		if (observer != null) {
-		    observer.onPreferitiChanged();
-		}
+		if (observer != null) observer.onPreferitiChanged();
 	}
-		
+
+
 // ---------------------------------------------------------------------------------------------
-	
+
+
 	// Metodo per modificare le linee preferite (sia attributo che nel file di testo) dell'utente loggato
 	public void cambiaPreferiti(List<String> lineePreferite, List<String> fermatePreferite) {
 		
@@ -112,7 +116,7 @@ public class Utente {
 		this.setFermatePreferite(fermatePreferite);
 
 		try {
-			Path path = Paths.get("src/resources/files/utenti.txt");
+			Path path = Paths.get(Frame.getDamoseDirectory().toString() + File.separator + "files/utenti.txt");
 			List<String> righe = Files.readAllLines(path);
 
 			for (int i = 0; i < righe.size(); i++) {
@@ -126,47 +130,23 @@ public class Utente {
 
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
 		}
 
 		notificaObserver();
 	}
 
-	
-	// Metodo per modificare le fermate preferite (sia attributo che nel file di testo) dell'utente loggato
-	public void cambiaFermatePreferite(List<String> fermatePreferite) throws Exception {
-		
-		this.setFermatePreferite(fermatePreferite);
 
-		try {
-			Path path = Paths.get("src/resources/files/utenti.txt");
-			List<String> righe = Files.readAllLines(path);
-
-			for (int i = 0; i < righe.size(); i++) {
-				if (righe.get(i).startsWith(this.username)) {
-					righe.set(i, this.username + "," + this.nome + "," + this.cognome + "," + String.join("-", lineePreferite) + "," + String.join("-", this.fermatePreferite));
-					break;
-				}
-			}
-
-			Files.write(path, righe);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		notificaObserver();
-	}
-	
 // ---------------------------------------------------------------------------------------------
-	
+
+
 	// Metodo che gestisce l'accesso a un utente già esistente
-	public String accedi(String username, String password) throws IOException {
+	public String accedi(String username, String password) throws IOException, URISyntaxException {
 		
-		if (username.isBlank()) {        	
-        	return "Username non inserito.";
-        }
+		if (username.isBlank()) return "Username non inserito.";
 		
-		BufferedReader reader = new BufferedReader(new FileReader("src/resources/files/utenti.txt"));
+		BufferedReader reader = new BufferedReader(new FileReader(Frame.getDamoseDirectory() + File.separator + "files/utenti.txt"));
         String riga;
         
         while ((riga = reader.readLine()) != null) {
@@ -202,14 +182,11 @@ public class Utente {
 					this.setFermatePreferite(listaFermatePreferite);
             		return "Verificata.";
             		
-            	} else {
-            		return "Password errata.";
-            	}
+            	} else return "Password errata.";
             }
         }
 
 		reader.close();
-		
 		return "Utente non esistente.";
 	}
 	
