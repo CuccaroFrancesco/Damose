@@ -119,7 +119,7 @@ public class Ricerca extends JPanel{
         	
         	switch (linea.getType()) {
 				case 0:
-					ImageIcon iconTram = new ImageIcon("src/resources/tram.png");
+					ImageIcon iconTram = new ImageIcon("src/resources/assets/tram.png");
 			        Image scaledImageTram = iconTram.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 			        ImageIcon newIconTram = new ImageIcon(scaledImageTram);
 			        btnLinea.setIcon(newIconTram);
@@ -128,7 +128,7 @@ public class Ricerca extends JPanel{
 				case 1:
 					switch (linea.getShortName()) {
 			        	case "MEA":
-			        		ImageIcon iconMetroA = new ImageIcon("src/resources/metro-a-logo-withborder.png");
+			        		ImageIcon iconMetroA = new ImageIcon("src/resources/assets/metro-a-logo-withborder.png");
 					        Image scaledImageMetroA = iconMetroA.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 					        ImageIcon newIconMetroA = new ImageIcon(scaledImageMetroA);
 					        
@@ -138,7 +138,7 @@ public class Ricerca extends JPanel{
 					        break;
 					    
 			        	case "MEB":
-			        		ImageIcon iconMetroB = new ImageIcon("src/resources/metro-b-logo-withborder.png");
+			        		ImageIcon iconMetroB = new ImageIcon("src/resources/assets/metro-b-logo-withborder.png");
 					        Image scaledImageMetroB = iconMetroB.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 					        ImageIcon newIconMetroB = new ImageIcon(scaledImageMetroB);
 					        
@@ -148,7 +148,7 @@ public class Ricerca extends JPanel{
 					        break;
 					        
 			        	case "MEB1":
-			        		ImageIcon iconMetroB1 = new ImageIcon("src/resources/metro-b-logo-withborder.png");
+			        		ImageIcon iconMetroB1 = new ImageIcon("src/resources/assets/metro-b-logo-withborder.png");
 					        Image scaledImageMetroB1 = iconMetroB1.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 					        ImageIcon newIconMetroB1 = new ImageIcon(scaledImageMetroB1);
 					        
@@ -157,7 +157,7 @@ public class Ricerca extends JPanel{
 					        break;
 					        
 			        	case "MEC":
-			        		ImageIcon iconMetroC = new ImageIcon("src/resources/metro-c-logo-withborder.png");
+			        		ImageIcon iconMetroC = new ImageIcon("src/resources/assets/metro-c-logo-withborder.png");
 					        Image scaledImageMetroC = iconMetroC.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 					        ImageIcon newIconMetroC = new ImageIcon(scaledImageMetroC);
 					        
@@ -170,14 +170,14 @@ public class Ricerca extends JPanel{
 			        break;
 		        
 				case 2:
-					ImageIcon iconTreno = new ImageIcon("src/resources/train.png");
+					ImageIcon iconTreno = new ImageIcon("src/resources/assets/train.png");
 			        Image scaledImageTreno = iconTreno.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 			        ImageIcon newIconTreno = new ImageIcon(scaledImageTreno);
 			        btnLinea.setIcon(newIconTreno);
 			        break;
 		        
 				case 3:
-					ImageIcon iconBus = new ImageIcon("src/resources/bus.png");
+					ImageIcon iconBus = new ImageIcon("src/resources/assets/bus.png");
 			        Image scaledImageBus = iconBus.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 			        ImageIcon newIconBus = new ImageIcon(scaledImageBus);
 			        btnLinea.setIcon(newIconBus);
@@ -209,7 +209,7 @@ public class Ricerca extends JPanel{
     		
         	btnFermata.setFocusable(false);
         	
-        	ImageIcon iconFermata = new ImageIcon("src/resources/fermata.png");
+        	ImageIcon iconFermata = new ImageIcon("src/resources/assets/fermata.png");
 	        Image scaledImageFermata = iconFermata.getImage().getScaledInstance(24, 32, Image.SCALE_SMOOTH);
 	        ImageIcon newIconFermata = new ImageIcon(scaledImageFermata);
 	        btnFermata.setIcon(newIconFermata);

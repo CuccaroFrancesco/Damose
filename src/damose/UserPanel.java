@@ -71,7 +71,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		btnProfilePic.setFocusPainted(false);
 		btnProfilePic.setContentAreaFilled(false);
 
-		ImageIcon iconProfilePic = new ImageIcon("src/resources/user_placeholder.png");
+		ImageIcon iconProfilePic = new ImageIcon("src/resources/assets/user_placeholder.png");
 		Image scaledImageProfilePic = iconProfilePic.getImage().getScaledInstance(144, 144, Image.SCALE_SMOOTH);
 		ImageIcon newIconProfilePic = new ImageIcon(scaledImageProfilePic);
 		btnProfilePic.setIcon(newIconProfilePic);
@@ -96,7 +96,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		btnSettings.setFocusPainted(false);
 		btnSettings.setContentAreaFilled(false);
 
-		ImageIcon iconSettings = new ImageIcon("src/resources/settings.png");
+		ImageIcon iconSettings = new ImageIcon("src/resources/assets/settings.png");
 		Image scaledImageSettings = iconSettings.getImage().getScaledInstance(18, 18, Image.SCALE_SMOOTH);
 		ImageIcon newIconSettings = new ImageIcon(scaledImageSettings);
 		btnSettings.setIcon(newIconSettings);
@@ -379,7 +379,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		btnBack.setFocusPainted(false);
 		btnBack.setContentAreaFilled(false);
 		
-		ImageIcon iconBack = new ImageIcon("src/resources/indietro.png");
+		ImageIcon iconBack = new ImageIcon("src/resources/assets/indietro.png");
         Image scaledImageBack = iconBack.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         ImageIcon newIconBack = new ImageIcon(scaledImageBack);
         btnBack.setIcon(newIconBack);
@@ -401,7 +401,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		btnLogout.setFocusPainted(false);
 		btnLogout.setContentAreaFilled(false);
 		
-		ImageIcon iconLogout = new ImageIcon("src/resources/logout.png");
+		ImageIcon iconLogout = new ImageIcon("src/resources/assets/logout.png");
         Image scaledImageLogout = iconLogout.getImage().getScaledInstance(18, 18, Image.SCALE_SMOOTH);
         ImageIcon newIconLogout = new ImageIcon(scaledImageLogout);
         btnLogout.setIcon(newIconLogout);
@@ -566,7 +566,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 						btnAccedi.setVisible(true);
 						btnRegistrati.setVisible(true);
 
-						ImageIcon iconCheck = new ImageIcon("src/resources/check-notification.png");
+						ImageIcon iconCheck = new ImageIcon("src/resources/assets/check-notification.png");
 						Image scaledImageCheck = iconCheck.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 						ImageIcon newIconCheck = new ImageIcon(scaledImageCheck);
 						frame.getNotificationPanel().getBtnMessage().setIcon(newIconCheck);
@@ -615,7 +615,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		                frame.getStopPanel().controllaUtente(true);
 		                frame.getRoutePanel().controllaUtente(true);
 
-						ImageIcon iconCheck = new ImageIcon("src/resources/check-notification.png");
+						ImageIcon iconCheck = new ImageIcon("src/resources/assets/check-notification.png");
 						Image scaledImageCheck = iconCheck.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 						ImageIcon newIconCheck = new ImageIcon(scaledImageCheck);
 						frame.getNotificationPanel().getBtnMessage().setIcon(newIconCheck);
@@ -670,7 +670,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 				frame.getStopPanel().controllaUtente(false);
 				frame.getRoutePanel().controllaUtente(false);
 
-				ImageIcon iconCheck = new ImageIcon("src/resources/check-notification.png");
+				ImageIcon iconCheck = new ImageIcon("src/resources/assets/check-notification.png");
 				Image scaledImageCheck = iconCheck.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 				ImageIcon newIconCheck = new ImageIcon(scaledImageCheck);
 				frame.getNotificationPanel().getBtnMessage().setIcon(newIconCheck);
@@ -738,7 +738,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 				// Switch per la scelta dell'icona del lineaBtn in base al tipo di linea
 				switch (lineaArray[0].getType()) {
 					case 0:
-						ImageIcon iconTram = new ImageIcon("src/resources/tram.png");
+						ImageIcon iconTram = new ImageIcon("src/resources/assets/tram.png");
 						Image scaledImageTram = iconTram.getImage().getScaledInstance(36, 36, Image.SCALE_SMOOTH);
 						ImageIcon newIconTram = new ImageIcon(scaledImageTram);
 						lineaBtn.setIcon(newIconTram);
@@ -748,7 +748,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 					case 1:
 						switch (lineaArray[0].getShortName()) {
 							case "MEA":
-								ImageIcon iconMetroA = new ImageIcon("src/resources/metro-a-logo-withborder.png");
+								ImageIcon iconMetroA = new ImageIcon("src/resources/assets/metro-a-logo-withborder.png");
 								Image scaledImageMetroA = iconMetroA.getImage().getScaledInstance(48, 48, Image.SCALE_SMOOTH);
 								ImageIcon newIconMetroA = new ImageIcon(scaledImageMetroA);
 								lineaBtn.setIcon(newIconMetroA);
@@ -756,7 +756,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 								break;
 
 							case "MEB", "MEB1":
-								ImageIcon iconMetroB = new ImageIcon("src/resources/metro-b-logo-withborder.png");
+								ImageIcon iconMetroB = new ImageIcon("src/resources/assets/metro-b-logo-withborder.png");
 								Image scaledImageMetroB = iconMetroB.getImage().getScaledInstance(48, 48, Image.SCALE_SMOOTH);
 								ImageIcon newIconMetroB = new ImageIcon(scaledImageMetroB);
 								lineaBtn.setIcon(newIconMetroB);
@@ -764,7 +764,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 								break;
 
 							case "MEC":
-								ImageIcon iconMetroC = new ImageIcon("src/resources/metro-c-logo-withborder.png");
+								ImageIcon iconMetroC = new ImageIcon("src/resources/assets/metro-c-logo-withborder.png");
 								Image scaledImageMetroC = iconMetroC.getImage().getScaledInstance(48, 48, Image.SCALE_SMOOTH);
 								ImageIcon newIconMetroC = new ImageIcon(scaledImageMetroC);
 								lineaBtn.setIcon(newIconMetroC);
@@ -775,7 +775,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 						break;
 
 					case 2:
-						ImageIcon iconTreno = new ImageIcon("src/resources/train.png");
+						ImageIcon iconTreno = new ImageIcon("src/resources/assets/train.png");
 						Image scaledImageTreno = iconTreno.getImage().getScaledInstance(36, 36, Image.SCALE_SMOOTH);
 						ImageIcon newIconTreno = new ImageIcon(scaledImageTreno);
 						lineaBtn.setIcon(newIconTreno);
@@ -783,7 +783,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 						break;
 
 					case 3:
-						ImageIcon iconBus = new ImageIcon("src/resources/bus.png");
+						ImageIcon iconBus = new ImageIcon("src/resources/assets/bus.png");
 						Image scaledImageBus = iconBus.getImage().getScaledInstance(36, 36, Image.SCALE_SMOOTH);
 						ImageIcon newIconBus = new ImageIcon(scaledImageBus);
 						lineaBtn.setIcon(newIconBus);
@@ -864,7 +864,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 
 	            stopBtn.setBounds(25, y, 50, 50);
 
-				ImageIcon iconFermata = new ImageIcon("src/resources/fermata-bianco.png");
+				ImageIcon iconFermata = new ImageIcon("src/resources/assets/fermata-bianco.png");
 				Image scaledImageFermata = iconFermata.getImage().getScaledInstance(27, 36, Image.SCALE_SMOOTH);
 				ImageIcon newIconFermata = new ImageIcon(scaledImageFermata);
 				stopBtn.setIcon(newIconFermata);

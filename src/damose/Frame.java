@@ -62,7 +62,7 @@ public class Frame extends JFrame {
         this.setMaximumSize(screenSize);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        ImageIcon iconaDamose = new ImageIcon("src/resources/damose-icon.png");
+        ImageIcon iconaDamose = new ImageIcon(getClass().getResource("/assets/damose-icon.png"));
         Image newIconaDamose16 = iconaDamose.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         Image newIconaDamose32 = iconaDamose.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
         Image newIconaDamose64 = iconaDamose.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
@@ -95,7 +95,7 @@ public class Frame extends JFrame {
         	@Override
             protected Void doInBackground() throws Exception {
                 
-        		dati.caricaDatiStaticiGTFS("staticGTFS");
+        		dati.caricaDatiStaticiGTFS("src/resources/staticGTFS");
                 return null;
             }
 
@@ -218,7 +218,7 @@ public class Frame extends JFrame {
 									if (Frame.this.dati.getVehiclePositions() != null) vehiclePositionsStatus = 1;
 									if (Frame.this.dati.getAlert() != null) alertStatus = 1;
 
-									ImageIcon iconError = new ImageIcon("src/resources/error-notification.png");
+									ImageIcon iconError = new ImageIcon("src/resources/assets/error-notification.png");
 									Image scaledImageError = iconError.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 									ImageIcon newIconError = new ImageIcon(scaledImageError);
 									notificationPanel.getBtnMessage().setIcon(newIconError);

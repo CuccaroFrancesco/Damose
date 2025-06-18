@@ -55,7 +55,7 @@ public class StatsPanel extends JPanel {
 
         btnBack.setBounds(-25, 5, 200, 30);
 
-        ImageIcon iconBack = new ImageIcon("src/resources/indietro.png");
+        ImageIcon iconBack = new ImageIcon("src/resources/assets/indietro.png");
         Image scaledImageBack = iconBack.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
         ImageIcon newIconBack = new ImageIcon(scaledImageBack);
         btnBack.setIcon(newIconBack);
@@ -193,7 +193,7 @@ public class StatsPanel extends JPanel {
             case "Atac":
                 btnAgency.setVisible(true);
 
-                ImageIcon iconAtac = new ImageIcon("src/resources/atac-logo.png");
+                ImageIcon iconAtac = new ImageIcon("src/resources/assets/atac-logo.png");
                 Image scaledImageAtac = iconAtac.getImage().getScaledInstance(65, 45, Image.SCALE_SMOOTH);
                 ImageIcon newIconAtac = new ImageIcon(scaledImageAtac);
                 btnAgency.setIcon(newIconAtac);
@@ -205,7 +205,7 @@ public class StatsPanel extends JPanel {
             case "Autoservizi Troiani":
                 btnAgency.setVisible(true);
 
-                ImageIcon iconTroiani = new ImageIcon("src/resources/autoservizi-troiani-logo.png");
+                ImageIcon iconTroiani = new ImageIcon("src/resources/assets/autoservizi-troiani-logo.png");
                 Image scaledImageTroiani = iconTroiani.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 ImageIcon newIconTroiani = new ImageIcon(scaledImageTroiani);
                 btnAgency.setIcon(newIconTroiani);
@@ -236,7 +236,7 @@ public class StatsPanel extends JPanel {
         // Assegnamento speciale di icona al btnAgency e di testo a codice in caso la linea sia una metropolitana
         switch (shortName) {
             case "MEA":
-                ImageIcon iconMetroA = new ImageIcon("src/resources/metro-a-logo-withborder.png");
+                ImageIcon iconMetroA = new ImageIcon("src/resources/assets/metro-a-logo-withborder.png");
                 Image scaledImageMetroA = iconMetroA.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 ImageIcon newIconMetroA = new ImageIcon(scaledImageMetroA);
                 btnAgency.setIcon(newIconMetroA);
@@ -246,7 +246,7 @@ public class StatsPanel extends JPanel {
                 break;
 
             case "MEB":
-                ImageIcon iconMetroB = new ImageIcon("src/resources/metro-b-logo-withborder.png");
+                ImageIcon iconMetroB = new ImageIcon("src/resources/assets/metro-b-logo-withborder.png");
                 Image scaledImageMetroB = iconMetroB.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 ImageIcon newIconMetroB = new ImageIcon(scaledImageMetroB);
                 btnAgency.setIcon(newIconMetroB);
@@ -256,7 +256,7 @@ public class StatsPanel extends JPanel {
                 break;
 
             case "MEB1":
-                ImageIcon iconMetroB1 = new ImageIcon("src/resources/metro-b-logo-withborder.png");
+                ImageIcon iconMetroB1 = new ImageIcon("src/resources/assets/metro-b-logo-withborder.png");
                 Image scaledImageMetroB1 = iconMetroB1.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 ImageIcon newIconMetroB1 = new ImageIcon(scaledImageMetroB1);
                 btnAgency.setIcon(newIconMetroB1);
@@ -266,7 +266,7 @@ public class StatsPanel extends JPanel {
                 break;
 
             case "MEC":
-                ImageIcon iconMetroC = new ImageIcon("src/resources/metro-c-logo-withborder.png");
+                ImageIcon iconMetroC = new ImageIcon("src/resources/assets/metro-c-logo-withborder.png");
                 Image scaledImageMetroC = iconMetroC.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 ImageIcon newIconMetroC = new ImageIcon(scaledImageMetroC);
                 btnAgency.setIcon(newIconMetroC);
@@ -375,7 +375,6 @@ public class StatsPanel extends JPanel {
         this.chartPanel.revalidate();
 
         this.repaint();
-
     }
 
 
@@ -419,7 +418,7 @@ public class StatsPanel extends JPanel {
         btnAgency.setPreferredSize(new Dimension(40, 40));
         btnAgency.setBounds(20, 70, 40, 40);
 
-        ImageIcon iconStop = new ImageIcon("src/resources/fermata-bianco.png");
+        ImageIcon iconStop = new ImageIcon("src/resources/assets/fermata-bianco.png");
         Image scaledImageStop = iconStop.getImage().getScaledInstance(32, 40, Image.SCALE_SMOOTH);
         ImageIcon newIconStop = new ImageIcon(scaledImageStop);
         btnAgency.setIcon(newIconStop);
@@ -505,9 +504,10 @@ public class StatsPanel extends JPanel {
 
 // ---------------------------------------------------------------------------------------------
 
+
     // Metodo per formattare velocemente da secondi a minuti avendo la stringa stritta per bene
     private String formattaTempo(int secondiTotali) {
-        int secondiAssoluti = Math.abs(secondiTotali); // rimuove segno negativo se presente
+        int secondiAssoluti = Math.abs(secondiTotali);     // rimuove segno negativo se presente
 
         int minuti = secondiAssoluti / 60;
         int secondi = secondiAssoluti % 60;
@@ -531,14 +531,11 @@ public class StatsPanel extends JPanel {
     }
 
 
-
-
-
     // Metodo che restituisce le statistiche relative a una determinata linea
     public ArrayList<String> ottieniStatistiche(Route linea) {
 
         // Ottenimento del file relativo alla linea, e istanziamento di un ArrayList che ospiterà le statistiche della stessa
-        File fileLinea = new File("files/linee/storico_" + linea.getId().getId() + ".txt");
+        File fileLinea = new File("src/resources/files/linee/storico_" + linea.getId().getId() + ".txt");
         ArrayList<String> statistiche = new ArrayList<>();
 
 
@@ -617,6 +614,7 @@ public class StatsPanel extends JPanel {
 
                             break;
                     }
+
                 } else System.err.println("Riga non valida: "+ riga);
             }
 
@@ -652,7 +650,7 @@ public class StatsPanel extends JPanel {
     public ArrayList<String> ottieniStatistiche(Stop fermata) {
 
         // Ottenimento del file relativo alla fermata, e istanziamento di un ArrayList che ospiterà le statistiche della stessa
-        File fileFermata = new File("files/fermate/storico_" + fermata.getId().getId() + ".txt");
+        File fileFermata = new File("src/resources/files/fermate/storico_" + fermata.getId().getId() + ".txt");
         ArrayList<String> statistiche = new ArrayList<>();
 
 
@@ -708,6 +706,7 @@ public class StatsPanel extends JPanel {
                             anticipati += 1;
                             break;
                     }
+
                 } else System.err.println("Riga non valida: "+ riga);
             }
 

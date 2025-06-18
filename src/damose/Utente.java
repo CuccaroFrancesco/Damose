@@ -112,7 +112,7 @@ public class Utente {
 		this.setFermatePreferite(fermatePreferite);
 
 		try {
-			Path path = Paths.get("files/utenti.txt");
+			Path path = Paths.get("src/resources/files/utenti.txt");
 			List<String> righe = Files.readAllLines(path);
 
 			for (int i = 0; i < righe.size(); i++) {
@@ -138,7 +138,7 @@ public class Utente {
 		this.setFermatePreferite(fermatePreferite);
 
 		try {
-			Path path = Paths.get("files/utenti.txt");
+			Path path = Paths.get("src/resources/files/utenti.txt");
 			List<String> righe = Files.readAllLines(path);
 
 			for (int i = 0; i < righe.size(); i++) {
@@ -166,7 +166,7 @@ public class Utente {
         	return "Username non inserito.";
         }
 		
-		BufferedReader reader = new BufferedReader(new FileReader("files/utenti.txt"));
+		BufferedReader reader = new BufferedReader(new FileReader("src/resources/files/utenti.txt"));
         String riga;
         
         while ((riga = reader.readLine()) != null) {
