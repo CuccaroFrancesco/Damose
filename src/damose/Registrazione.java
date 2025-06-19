@@ -23,7 +23,7 @@ public class Registrazione {
 	// Metodo che controlla la validità dello username inserito
 	public static String checkUsername(String newUsername) throws IOException, URISyntaxException {
 
-		BufferedReader reader = new BufferedReader(new FileReader(new File(Frame.getDamoseDirectory(), "files/utenti.txt")));
+		BufferedReader reader = new BufferedReader(new FileReader(new File(Frame.getDamoseDirectory(), "files" + File.separator + "utenti.txt")));
 		String riga;
 
 		if (newUsername.isBlank()) {
@@ -91,7 +91,7 @@ public class Registrazione {
 	// Metodo che gestisce l'aggiunta di nuovi user al file di testo che svolge il ruolo di "database"
 	public static void addUser(String nome, String cognome, String username, String password) throws IOException, URISyntaxException {
 
-		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Frame.getDamoseDirectory(), "files/utenti.txt"), true));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Frame.getDamoseDirectory(), "files" + File.separator + "utenti.txt"), true));
 		writer.write(username + "," + nome + "," + cognome + "," + password + ", , \n");
 		writer.flush();
 		writer.close();

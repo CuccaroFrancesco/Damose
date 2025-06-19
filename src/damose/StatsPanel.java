@@ -24,9 +24,9 @@ import java.util.ArrayList;
 
 public class StatsPanel extends JPanel {
 
-    private Frame frame;
-    private JButton btnBack, btnAgency;
-    private JLabel codice, agenziaENome, lblDettagli, lblExtra;
+    private final Frame frame;
+    private final JButton btnBack, btnAgency;
+    private final JLabel codice, agenziaENome, lblDettagli, lblExtra;
     private ChartPanel chartPanel;
     private Trip viaggioDaVisualizzare;
     private Stop fermataDaVisualizzare;

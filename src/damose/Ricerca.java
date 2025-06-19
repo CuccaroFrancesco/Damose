@@ -26,7 +26,7 @@ import java.awt.event.ActionListener;
 
 public class Ricerca extends JPanel{
 	
-	private Frame frame;
+	private final Frame frame;
 	
 	private JPanel panelRisultati;
     private JScrollPane risultatiScrollPane;

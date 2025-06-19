@@ -18,10 +18,10 @@ import javax.swing.*;
 
 public class VeicoliWaypoint extends DefaultWaypoint {
 
-    private VehiclePosition vehiclePosition;
-    private double angolo;
+    private final VehiclePosition vehiclePosition;
+    private final double angolo;
+    private final DatiGTFS dati;
     private Image waypointIcon;
-    private DatiGTFS dati;
 
 
     // Costruttore di un veicoliWaypoint

@@ -31,19 +31,19 @@ import com.google.transit.realtime.GtfsRealtime.TripUpdate.*;
 
 public class RoutePanel extends JPanel {
 
-	private Frame frame;
+	private final Frame frame;
 
-	private JLabel codiceLinea, agenziaENomeLinea, lblPartenze, lblViaggioVisualizzato, lblViaggioVisualizzatoInfo, lblVeicoli, lblNoInfoVeicoli;
-	private JButton btnClose, btnRefresh, btnStats, btnAgency, btnFavorite, btnWebsite, btnRouteType, btnTripLeft, btnTripRight;
+	private final JLabel codiceLinea, agenziaENomeLinea, lblPartenze, lblViaggioVisualizzato, lblViaggioVisualizzatoInfo, lblVeicoli, lblNoInfoVeicoli;
+	private final JButton btnClose, btnRefresh, btnStats, btnAgency, btnFavorite, btnWebsite, btnRouteType, btnTripLeft, btnTripRight;
 	private JPanel fermatePanel, veicoliPanel;
 	private JScrollPane fermateScrollPane, veicoliScrollPane;
-	private ImageIcon iconIntermezzoBus, newIconIntermezzoBus, iconInizioBus, newIconInizioBus, iconFineBus, newIconFineBus,
+	private final ImageIcon iconIntermezzoBus, newIconIntermezzoBus, iconInizioBus, newIconInizioBus, iconFineBus, newIconFineBus,
 			iconIntermezzoTram, newIconIntermezzoTram, iconInizioTram, newIconInizioTram, iconFineTram, newIconFineTram,
 			iconIntermezzoTreno, newIconIntermezzoTreno, iconInizioTreno, newIconInizioTreno, iconFineTreno, newIconFineTreno,
 			iconIntermezzoMetroA, newIconIntermezzoMetroA, iconInizioMetroA, newIconInizioMetroA, iconFineMetroA, newIconFineMetroA,
 			iconIntermezzoMetroB, newIconIntermezzoMetroB, iconInizioMetroB, newIconInizioMetroB, iconFineMetroB, newIconFineMetroB,
 			iconIntermezzoMetroC, newIconIntermezzoMetroC, iconInizioMetroC, newIconInizioMetroC, iconFineMetroC, newIconFineMetroC;
-	private Image scaledImageIntermezzoBus, scaledImageInizioBus, scaledImageFineBus,
+	private final Image scaledImageIntermezzoBus, scaledImageInizioBus, scaledImageFineBus,
 			scaledImageIntermezzoTram, scaledImageInizioTram, scaledImageFineTram,
 			scaledImageIntermezzoTreno, scaledImageInizioTreno, scaledImageFineTreno,
 			scaledImageIntermezzoMetroA, scaledImageInizioMetroA, scaledImageFineMetroA,
@@ -649,8 +649,8 @@ public class RoutePanel extends JPanel {
 						desktop.browse(new URI(url));
 					} catch (IOException e1) {
 						e1.printStackTrace();
-					} catch (URISyntaxException e1) {
-						e1.printStackTrace();
+					} catch (URISyntaxException e2) {
+						e2.printStackTrace();
 					}
 				}
 			}
@@ -1148,6 +1148,10 @@ public class RoutePanel extends JPanel {
 
 		// Rimozione di eventuali veicoliScrollPane precedenti (necessario per evitare overlap)
 		if (veicoliScrollPane != null) this.remove(veicoliScrollPane);
+
+
+		// Rimozione di eventuali veicoli da disegnare precedenti dal veicoliPainter
+		frame.getMappa().getVeicoliPainter().setVeicoliDaDisegnare(new ArrayList<>());
 
 
 		// Gestione della visualizzazione della sezione "Veicoli" in base a vehiclePositionsStatus

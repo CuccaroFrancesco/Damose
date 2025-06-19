@@ -7,24 +7,17 @@ import javax.swing.event.DocumentListener;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.*;
-import java.util.List;
-import java.util.ArrayList;
-
-import org.onebusaway.gtfs.model.*;
-
-import org.jxmapviewer.viewer.*;
 
 
 
 public class Navbar extends JPanel {
 
-	private Frame frame;
+	private final Frame frame;
 	
-    private JTextField searchBar;
-    private JPanel mapButtonGroup;
-    private JLayeredPane searchLayeredPane;
-    private JButton mappaNormale, mappaSatellitare, mappaMista, btnLogin, btnRicerca;
+    private final JTextField searchBar;
+    private final JPanel mapButtonGroup;
+    private final JLayeredPane searchLayeredPane;
+    private final JButton mappaNormale, mappaSatellitare, mappaMista, btnLogin, btnRicerca;
 
     
     // Costruttore dell'oggetto Navbar

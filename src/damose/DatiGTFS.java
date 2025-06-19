@@ -418,8 +418,8 @@ public class DatiGTFS {
 	public void creaStorico() throws IOException, URISyntaxException {
 
 		// Creazione delle directory "linee" e "fermate"
-		new File(Frame.getDamoseDirectory(),"files/linee").mkdirs();
-		new File(Frame.getDamoseDirectory(),"files/fermate").mkdirs();
+		new File(Frame.getDamoseDirectory(),"files" + File.separator + "linee").mkdirs();
+		new File(Frame.getDamoseDirectory(),"files" + File.separator + "fermate").mkdirs();
 
 
 		// Ottenimento della data e dell'orario attuale
@@ -447,7 +447,7 @@ public class DatiGTFS {
 
 			// Ottenimento dell'ID della linea e del suo relativo file di storico
 			String lineaId = linea.getId().getId();
-			File fileLinea = new File(Frame.getDamoseDirectory(), "files/linee/storico_" + lineaId + ".txt");
+			File fileLinea = new File(Frame.getDamoseDirectory(), "files" + File.separator + "linee" + File.separator + "storico_" + lineaId + ".txt");
 
 
 			// Caricamento del contenuto esistente nel file relativo alla linea considerata
@@ -545,7 +545,7 @@ public class DatiGTFS {
 
 					// Ottenimento della fermata relativa allo StopTime e del suo relativo file di storico
 					String stopId = stopTime.getStop().getId().getId();
-					File fileFermata = new File(Frame.getDamoseDirectory(), "files/fermate/storico_" + stopId + ".txt");
+					File fileFermata = new File(Frame.getDamoseDirectory(), "files" + File.separator + "fermate" + File.separator + "storico_" + stopId + ".txt");
 
 
 					// Caricamento del contenuto esistente nel file relativo alla fermata considerata, e inserimento delle informazioni ottenute nella HashMap fermateStorico
@@ -618,7 +618,7 @@ public class DatiGTFS {
 		// Scrittura dei dati relativi alle linee nei rispettivi file di testo
 		for (Map.Entry<String, List<String>> entry : lineeDaScrivere.entrySet()) {
 
-			File file = new File(Frame.getDamoseDirectory(), "files/linee/storico_" + entry.getKey() + ".txt");
+			File file = new File(Frame.getDamoseDirectory(), "files" + File.separator + "linee" + File.separator + "storico_" + entry.getKey() + ".txt");
 			if (!file.exists()) file.createNewFile();
 
 			try (FileWriter fw = new FileWriter(file, true)) {
@@ -632,7 +632,7 @@ public class DatiGTFS {
 		// Scrittura dei dati relativi alle fermate nei rispettivi file di testo
 		for (Map.Entry<String, List<String>> entry : fermateDaScrivere.entrySet()) {
 
-			File file = new File(Frame.getDamoseDirectory(), "files/fermate/storico_" + entry.getKey() + ".txt");
+			File file = new File(Frame.getDamoseDirectory(), "files" + File.separator + "fermate" + File.separator + "storico_" + entry.getKey() + ".txt");
 			if (!file.exists()) file.createNewFile();
 
 			try (FileWriter fw = new FileWriter(file, true)) {

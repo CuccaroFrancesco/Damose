@@ -1,18 +1,14 @@
 package damose;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -116,7 +112,7 @@ public class Utente {
 		this.setFermatePreferite(fermatePreferite);
 
 		try {
-			Path path = Paths.get(Frame.getDamoseDirectory().toString() + File.separator + "files/utenti.txt");
+			Path path = Paths.get(Frame.getDamoseDirectory() + File.separator + "files" + File.separator + "utenti.txt");
 			List<String> righe = Files.readAllLines(path);
 
 			for (int i = 0; i < righe.size(); i++) {
@@ -146,14 +142,14 @@ public class Utente {
 		
 		if (username.isBlank()) return "Username non inserito.";
 		
-		BufferedReader reader = new BufferedReader(new FileReader(Frame.getDamoseDirectory() + File.separator + "files/utenti.txt"));
+		BufferedReader reader = new BufferedReader(new FileReader(Frame.getDamoseDirectory() + File.separator + "files" + File.separator + "utenti.txt"));
         String riga;
         
         while ((riga = reader.readLine()) != null) {
 
          	List<String> dati = new ArrayList<>(List.of(riga.split(",", -1)));
 
-            if (dati.size() > 0 && dati.get(0).equals(username.trim())) {
+            if (!dati.isEmpty() && dati.get(0).equals(username.trim())) {
             	
             	if(dati.get(3).trim().equals(password)) {  
             		

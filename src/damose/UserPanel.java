@@ -16,13 +16,13 @@ import java.util.List;
 
 public class UserPanel extends JPanel implements PreferitiObserver {
 	
-	private Frame frame;
+	private final Frame frame;
 	
 	private JButton btnProfilePic, btnSettings, btnAccedi, btnRegistrati, btnConfermaLogin, btnConfermaRegistr, btnLogout, btnBack, btnToggleFermate, btnToggleLinee;
-	private JLabel titolo, lblNome, lblCognome, lblUsername, lblPassword, lblConfermaPassword, lblNomeCognomeUtente,
-	               erroreNome, erroreCognome, erroreUsername, errorePassword, erroreConfermaPassword;
-	private JTextField inputNome, inputCognome, inputUsername;
-	private JPasswordField inputPassword, inputConfermaPassword;
+	private final JLabel titolo, lblNome, lblCognome, lblUsername, lblPassword, lblConfermaPassword, lblNomeCognomeUtente,
+	               		 erroreNome, erroreCognome, erroreUsername, errorePassword, erroreConfermaPassword;
+	private final JTextField inputNome, inputCognome, inputUsername;
+	private final JPasswordField inputPassword, inputConfermaPassword;
 	private JPanel panelLineePreferite, panelFermatePreferite;
 	private JScrollPane fermateScrollPane, lineeScrollPane;
 
@@ -504,11 +504,8 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 					String resultCognome = Registrazione.checkCognome(newCognome);
 					String resultUsername = null;
 
-					try {
-						resultUsername = Registrazione.checkUsername(newUsername);
-					} catch (URISyntaxException e1) {
-						e1.printStackTrace();
-					}
+					try { resultUsername = Registrazione.checkUsername(newUsername); }
+					catch (URISyntaxException e1) { e1.printStackTrace(); }
 
 					String resultPassword = Registrazione.checkPassword(newPassword);
 					String resultConfermaPassword = Registrazione.checkConfermaPassword(newPassword, newConfermaPassword);
@@ -533,7 +530,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 					}
 					
 					
-					if (!resultUsername.equals("Verificata.")) {
+					if (resultUsername == null || !resultUsername.equals("Verificata.")) {
 						erroreUsername.setText(resultUsername);
 						erroreUsername.setVisible(true);
 						inputUsername.setBorder(new LineBorder(Color.RED, 1));

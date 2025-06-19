@@ -2,9 +2,7 @@ package damose;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.util.*;
 import java.util.List;
-import java.util.ArrayList;
 
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.painter.*;

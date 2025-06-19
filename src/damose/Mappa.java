@@ -22,13 +22,13 @@ import org.onebusaway.gtfs.model.*;
 
 public class Mappa extends JComponent {
 
-	private Frame frame;
+	private final Frame frame;
 	
-    private JXMapViewer mapViewer;
-    private FileBasedLocalCache localCache;
-    private WaypointPainter<Waypoint> fermateVisibiliPainter;
-    private LineaPainter lineaPainter;
-    private VeicoliPainter veicoliPainter;
+    private final JXMapViewer mapViewer;
+    private final FileBasedLocalCache localCache;
+    private final WaypointPainter<Waypoint> fermateVisibiliPainter;
+    private final LineaPainter lineaPainter;
+    private final VeicoliPainter veicoliPainter;
 
     
     // Costruttore dell'oggetto Mappa

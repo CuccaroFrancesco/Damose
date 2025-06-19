@@ -28,10 +28,10 @@ import com.google.transit.realtime.GtfsRealtime.TripUpdate.StopTimeUpdate;
 
 public class StopPanel extends JPanel {
 	
-	private Frame frame;
+	private final Frame frame;
 	
-	private JLabel nomeFermata, codiceFermata, lblArrivi, lblLineePassanti;
-	private JButton btnClose, btnRefresh, btnStopIcon, btnFavorite, btnCoordinates, btnStats;
+	private final JLabel nomeFermata, codiceFermata, lblArrivi, lblLineePassanti;
+	private final JButton btnClose, btnRefresh, btnStopIcon, btnFavorite, btnCoordinates, btnStats;
 	private JPanel prossimiArriviPanel, lineePassantiPanel;
 	private JScrollPane prossimiArriviScrollPane, lineePassantiScrollPane;
 	private List<StopTime> arriviDaVisualizzare;

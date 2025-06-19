@@ -96,8 +96,8 @@ public class Frame extends JFrame {
             
         	@Override
             protected Void doInBackground() throws Exception {
-                
-        		dati.caricaDatiStaticiGTFS(new File(Frame.getDamoseDirectory(), "staticGTFS"));
+
+				dati.caricaDatiStaticiGTFS(new File(Frame.getDamoseDirectory(), "staticGTFS"));
                 return null;
             }
 
@@ -338,11 +338,7 @@ public class Frame extends JFrame {
 
 	// Metodo che permette di ottenere la directory di base dell'applicazione come percorso assoluto
 	public static File getDamoseDirectory() throws URISyntaxException {
-
-		File path = new File(Frame.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
-
-		if (path.isFile() && path.getName().endsWith(".jar")) return path.getParentFile();
-		else return path.getParentFile().getParentFile();
+		return new File(System.getProperty("user.dir"));
 	}
 
 

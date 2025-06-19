@@ -4,14 +4,13 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
+
 
 
 public class NotificationPanel extends JPanel {
 
-    private JFrame frame;
-    private JButton btnMessage, btnClose;
+    private final JFrame frame;
+    private final JButton btnMessage;
     private Timer currentTimer;
 
 
@@ -68,12 +67,6 @@ public class NotificationPanel extends JPanel {
     // Metodo get per il btnMessage
     public JButton getBtnMessage() {
         return this.btnMessage;
-    }
-
-
-    // Metodo get per il btnClose
-    public JButton getBtnClose() {
-        return this.btnClose;
     }
 
 
