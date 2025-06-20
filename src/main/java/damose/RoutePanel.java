@@ -53,6 +53,7 @@ public class RoutePanel extends JPanel {
 	private List<Trip> viaggiDaVisualizzare;
 
 
+
 	// Costruttore del pannello routePanel
 	public RoutePanel(Frame frame) {
 

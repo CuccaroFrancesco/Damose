@@ -33,6 +33,7 @@ public class Frame extends JFrame {
 	private StopPanel stopPanel;
 	private UserPanel userPanel;
 	private StatsPanel statsPanel;
+	private SettingsPanel settingsPanel;
 	private NotificationPanel notificationPanel;
 	private Navbar navbar;
 	private Ricerca ricerca;
@@ -137,6 +138,13 @@ public class Frame extends JFrame {
 					layeredPane.add(statsPanel, Integer.valueOf(101));
 
 
+					// Aggiunta del settingsPanel alla finestra principale
+					settingsPanel = new SettingsPanel(Frame.this);
+
+					settingsPanel.setBounds(screenSize.width - 350, 70, 350, screenSize.height - 70);
+					layeredPane.add(settingsPanel, Integer.valueOf(101));
+
+
 					// Aggiunta del notificationPanel alla finestra principale
 					notificationPanel = new NotificationPanel(Frame.this);
 
@@ -160,7 +168,6 @@ public class Frame extends JFrame {
 	                userPanel = new UserPanel(Frame.this);
 	                
 	                userPanel.setBounds(screenSize.width - 350, 70, 350, screenSize.height - 70);
-	                userPanel.setVisible(false);
 	                layeredPane.add(userPanel, Integer.valueOf(101));
 	                
 	                
@@ -285,6 +292,12 @@ public class Frame extends JFrame {
 	public StatsPanel getStatsPanel() { return this.statsPanel; }
 
 
+	// Metodo get per il settingsPanel assegnato all'istanza
+	public SettingsPanel getSettingsPanel() {
+		return this.settingsPanel;
+	}
+
+
 	// Metodo get per il notificationPanel assegnato all'istanza
 	public NotificationPanel getNotificationPanel() {
 		return this.notificationPanel;
@@ -355,6 +368,7 @@ public class Frame extends JFrame {
 		navbar.getBtnLogin().setBounds(newWidth - navbar.getBtnLogin().getWidth() - 30, 10, 50, 50);
 		
 		userPanel.setBounds(newWidth - 350, 70, 350, newHeight - 70);
+		settingsPanel.setBounds(newWidth - 350, 70, 350, newHeight - 70);
 		
 		if ((newWidth / 2) - 250 <= 230) {                                               
 			
@@ -368,7 +382,7 @@ public class Frame extends JFrame {
 		if (ricerca.getRisultatiScrollPane() == null) ricerca.setBounds(navbar.getSearchBar().getX(), 55, navbar.getSearchBar().getWidth(), 0);
 		else ricerca.setBounds(navbar.getSearchBar().getX(), 55, navbar.getSearchBar().getWidth(), ricerca.getRisultatiScrollPane().getHeight());
 		
-		if (userPanel.isVisible()) {
+		if (userPanel.isVisible() || settingsPanel.isVisible()) {
 			
 			if (stopPanel.isVisible() || routePanel.isVisible() || statsPanel.isVisible()) mapPanel.setBounds(350, 70, newWidth - 350, newHeight - 70);
 			else mapPanel.setBounds(0, 70, newWidth - 350, newHeight - 70);

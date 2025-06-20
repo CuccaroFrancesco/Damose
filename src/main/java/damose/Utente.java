@@ -151,7 +151,7 @@ public class Utente {
 
             if (!dati.isEmpty() && dati.get(0).equals(username.trim())) {
             	
-            	if(dati.get(3).trim().equals(password)) {  
+            	if (dati.get(3).trim().equals(password)) {
             		
             		this.isLogged = true;
             		this.setUsername(username.trim());

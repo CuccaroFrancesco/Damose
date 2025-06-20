@@ -36,6 +36,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		
 		this.setBackground(new Color(130, 36, 51));
 		this.setLayout(null);
+		this.setVisible(false);
 		
 		
 		// Scritta "Ospite"
@@ -101,6 +102,12 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		Image scaledImageSettings = iconSettings.getImage().getScaledInstance(18, 18, Image.SCALE_SMOOTH);
 		ImageIcon newIconSettings = new ImageIcon(scaledImageSettings);
 		btnSettings.setIcon(newIconSettings);
+
+		btnSettings.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.getSettingsPanel().creaPannelloImpostazioni();
+			}
+		});
 
 		this.add(btnSettings);
 		

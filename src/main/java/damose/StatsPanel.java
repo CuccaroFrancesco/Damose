@@ -173,7 +173,7 @@ public class StatsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
 
                 StatsPanel.this.setVisible(false);
-                frame.getRoutePanel().creaPannelloLinea(linea);
+                frame.getRoutePanel().setVisible(true);
             }
         });
 
@@ -411,7 +411,7 @@ public class StatsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
 
                 StatsPanel.this.setVisible(false);
-                frame.getStopPanel().creaPannelloFermata(fermata);
+                frame.getStopPanel().setVisible(true);
             }
         });
 
