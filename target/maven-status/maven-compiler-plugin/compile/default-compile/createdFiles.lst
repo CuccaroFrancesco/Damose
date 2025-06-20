@@ -12,8 +12,10 @@ damose\Registrazione.class
 damose\Main$1.class
 damose\StatsPanel$2.class
 damose\UserPanel$6.class
+damose\DatiGTFSTest$CollectionTests.class
 damose\TilesetManager.class
 damose\PreferitiObserver.class
+damose\DatiGTFSTest.class
 damose\Navbar$2.class
 damose\Navbar$3.class
 damose\Utente.class
@@ -27,6 +29,8 @@ damose\UserPanel$10.class
 damose\Frame$1$1.class
 damose\UserPanel$1.class
 damose\Navbar$4.class
+damose\DatiGTFSTest$NullCasesTests.class
+damose\DatiGTFSTest$RicercaFermateTests.class
 damose\Navbar$7.class
 damose\RoutePanel$3.class
 damose\Main.class
@@ -51,5 +55,7 @@ damose\UserPanel$3.class
 damose\Frame$1.class
 damose\RoutePanel$1.class
 damose\RoutePanel$7.class
+damose\DatiGTFSTest$ViaggiFermateTests.class
 damose\UserPanel$4.class
+damose\DatiGTFSTest$RicercaLineeTests.class
 damose\Navbar$6.class
