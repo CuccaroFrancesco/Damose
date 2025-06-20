@@ -241,6 +241,8 @@ public class DatiGTFS {
 	
 	// Metodo che cerca e restituisce delle linee in base a una stringa di input
 	public List<Route> cercaLinee(String input) {
+		if (input == null || input.isEmpty()) return null;
+		input = input.trim();
 		
 	    List<Route> linee = new ArrayList<>();
 	    String normalizedInput = input.toLowerCase();
@@ -263,7 +265,9 @@ public class DatiGTFS {
 	
 	// Metodo che cerca e restituisce delle fermate in base a una stringa di input
 	public List<Stop> cercaFermate(String input) {
-		
+		if (input == null || input.isEmpty()) return null;
+		input = input.trim();
+
 	    List<Stop> fermate = new ArrayList<>();
 	    String normalizedInput = input.toLowerCase();
 
@@ -271,7 +275,7 @@ public class DatiGTFS {
 	        String stopId = stop.getId().getId().toLowerCase();
 	        String stopName = stop.getName() != null ? stop.getName().toLowerCase() : "";
 
-	        if (stopId.contains(normalizedInput) || stopName.contains(normalizedInput)) {
+	      if (stopId.contains(normalizedInput) || stopName.contains(normalizedInput)) {
 	            fermate.add(stop);
 	        }
 	    }
@@ -310,6 +314,7 @@ public class DatiGTFS {
 
 	// Metodo che restituisce tutte le fermate appartenenti a una determinata linea
 	public List<Stop> getFermatePerViaggio(Trip viaggio) {
+		if(viaggio == null) return null;
 		
 		List<StopTime> stopTimes = this.datiStatici.getStopTimesForTrip(viaggio);
 		List<Stop> listaFermate = new ArrayList<>();
@@ -326,6 +331,7 @@ public class DatiGTFS {
 	
 	// Metodo che restituisce tutte le linee passanti per una determinata fermata
 	public List<Route> getLineePassantiPerFermata(Stop fermata) {
+		if (fermata == null) return null;
 		
 		List<Trip> viaggi = new ArrayList<>();
 		List<Route> lineePassanti = new ArrayList<>();
@@ -348,6 +354,7 @@ public class DatiGTFS {
 
 	// Metodo che restituisce tutti i viaggi relativi alla linea attuale
 	public List<Trip> getViaggiDaVisualizzare(Route linea) {
+		if (linea == null) return null;
 
 		List<Trip> listaViaggi = this.getDatiStatici().getTripsForRoute(linea);
 		List<Trip> listaViaggiCopy = new ArrayList<>(listaViaggi);
@@ -357,15 +364,6 @@ public class DatiGTFS {
 		return listaViaggiCopy;
 	}
 
-
-	// Metodo che restituisce un booleano in base alla circolarità del viaggio
-	public boolean isCircolare(Trip viaggio) {
-
-		List<Stop> fermate = this.getFermatePerViaggio(viaggio);
-
-		if (fermate.getFirst().equals(fermate.getLast())) return true;
-		return false;
-	}
 
 
 // ---------------------------------------------------------------------------------------------
