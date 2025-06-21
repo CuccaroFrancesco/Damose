@@ -106,9 +106,9 @@ public class Ricerca extends JPanel{
         	for (ActionListener a : btnLinea.getActionListeners()) { btnLinea.removeActionListener(a); }
 	        
 	        btnLinea.addActionListener(e -> {
+
 	        	frame.getRoutePanel().creaPannelloLinea(linea);
-        		
-        		LineaPainter.costruisciLineaDaDisegnare(frame.getDati().getViaggiDaVisualizzare(linea).getFirst(), frame.getMappa(), frame.getDati());
+				LineaPainter.costruisciLineaDaDisegnare(frame.getDati().getViaggiDaVisualizzare(linea).getFirst(), frame.getMappa(), frame.getDati());
         		
 	        	Ricerca.this.setVisible(false);
 	        });
@@ -215,9 +215,8 @@ public class Ricerca extends JPanel{
 	        for (ActionListener a : btnFermata.getActionListeners()) { btnFermata.removeActionListener(a); }
 	        
 	        btnFermata.addActionListener(e -> {
+
 	        	frame.getStopPanel().creaPannelloFermata(fermata);
-	        	frame.getRoutePanel().setVisible(false);
-	            
 	        	frame.getMappa().centraMappa(fermata.getLon(), fermata.getLat(), 2);
 	        	
 	        	Ricerca.this.setVisible(false);

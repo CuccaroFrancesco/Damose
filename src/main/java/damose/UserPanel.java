@@ -3,6 +3,7 @@ package damose;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
+import org.jxmapviewer.viewer.*;
 import org.onebusaway.gtfs.model.Route;
 import org.onebusaway.gtfs.model.Stop;
 
@@ -73,7 +74,7 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		btnProfilePic.setFocusPainted(false);
 		btnProfilePic.setContentAreaFilled(false);
 
-		ImageIcon iconProfilePic = new ImageIcon(getClass().getResource("/assets/user_placeholder.png"));
+		ImageIcon iconProfilePic = new ImageIcon(getClass().getResource("/assets/user-placeholder.png"));
 		Image scaledImageProfilePic = iconProfilePic.getImage().getScaledInstance(144, 144, Image.SCALE_SMOOTH);
 		ImageIcon newIconProfilePic = new ImageIcon(scaledImageProfilePic);
 		btnProfilePic.setIcon(newIconProfilePic);
@@ -633,6 +634,25 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 		                frame.getStopPanel().controllaUtente(true);
 		                frame.getRoutePanel().controllaUtente(true);
 
+						if (frame.getRoutePanel().isVisible()) {
+							frame.getMappa().aggiornaFermateVisibili(frame.getRoutePanel().getViaggiDaVisualizzare().get(frame.getRoutePanel().getIndiceViaggioVisualizzato()));
+
+						} else if (frame.getStopPanel().isVisible()) {
+							frame.getMappa().aggiornaFermateVisibili(frame.getDati().cercaFermataByID(frame.getStopPanel().getCodiceFermata().substring(4)));
+
+						} else if (frame.getStatsPanel().isVisible()) {
+							if (frame.getStatsPanel().getViaggioDaVisualizzare() != null) frame.getMappa().aggiornaFermateVisibili(frame.getStatsPanel().getViaggioDaVisualizzare());
+							else if (frame.getStatsPanel().getFermataDaVisualizzare() != null) frame.getMappa().aggiornaFermateVisibili(frame.getStatsPanel().getFermataDaVisualizzare());
+
+						} else {
+							if (frame.getUtente().getFermatePreferiteToggleStatus()) frame.getMappa().aggiornaFermateVisibili(frame.getUtente().getFermatePreferite());
+							else frame.getMappa().aggiornaFermateVisibili();
+						}
+
+						if (frame.getUtente().getCentroAutoSpawnPointToggleStatus() && frame.getUtente().getSpawnPointLat() != 0.0 && frame.getUtente().getSpawnPointLon() != 0.0) {
+							frame.getMappa().getMapViewer().setAddressLocation(new GeoPosition(frame.getUtente().getSpawnPointLat(), frame.getUtente().getSpawnPointLon()));
+						}
+
 						ImageIcon iconCheck = new ImageIcon(getClass().getResource("/assets/check-notification.png"));
 						Image scaledImageCheck = iconCheck.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 						ImageIcon newIconCheck = new ImageIcon(scaledImageCheck);
@@ -689,6 +709,18 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 				
 				frame.getStopPanel().controllaUtente(false);
 				frame.getRoutePanel().controllaUtente(false);
+
+				if (frame.getRoutePanel().isVisible()) {
+					frame.getMappa().aggiornaFermateVisibili(frame.getRoutePanel().getViaggiDaVisualizzare().get(frame.getRoutePanel().getIndiceViaggioVisualizzato()));
+
+				} else if (frame.getStopPanel().isVisible()) {
+					frame.getMappa().aggiornaFermateVisibili(frame.getDati().cercaFermataByID(frame.getStopPanel().getCodiceFermata().substring(4)));
+
+				} else if (frame.getStatsPanel().isVisible()) {
+					if (frame.getStatsPanel().getViaggioDaVisualizzare() != null) frame.getMappa().aggiornaFermateVisibili(frame.getStatsPanel().getViaggioDaVisualizzare());
+					else if (frame.getStatsPanel().getFermataDaVisualizzare() != null) frame.getMappa().aggiornaFermateVisibili(frame.getStatsPanel().getFermataDaVisualizzare());
+
+				} else frame.getMappa().aggiornaFermateVisibili();
 
 				ImageIcon iconCheck = new ImageIcon(getClass().getResource("/assets/check-notification.png"));
 				Image scaledImageCheck = iconCheck.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
@@ -823,7 +855,6 @@ public class UserPanel extends JPanel implements PreferitiObserver {
                 		if (lineaArray[0] != null) {
 
                 			frame.getRoutePanel().creaPannelloLinea(lineaArray[0]);
-							frame.getRoutePanel().controllaUtente(frame.getUtente().getIsLogged());
                             LineaPainter.costruisciLineaDaDisegnare(frame.getDati().getViaggiDaVisualizzare(lineaArray[0]).get(frame.getRoutePanel().getIndiceViaggioVisualizzato()), frame.getMappa(), frame.getDati());
 
                         } else { System.err.println("Linea non trovata"); }
@@ -901,7 +932,6 @@ public class UserPanel extends JPanel implements PreferitiObserver {
 	            		if (fermata[0] != null) {
 
 	            			frame.getStopPanel().creaPannelloFermata(fermata[0]);
-							frame.getStopPanel().controllaUtente(frame.getUtente().getIsLogged());
 	            			frame.getMappa().centraMappa(fermata[0].getLon(), fermata[0].getLat(), 2);
 
 	                    } else { System.err.println("Fermata non trovata"); }

@@ -92,7 +92,7 @@ public class Registrazione {
 	public static void addUser(String nome, String cognome, String username, String password) throws IOException, URISyntaxException {
 
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(Frame.getDamoseDirectory(), "files" + File.separator + "utenti.txt"), true));
-		writer.write(username + "," + nome + "," + cognome + "," + password + ", , \n");
+		writer.write(username + "," + nome + "," + cognome + "," + password + ", , ,0,0.0,0.0,0\n");
 		writer.flush();
 		writer.close();
 	}	

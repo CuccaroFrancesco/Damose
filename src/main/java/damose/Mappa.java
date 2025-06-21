@@ -1,12 +1,12 @@
 package damose;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.Rectangle;
-import java.awt.Point;
+import java.awt.*;
 import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.*;
+import java.util.List;
 
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.VirtualEarthTileFactoryInfo;
@@ -29,12 +29,14 @@ public class Mappa extends JComponent {
     private final WaypointPainter<Waypoint> fermateVisibiliPainter;
     private final LineaPainter lineaPainter;
     private final VeicoliPainter veicoliPainter;
+    private boolean waitingForClick;
 
     
     // Costruttore dell'oggetto Mappa
     public Mappa(Frame frame) throws Exception {
     	
     	this.frame = frame;
+        this.waitingForClick = false;
     	
     	
     	// Impostazioni iniziale della mappa
@@ -71,10 +73,12 @@ public class Mappa extends JComponent {
 
         
         // Impostazione della posizione e dello zoom iniziale
-        GeoPosition Roma = new GeoPosition(41.90, 12.49);
+        GeoPosition roma = new GeoPosition(41.90, 12.49);
         
-        mapViewer.setAddressLocation(Roma);
-        mapViewer.setZoom(4);
+        mapViewer.setAddressLocation(roma);
+        mapViewer.setZoom(3);
+
+        aggiornaFermateVisibili();
 
         
         // Listener per le azioni eseguibili dal mouse sulla mappa
@@ -86,26 +90,70 @@ public class Mappa extends JComponent {
         mapViewer.addMouseWheelListener(zoomListener);
         
         mapViewer.addPropertyChangeListener("zoom", e -> {
+
                 if (frame.getRoutePanel().isVisible()) {
                     aggiornaFermateVisibili(frame.getRoutePanel().getViaggiDaVisualizzare().get(frame.getRoutePanel().getIndiceViaggioVisualizzato()));
+
                 } else if (frame.getStopPanel().isVisible()) {
                     aggiornaFermateVisibili(frame.getDati().cercaFermataByID(frame.getStopPanel().getCodiceFermata().substring(4)));
+
                 } else if (frame.getStatsPanel().isVisible()) {
                     if (frame.getStatsPanel().getViaggioDaVisualizzare() != null) aggiornaFermateVisibili(frame.getStatsPanel().getViaggioDaVisualizzare());
                     else if (frame.getStatsPanel().getFermataDaVisualizzare() != null) aggiornaFermateVisibili(frame.getStatsPanel().getFermataDaVisualizzare());
-                } else aggiornaFermateVisibili();
+
+                } else {
+                    if (frame.getUtente().getIsLogged() && frame.getUtente().getFermatePreferiteToggleStatus()) aggiornaFermateVisibili(frame.getUtente().getFermatePreferite());
+                    else aggiornaFermateVisibili();
+                }
             });
 
         mapViewer.addPropertyChangeListener("centerPosition", e -> {
+
                 if (frame.getRoutePanel().isVisible()) {
                     aggiornaFermateVisibili(frame.getRoutePanel().getViaggiDaVisualizzare().get(frame.getRoutePanel().getIndiceViaggioVisualizzato()));
+
                 } else if (frame.getStopPanel().isVisible()) {
                     aggiornaFermateVisibili(frame.getDati().cercaFermataByID(frame.getStopPanel().getCodiceFermata().substring(4)));
+
                 } else if (frame.getStatsPanel().isVisible()) {
                     if (frame.getStatsPanel().getViaggioDaVisualizzare() != null) aggiornaFermateVisibili(frame.getStatsPanel().getViaggioDaVisualizzare());
                     else if (frame.getStatsPanel().getFermataDaVisualizzare() != null) aggiornaFermateVisibili(frame.getStatsPanel().getFermataDaVisualizzare());
-                } else aggiornaFermateVisibili();
+
+                } else {
+                    if (frame.getUtente().getIsLogged() && frame.getUtente().getFermatePreferiteToggleStatus()) aggiornaFermateVisibili(frame.getUtente().getFermatePreferite());
+                    else aggiornaFermateVisibili();
+                }
             });
+
+        mapViewer.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+
+                if (waitingForClick) {
+
+                    Point puntoCliccato = e.getPoint();
+                    GeoPosition pos = mapViewer.convertPointToGeoPosition(puntoCliccato);
+
+                    frame.getUtente().aggiornaUtente(frame.getUtente().getLineePreferite(),
+                            frame.getUtente().getFermatePreferite(),
+                            frame.getUtente().getFermatePreferiteToggleStatus(),
+                            pos.getLatitude(),
+                            pos.getLongitude(),
+                            frame.getUtente().getCentroAutoSpawnPointToggleStatus());
+
+                    frame.getSettingsPanel().getLblSpawnPointAttualeInfo().setText("<html>Lat: <b>" + frame.getUtente().getSpawnPointLat() + "</b>, Lon: <b>" + frame.getUtente().getSpawnPointLon() + "</b></html>");
+
+                    waitingForClick = false;
+
+                    ImageIcon iconCheck = new ImageIcon(getClass().getResource("/assets/check-notification.png"));
+                    Image scaledImageCheck = iconCheck.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+                    ImageIcon newIconCheck = new ImageIcon(scaledImageCheck);
+                    frame.getNotificationPanel().getBtnMessage().setIcon(newIconCheck);
+                    frame.getNotificationPanel().getBtnMessage().setText("  Nuovo SpawnPoint impostato!");
+
+                    frame.getNotificationPanel().attivaNotifica();
+                }
+            }
+        });
         
         
         // Configurazione del layout e aggiunta del mapViewer alla mappa
@@ -150,6 +198,16 @@ public class Mappa extends JComponent {
     // Metodo get per il veicoliPainter
     public VeicoliPainter getVeicoliPainter() {
         return this.veicoliPainter;
+    }
+
+
+    // Metodi get e set per la variabile waitingForClick
+    public boolean getWaitingForClick() {
+        return this.waitingForClick;
+    }
+
+    public void setWaitingForClick(boolean waitingForClick) {
+        this.waitingForClick = waitingForClick;
     }
 
 
@@ -209,6 +267,24 @@ public class Mappa extends JComponent {
         puntatoreFermata.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
 
         fermateVisibiliPainter.setWaypoints(puntatoreFermata);
+        mapViewer.repaint();
+    }
+
+    public void aggiornaFermateVisibili(List<String> fermatePreferite) {
+
+        List<Stop> fermate = new ArrayList<>();
+        Set<Waypoint> puntatoriFermate = new HashSet<>();
+
+        for (String fermataPreferita : fermatePreferite) {
+            Stop fermata = frame.getDati().cercaFermataByID(fermataPreferita);
+            fermate.add(fermata);
+        }
+
+        for (Stop fermataDaDisegnare : fermate) {
+            puntatoriFermate.add(new DefaultWaypoint(fermataDaDisegnare.getLat(), fermataDaDisegnare.getLon()));
+        }
+
+        fermateVisibiliPainter.setWaypoints(puntatoriFermate);
         mapViewer.repaint();
     }
 

@@ -226,7 +226,6 @@ public class StatsPanel extends JPanel {
         // Visualizzazione dei nomi (long name e short name) assegnati alla linea e del nome dell'agenzia che la gestisce
         codice.setText(" " + shortName);
         codice.setFont(new Font("Arial Nova", Font.BOLD, 30));
-        codice.setBounds(80, 70, 180, 50);
 
         agenziaENome.setBounds(20, 125, 300, 20);
 

@@ -260,7 +260,7 @@ public class Navbar extends JPanel {
         btnLogin.setPreferredSize(new Dimension(50, 50));
         btnLogin.setBounds(getWidth() - btnLogin.getWidth() - 40, 10, 50, 50);
         
-        ImageIcon icon = new ImageIcon(getClass().getResource("/assets/user_placeholder.png"));
+        ImageIcon icon = new ImageIcon(getClass().getResource("/assets/user-placeholder.png"));
         Image scaledImage = icon.getImage().getScaledInstance(44, 44, Image.SCALE_SMOOTH);
         ImageIcon newIcon = new ImageIcon(scaledImage);
         btnLogin.setIcon(newIcon);

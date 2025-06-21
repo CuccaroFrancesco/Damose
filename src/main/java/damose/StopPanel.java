@@ -122,8 +122,10 @@ public class StopPanel extends JPanel {
         	public void actionPerformed(ActionEvent e) {
         		StopPanel.this.setVisible(false);
 
-				StopPanel.this.frame.getMappa().aggiornaFermateVisibili();
-				StopPanel.this.frame.getMappa().getMapViewer().repaint();
+				if (frame.getUtente().getIsLogged() && frame.getUtente().getFermatePreferiteToggleStatus()) frame.getMappa().aggiornaFermateVisibili(frame.getUtente().getFermatePreferite());
+				else frame.getMappa().aggiornaFermateVisibili();
+
+				frame.getMappa().getMapViewer().repaint();
         	}
         });
         
@@ -305,47 +307,6 @@ public class StopPanel extends JPanel {
 		});
 
 
-		// Assegnamento dell'icona di default per il pulsante btnFavorite
-		ImageIcon iconCuore = new ImageIcon(getClass().getResource("/assets/cuore-vuoto.png"));
-		Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
-
-
-		// Chiamata al metodo controllaUtente() per verificare se visualizzare o meno il pulsante btnFavorite
-		this.controllaUtente(this.frame.getUtente().getIsLogged());
-
-
-		// Funzionalità per il pulsante btnFavorite
-		btnFavorite.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        
-		        List<String> fermatePreferite = frame.getUtente().getFermatePreferite();
-		        String idFermata = fermata.getId().getId();
-		        
-		        boolean isOraPreferita;
-		        
-		        if (fermatePreferite.contains(idFermata)) {
-		        	fermatePreferite.remove(idFermata);
-		        	isOraPreferita = false;
-		        } else {
-		        	fermatePreferite.add(idFermata);
-		            isOraPreferita = true;
-		        }
-		        
-		        try {
-		        	frame.getUtente().cambiaPreferiti(frame.getUtente().getLineePreferite(), fermatePreferite);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-		        
-		        String iconCuorePath = isOraPreferita ? "/assets/cuore.png" : "/assets/cuore-vuoto.png";
-		        ImageIcon iconCuore = new ImageIcon(getClass().getResource(iconCuorePath));
-		        Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		        btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
-		    }
-		});
-
-
 		// Variabili che contengono informazioni sulla fermata (nome, ID e coordinate)
 		String name = fermata.getName();
 		String id = fermata.getId().getId();
@@ -356,6 +317,46 @@ public class StopPanel extends JPanel {
 		// Visualizzazione del nome e dell'ID della fermata
 		nomeFermata.setText(name);
 		codiceFermata.setText("ID: " + id);
+
+
+		// Chiamata al metodo controllaUtente() per verificare se visualizzare o meno il pulsante btnFavorite
+		this.controllaUtente(this.frame.getUtente().getIsLogged());
+
+
+		// Funzionalità per il pulsante btnFavorite
+		btnFavorite.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				List<String> fermatePreferite = frame.getUtente().getFermatePreferite();
+				String idFermata = fermata.getId().getId();
+
+				boolean isOraPreferita;
+
+				if (fermatePreferite.contains(idFermata)) {
+					fermatePreferite.remove(idFermata);
+					isOraPreferita = false;
+				} else {
+					fermatePreferite.add(idFermata);
+					isOraPreferita = true;
+				}
+
+				try {
+					frame.getUtente().aggiornaUtente(frame.getUtente().getLineePreferite(),
+							fermatePreferite,
+							frame.getUtente().getFermatePreferiteToggleStatus(),
+							frame.getUtente().getSpawnPointLat(),
+							frame.getUtente().getSpawnPointLon(),
+							frame.getUtente().getCentroAutoSpawnPointToggleStatus());
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+
+				String iconCuorePath = isOraPreferita ? "/assets/cuore.png" : "/assets/cuore-vuoto.png";
+				ImageIcon iconCuore = new ImageIcon(getClass().getResource(iconCuorePath));
+				Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+				btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
+			}
+		});
 
 
 		// Visualizzazione delle coordinate (latitudine e longitudine) della fermata
@@ -480,7 +481,6 @@ public class StopPanel extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 
 					frame.getRoutePanel().creaPannelloLinea(linea);
-					frame.getRoutePanel().controllaUtente(frame.getUtente().getIsLogged());
 					LineaPainter.costruisciLineaDaDisegnare(frame.getDati().getViaggiDaVisualizzare(linea).get(frame.getRoutePanel().getIndiceViaggioVisualizzato()), frame.getMappa(), frame.getDati());
 				}
 			});
@@ -818,6 +818,7 @@ public class StopPanel extends JPanel {
 
 			btnFavorite.revalidate();
 		    btnFavorite.repaint();
+			StopPanel.this.repaint();
 
 		} else {
 

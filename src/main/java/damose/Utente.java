@@ -16,14 +16,15 @@ import java.util.List;
 public class Utente {
 	
 	private String nome, cognome, username, password;
-	private boolean isLogged;
+	private double spawnPointLat, spawnPointLon;
+	private boolean isLogged, fermatePreferiteToggleStatus, centroAutoSpawnPointToggleStatus;
 	private List<String> lineePreferite, fermatePreferite;
 	private PreferitiObserver observer;
 	
 	
 	// Metodi get e set per il nome associato all'utente
 	public String getNome() {
-		return nome;
+		return this.nome;
 	}
 
 	public void setNome(String nome) {
@@ -33,7 +34,7 @@ public class Utente {
 	
 	// Metodi get e set per il cognome associato all'utente
 	public String getCognome() {
-		return cognome;
+		return this.cognome;
 	}
 	
 	public void setCognome(String cognome) {
@@ -63,7 +64,7 @@ public class Utente {
 	
 	// Metodi get e set per le linee preferite dell'utente
 	public List<String> getLineePreferite() {
-		return lineePreferite;
+		return this.lineePreferite;
 	}
 
 	public void setLineePreferite(List<String> lineePreferite) {
@@ -73,11 +74,51 @@ public class Utente {
 	
 	// Metodi get e set per le fermate preferite dell'utente
 	public List<String> getFermatePreferite() {
-		return fermatePreferite;
+		return this.fermatePreferite;
 	}
 	
 	public void setFermatePreferite(List<String> fermatePreferite) {
 		this.fermatePreferite = fermatePreferite.equals(" ") ? new ArrayList<>() : fermatePreferite;
+	}
+
+
+	// Metodi get e set per la preferenza dell'impostazione "Visualizza solo fermate preferite"
+	public boolean getFermatePreferiteToggleStatus() {
+		return this.fermatePreferiteToggleStatus;
+	}
+
+	public void setFermatePreferiteToggleStatus(boolean fermatePreferiteToggleStatus) {
+		this.fermatePreferiteToggleStatus = fermatePreferiteToggleStatus;
+	}
+
+
+	// Metodi get e set per la latitudine dello SpawnPoint dell'utente
+	public double getSpawnPointLat() {
+		return this.spawnPointLat;
+	}
+
+	public void setSpawnPointLat(double spawnPointLat) {
+		this.spawnPointLat = spawnPointLat;
+	}
+
+
+	// Metodi get e set per la longitudine dello SpawnPoint dell'utente
+	public double getSpawnPointLon() {
+		return this.spawnPointLon;
+	}
+
+	public void setSpawnPointLon(double spawnPointLon) {
+		this.spawnPointLon = spawnPointLon;
+	}
+
+
+	// Metodi get e set per la preferenza dell'impostazione "Centramento automatico sullo SpawnPoint"
+	public boolean getCentroAutoSpawnPointToggleStatus() {
+		return this.centroAutoSpawnPointToggleStatus;
+	}
+
+	public void setCentroAutoSpawnPointToggleStatus(boolean centroAutoSpawnPointToggleStatus) {
+		this.centroAutoSpawnPointToggleStatus = centroAutoSpawnPointToggleStatus;
 	}
 	
 	
@@ -105,11 +146,18 @@ public class Utente {
 // ---------------------------------------------------------------------------------------------
 
 
-	// Metodo per modificare le linee preferite (sia attributo che nel file di testo) dell'utente loggato
-	public void cambiaPreferiti(List<String> lineePreferite, List<String> fermatePreferite) {
+	// Metodo per aggiornare i dati dell'utente loggato
+	public void aggiornaUtente(List<String> lineePreferite, List<String> fermatePreferite, boolean fermatePreferiteToggleStatus, double spawnPointLat, double spawnPointLon, boolean centroAutoSpawnPointToggleStatus) {
 		
 		this.setLineePreferite(lineePreferite);
 		this.setFermatePreferite(fermatePreferite);
+		this.setFermatePreferiteToggleStatus(fermatePreferiteToggleStatus);
+		this.setSpawnPointLat(spawnPointLat);
+		this.setSpawnPointLon(spawnPointLon);
+		this.setCentroAutoSpawnPointToggleStatus(centroAutoSpawnPointToggleStatus);
+
+		String fermatePreferiteToggleStatusString = fermatePreferiteToggleStatus ? "1" : "0";
+		String centroAutoSpawnPointToggleStatusString = centroAutoSpawnPointToggleStatus ? "1" : "0";
 
 		try {
 			Path path = Paths.get(Frame.getDamoseDirectory() + File.separator + "files" + File.separator + "utenti.txt");
@@ -117,7 +165,12 @@ public class Utente {
 
 			for (int i = 0; i < righe.size(); i++) {
 				if (righe.get(i).startsWith(this.username)) {
-					righe.set(i, this.username + "," + this.nome + "," + this.cognome + "," + this.password + "," + String.join("-", lineePreferite) + "," + String.join("-", fermatePreferite));
+					righe.set(i, this.username + "," + this.nome + "," + this.cognome + "," + this.password + "," +
+							     String.join("-", lineePreferite) + "," +
+							     String.join("-", fermatePreferite) + "," +
+							     fermatePreferiteToggleStatusString + "," +
+							     spawnPointLat + "," + spawnPointLon + "," +
+							     centroAutoSpawnPointToggleStatusString);
 					break;
 				}
 			}
@@ -176,6 +229,19 @@ public class Utente {
 					}
 
 					this.setFermatePreferite(listaFermatePreferite);
+
+					if (dati.get(6).equals("0")) this.setFermatePreferiteToggleStatus(false);
+					else if (dati.get(6).equals("1")) this.setFermatePreferiteToggleStatus(true);
+
+					if (!dati.get(7).isBlank()) this.setSpawnPointLat(Double.parseDouble(dati.get(7).trim()));
+					else this.setSpawnPointLat(0.0);
+
+					if (!dati.get(8).isBlank()) this.setSpawnPointLon(Double.parseDouble(dati.get(8).trim()));
+					else this.setSpawnPointLon(0.0);
+
+					if (dati.get(9).equals("0")) this.setCentroAutoSpawnPointToggleStatus(false);
+					else if (dati.get(9).equals("1")) this.setCentroAutoSpawnPointToggleStatus(true);
+
             		return "Verificata.";
             		
             	} else return "Password errata.";
@@ -195,6 +261,10 @@ public class Utente {
 		this.password = null;
 		this.lineePreferite = new ArrayList<>();
 		this.fermatePreferite = new ArrayList<>();
+		this.fermatePreferiteToggleStatus = false;
+		this.spawnPointLat = 0.0;
+		this.spawnPointLon = 0.0;
+		this.centroAutoSpawnPointToggleStatus = false;
 		this.isLogged = false;
 	}
 }

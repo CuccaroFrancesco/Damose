@@ -1,6 +1,7 @@
-Nova,Francesco,Cuccaro,Banana04$,01-024-71-211-665,80785-70133
-rauliscu,Raul,Iscu Lacatusu,MiPiaceJava$01,01-211-024-92-71,80785-70133
-Rob,Roberta,Loreti,amoRaul!<3,53-71-92-01-211-024,70133-80785
-admin,admin,admin,admin,024-01-71-211-88-766-665-MEA-MEB-MEB1-MEC-3,80785-70133-20036
-vuoto,vuoto,vuoto,vuoto,,
-DaniCal05,Daniele,Calisti,Banana04$,-60-344-337,
+Nova,Francesco,Cuccaro,Banana04$,01-024-71-211-665,80785-70133,0,0.0,0.0,0
+rauliscu,Raul,Iscu Lacatusu,MiPiaceJava$01,01-211-024-92-71,80785-70133,1,0.0,0.0,0
+Rob,Roberta,Loreti,amoRaul!<3,53-71-92-01-211-024,70133-80785,0,0.0,0.0,0
+admin,admin,admin,admin,024-01-71-211-88-766-665-MEA-MEB-MEB1-MEC-3,80785-70133-20036,1,41.935359598009676,12.393951416015625,1
+vuoto,vuoto,vuoto,vuoto,,,0,0.0,0.0,0
+DaniCal05,Daniele,Calisti,Banana04$,-60-344-337,,0,0.0,0.0,0
+palle,palle,palle,Banana$04,,,0,41.8526849831226,12.313957214355469,0

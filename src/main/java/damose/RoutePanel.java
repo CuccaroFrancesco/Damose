@@ -174,11 +174,12 @@ public class RoutePanel extends JPanel {
 
 				RoutePanel.this.setVisible(false);
 
-				RoutePanel.this.frame.getMappa().getLineaPainter().setLineaDaDisegnare(new ArrayList<>(), null);
-				RoutePanel.this.frame.getMappa().getVeicoliPainter().setVeicoliDaDisegnare(new ArrayList<>());
+				frame.getMappa().getLineaPainter().setLineaDaDisegnare(new ArrayList<>(), null);
+				frame.getMappa().getVeicoliPainter().setVeicoliDaDisegnare(new ArrayList<>());
 
-				RoutePanel.this.frame.getMappa().aggiornaFermateVisibili();
-				RoutePanel.this.frame.getMappa().getMapViewer().repaint();
+                if (frame.getUtente().getIsLogged() && frame.getUtente().getFermatePreferiteToggleStatus()) frame.getMappa().aggiornaFermateVisibili(frame.getUtente().getFermatePreferite());
+                else frame.getMappa().aggiornaFermateVisibili();
+				frame.getMappa().getMapViewer().repaint();
 			}
 		});
 
@@ -549,47 +550,6 @@ public class RoutePanel extends JPanel {
 		});
 
 
-		// Assegnamento dell'icona di default per il pulsante btnFavorite
-		ImageIcon iconCuore = new ImageIcon(getClass().getResource("/assets/cuore-vuoto.png"));
-		Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
-
-
-		// Chiamata al metodo controllaUtente() per verificare se visualizzare o meno il pulsante btnFavorite
-		controllaUtente(this.frame.getUtente().getIsLogged());
-
-
-		// Funzionalità per il pulsante btnFavorite
-		btnFavorite.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				List<String> lineePreferite = frame.getUtente().getLineePreferite();
-				String idLinea = linea.getId().getId();
-
-				boolean isOraPreferita;
-
-				if (lineePreferite.contains(idLinea)) {
-					lineePreferite.remove(idLinea);
-					isOraPreferita = false;
-				} else {
-					lineePreferite.add(idLinea);
-					isOraPreferita = true;
-				}
-
-				try {
-					frame.getUtente().cambiaPreferiti(lineePreferite, frame.getUtente().getFermatePreferite());
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-
-				String iconCuorePath = isOraPreferita ? "/assets/cuore.png" : "/assets/cuore-vuoto.png";
-				ImageIcon iconCuore = new ImageIcon(getClass().getResource(iconCuorePath));
-				Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-				btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
-			}
-		});
-
-
 		// Variabili che contengono informazioni sulla linea (agenzia, long name e short name)
 		String agencyName = linea.getAgency().getName();
 		String longName = linea.getLongName();
@@ -635,6 +595,46 @@ public class RoutePanel extends JPanel {
 
 		if (longName == null || longName.isEmpty()) agenziaENomeLinea.setText(agencyName);
 		else agenziaENomeLinea.setText(agencyName + "  -  " + longName);
+
+
+		// Chiamata al metodo controllaUtente() per verificare se visualizzare o meno il pulsante btnFavorite
+		this.controllaUtente(frame.getUtente().getIsLogged());
+
+
+		// Funzionalità per il pulsante btnFavorite
+		btnFavorite.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				List<String> lineePreferite = frame.getUtente().getLineePreferite();
+				String idLinea = linea.getId().getId();
+
+				boolean isOraPreferita;
+
+				if (lineePreferite.contains(idLinea)) {
+					lineePreferite.remove(idLinea);
+					isOraPreferita = false;
+				} else {
+					lineePreferite.add(idLinea);
+					isOraPreferita = true;
+				}
+
+				try {
+					frame.getUtente().aggiornaUtente(lineePreferite,
+							frame.getUtente().getFermatePreferite(),
+							frame.getUtente().getFermatePreferiteToggleStatus(),
+							frame.getUtente().getSpawnPointLat(),
+							frame.getUtente().getSpawnPointLon(),
+							frame.getUtente().getCentroAutoSpawnPointToggleStatus());
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+
+				String iconCuorePath = isOraPreferita ? "/assets/cuore.png" : "/assets/cuore-vuoto.png";
+				ImageIcon iconCuore = new ImageIcon(getClass().getResource(iconCuorePath));
+				Image scaledImageCuore = iconCuore.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+				btnFavorite.setIcon(new ImageIcon(scaledImageCuore));
+			}
+		});
 
 
 		// Funzionalità per il pulsante btnWebsite, che permette di accedere a un sito web con informazioni relative alla linea
@@ -1412,6 +1412,7 @@ public class RoutePanel extends JPanel {
 
 			btnFavorite.revalidate();
 			btnFavorite.repaint();
+            RoutePanel.this.repaint();
 
 		} else {
 

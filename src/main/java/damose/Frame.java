@@ -1,10 +1,10 @@
 package damose;
 
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -13,10 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLayeredPane;
-import javax.swing.SwingWorker;
+import javax.swing.*;
 
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.painter.CompoundPainter;
@@ -199,6 +196,22 @@ public class Frame extends JFrame {
 	                		}
 	                	}
 	                });
+
+
+					// Gestione del click sulla mappa nel momento in cui waitingForClick è true
+					layeredPane.addMouseListener(new MouseAdapter() {
+						public void mouseClicked(MouseEvent e) {
+
+							if (mapPanel.getWaitingForClick()) {
+
+								Component clickedComponent = SwingUtilities.getDeepestComponentAt(Frame.this, e.getX(), e.getY());
+								if (clickedComponent != mapPanel && !SwingUtilities.isDescendingFrom(clickedComponent, mapPanel)) {
+									mapPanel.setWaitingForClick(false);
+									if (notificationPanel.isVisible()) notificationPanel.setVisible(false);
+								}
+							}
+						}
+					});
 
 					SwingWorker<Void, Void> realTimeDataLoader = new SwingWorker<>() {
 
