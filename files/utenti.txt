@@ -1,4 +1,1 @@
-Nova,Francesco,Cuccaro,Banana04$,01-024-71-211-665,80785-70133,0,0.0,0.0,0
-rauliscu,Raul,Iscu Lacatusu,MiPiaceJava$01,01-211-024-71-92,80785-70133,0,42.25393426299183,12.513427734375,0
-Rob,Roberta,Loreti,amoRaul!<3,53-71-92-01-211-024,70133-80785,0,0.0,0.0,0
-DaniCal05,Daniele,Calisti,Banana04$,-60-344-337,,0,0.0,0.0,0
+utenteEsistente,Nome,Cognome,password, , ,0,0.0,0.0,0
