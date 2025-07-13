@@ -11,12 +11,9 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+import java.util.*;
 
 import javax.swing.*;
-
-import java.util.Iterator;
-import java.util.List;
 
 import java.time.*;
 import java.time.format.*;
@@ -175,7 +172,7 @@ public class RoutePanel extends JPanel {
 				RoutePanel.this.setVisible(false);
 
 				frame.getMappa().getLineaPainter().setLineaDaDisegnare(new ArrayList<>(), null);
-				frame.getMappa().getVeicoliPainter().setVeicoliDaDisegnare(new ArrayList<>());
+				frame.getMappa().getVeicoliPainter().setVeicoliDaDisegnare(new HashSet<>());
 
                 if (frame.getUtente().getIsLogged() && frame.getUtente().getFermatePreferiteToggleStatus()) frame.getMappa().aggiornaFermateVisibili(frame.getUtente().getFermatePreferite());
                 else frame.getMappa().aggiornaFermateVisibili();
@@ -1152,7 +1149,7 @@ public class RoutePanel extends JPanel {
 
 
 		// Rimozione di eventuali veicoli da disegnare precedenti dal veicoliPainter
-		frame.getMappa().getVeicoliPainter().setVeicoliDaDisegnare(new ArrayList<>());
+		frame.getMappa().getVeicoliPainter().setVeicoliDaDisegnare(new HashSet<>());
 
 
 		// Gestione della visualizzazione della sezione "Veicoli" in base a vehiclePositionsStatus
@@ -1174,7 +1171,7 @@ public class RoutePanel extends JPanel {
 			lblVeicoli.setVisible(true);
 
 			// Ottenimento dei veicoli che stanno percorrendo la linea
-			List<VehiclePosition> veicoliDellaLinea = frame.getDati().getVeicoliPerLinea(linea);
+			Set<VehiclePosition> veicoliDellaLinea = frame.getDati().getVeicoliPerLinea(linea);
 
 
 			// Creazione del pannello veicoliPanel, che ospiterà la lista dei veicoli percorrenti la linea e le relative informazioni
@@ -1187,13 +1184,12 @@ public class RoutePanel extends JPanel {
 				veicoliPanel.setBackground(new Color(130, 36, 51));
 				veicoliPanel.setPreferredSize(new Dimension(350, Math.max(150, veicoliDellaLinea.size() * 60 - 10)));
 
-				for (int i = 0; i < veicoliDellaLinea.size(); i++) {
+				int i = 0;
+
+				for (VehiclePosition veicolo : veicoliDellaLinea) {
 
 					int y = i * 60;
-
-					// Ottenimento del veicolo all'indice i
-					VehiclePosition veicolo = veicoliDellaLinea.get(i);
-
+					i++;
 
 					// Ottenimento di ID e targa (se disponibile) del veicolo
 					String idVeicolo = veicolo.getVehicle().getId();
@@ -1316,7 +1312,7 @@ public class RoutePanel extends JPanel {
 
 
 				// Disegno dei veicoli sulla mappa
-				List<VeicoliWaypoint> veicoliDaDisegnare = new ArrayList<>();
+				Set<VeicoliWaypoint> veicoliDaDisegnare = new HashSet<>();
 
 				for (VehiclePosition veicolo : veicoliDellaLinea) {
 

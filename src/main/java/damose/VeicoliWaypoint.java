@@ -53,12 +53,6 @@ public class VeicoliWaypoint extends DefaultWaypoint {
 // ---------------------------------------------------------------------------------------------
 
 
-    // Metodo get per il VehiclePosition associato al veicoliWaypoint
-    public VehiclePosition getVehiclePosition() {
-        return this.vehiclePosition;
-    }
-
-
     // Metodo get per l'angolazione del veicoliWaypoint
     public double getAngolo() {
         return this.angolo;

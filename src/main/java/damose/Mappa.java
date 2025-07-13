@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.VirtualEarthTileFactoryInfo;
@@ -65,7 +66,7 @@ public class Mappa extends JComponent {
         // Creazione dei vari painter e aggiunta al painterGroup della mappa
         this.fermateVisibiliPainter = new WaypointPainter<Waypoint>();
         this.lineaPainter = new LineaPainter(new ArrayList<>());
-        this.veicoliPainter = new VeicoliPainter(new ArrayList<>());
+        this.veicoliPainter = new VeicoliPainter(new HashSet<>());
         
         this.frame.getPainterGroup().addPainter(lineaPainter);
         this.frame.getPainterGroup().addPainter(fermateVisibiliPainter);
@@ -305,19 +306,18 @@ public class Mappa extends JComponent {
 
         GeoPosition topLeft = tileFactory.pixelToGeo(new Point(mappaVisibile.x, mappaVisibile.y), zoomAttuale);
         GeoPosition bottomRight = tileFactory.pixelToGeo(new Point(mappaVisibile.x + mappaVisibile.width, mappaVisibile.y + mappaVisibile.height), zoomAttuale);
+
         double nord = topLeft.getLatitude();
         double ovest = topLeft.getLongitude();
         double sud = bottomRight.getLatitude();
         double est = bottomRight.getLongitude();
 
-        List<Stop> fermateVisibili = frame.getDati().getFermate().stream()
+        Set<Stop> fermateVisibili = frame.getDati().getFermate().stream()
                 .filter(stop -> stop.getLat() >= Math.min(nord, sud) && stop.getLat() <= Math.max(nord, sud))
                 .filter(stop -> stop.getLon() >= Math.min(ovest, est) && stop.getLon() <= Math.max(ovest, est))
-                .toList();
+                .collect(Collectors.toSet());
 
-        for (Stop fermata : fermateVisibili) {
-            puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon()));
-        }
+        for (Stop fermata : fermateVisibili) { puntatoriFermate.add(new DefaultWaypoint(fermata.getLat(), fermata.getLon())); }
 
         fermateVisibiliPainter.setWaypoints(puntatoriFermate);
         mapViewer.repaint();

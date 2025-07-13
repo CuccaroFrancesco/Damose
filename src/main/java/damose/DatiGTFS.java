@@ -94,18 +94,6 @@ public class DatiGTFS {
 	}
 	
 	
-	// Metodo get per i messaggi riguardanti lo stato del caricamento
-	public JLabel getLogs() {
-		return this.logs;
-	}
-	
-	
-	// Metodo get per la barra di caricamento
-	public JProgressBar getProgressBar() {
-		return this.progressBar;
-	}
-	
-	
 	// Metodo set per il valore da mostrare sulla barra di caricamento
 	public void setProgress(int i, String nome) {
 		this.progressBar.setValue(i);
@@ -174,9 +162,7 @@ public class DatiGTFS {
 	public void caricaTripUpdatesGTFS() throws Exception {
 			
 		URL url = new URL("https://romamobilita.it/sites/default/files/rome_rtgtfs_trip_updates_feed.pb");
-			
-		FeedMessage feed = FeedMessage.parseFrom(url.openStream());
-		this.tripUpdates = feed;
+		this.tripUpdates = FeedMessage.parseFrom(url.openStream());
 
 		System.out.println("TripUpdates caricati.");
 	}
@@ -186,9 +172,7 @@ public class DatiGTFS {
 	public void caricaVehiclePositionsGTFS() throws Exception {
 				
 		URL url = new URL("https://romamobilita.it/sites/default/files/rome_rtgtfs_vehicle_positions_feed.pb");
-				
-		FeedMessage feed = FeedMessage.parseFrom(url.openStream());
-		this.vehiclePositions = feed;
+		this.vehiclePositions = FeedMessage.parseFrom(url.openStream());
 
 		System.out.println("VehiclePositions caricati.");
 	}
@@ -198,9 +182,7 @@ public class DatiGTFS {
 	public void caricaAlertGTFS() throws Exception {
 				
 		URL url = new URL("https://romamobilita.it/sites/default/files/rome_rtgtfs_service_alerts_feed.pb");
-				
-		FeedMessage feed = FeedMessage.parseFrom(url.openStream());
-		this.alert = feed;
+		this.alert = FeedMessage.parseFrom(url.openStream());
 
 		System.out.println("Alert caricati.");
 	}
@@ -233,14 +215,9 @@ public class DatiGTFS {
 	}
 	
 	
-	// Metodo get per i dati statici GTFS dell'istanza relativi alle shapes
-	public Collection<AgencyAndId> getShapes() {
-		return this.datiStatici.getAllShapeIds();
-	}
-	
-	
 	// Metodo che cerca e restituisce delle linee in base a una stringa di input
 	public List<Route> cercaLinee(String input) {
+
 		if (input == null || input.isEmpty()) return null;
 		input = input.trim();
 		
@@ -251,13 +228,11 @@ public class DatiGTFS {
 	        String routeId = route.getId().getId().toLowerCase();
 	        String longName = route.getLongName() != null ? route.getLongName().toLowerCase() : "";
 
-	        if (routeId.contains(normalizedInput) || longName.contains(normalizedInput)) {
-	            linee.add(route);
-	        }
+	        if (routeId.contains(normalizedInput) || longName.contains(normalizedInput)) { linee.add(route); }
 	    }
 	    
-	    linee.sort((l1, l2) -> l1.getShortName().compareTo(l2.getShortName()));
-	    linee.sort((l1, l2) -> Integer.compare(l1.getType(), l2.getType()));
+	    linee.sort(Comparator.comparing(Route::getShortName));
+	    linee.sort(Comparator.comparingInt(Route::getType));
 
 	    return linee;
 	}
@@ -265,6 +240,7 @@ public class DatiGTFS {
 	
 	// Metodo che cerca e restituisce delle fermate in base a una stringa di input
 	public List<Stop> cercaFermate(String input) {
+
 		if (input == null || input.isEmpty()) return null;
 		input = input.trim();
 
@@ -275,12 +251,10 @@ public class DatiGTFS {
 	        String stopId = stop.getId().getId().toLowerCase();
 	        String stopName = stop.getName() != null ? stop.getName().toLowerCase() : "";
 
-	      if (stopId.contains(normalizedInput) || stopName.contains(normalizedInput)) {
-	            fermate.add(stop);
-	        }
+	        if (stopId.contains(normalizedInput) || stopName.contains(normalizedInput)) { fermate.add(stop); }
 	    }
 	    
-	    fermate.sort((f1, f2) -> f1.getId().getId().compareTo(f2.getId().getId()));
+	    fermate.sort(Comparator.comparing(f -> f.getId().getId()));
 
 	    return fermate;
 	}
@@ -290,9 +264,7 @@ public class DatiGTFS {
 	public Route cercaLineaByID(String lineaID) {
 
 		for (Route linea : this.getLinee()) {
-            if (linea.getId().getId().equals(lineaID)) {
-                return linea;
-            }
+            if (linea.getId().getId().equals(lineaID)) { return linea; }
         }
 
 		return null;
@@ -303,9 +275,7 @@ public class DatiGTFS {
 	public Stop cercaFermataByID(String stopId) {
 
 		for (Stop stop : this.getFermate()) {
-            if (stop.getId().getId().equals(stopId)) {
-                return stop;
-            }
+            if (stop.getId().getId().equals(stopId)) { return stop; }
         }
 
 		return null;
@@ -314,14 +284,13 @@ public class DatiGTFS {
 
 	// Metodo che restituisce tutte le fermate appartenenti a una determinata linea
 	public List<Stop> getFermatePerViaggio(Trip viaggio) {
-		if(viaggio == null) return null;
+
+		if (viaggio == null) return null;
 		
 		List<StopTime> stopTimes = this.datiStatici.getStopTimesForTrip(viaggio);
 		List<Stop> listaFermate = new ArrayList<>();
 		
-		for (StopTime stopTime: stopTimes) {
-			listaFermate.add((Stop) stopTime.getStop());
-		}
+		for (StopTime stopTime: stopTimes) { listaFermate.add((Stop) stopTime.getStop()); }
 
 		if (viaggio.getDirectionId().equals("1")) listaFermate = listaFermate.reversed();
 		
@@ -330,22 +299,19 @@ public class DatiGTFS {
 	
 	
 	// Metodo che restituisce tutte le linee passanti per una determinata fermata
-	public List<Route> getLineePassantiPerFermata(Stop fermata) {
+	public Set<Route> getLineePassantiPerFermata(Stop fermata) {
+
 		if (fermata == null) return null;
 		
-		List<Trip> viaggi = new ArrayList<>();
-		List<Route> lineePassanti = new ArrayList<>();
+		Set<Trip> viaggi = new HashSet<>();
+		Set<Route> lineePassanti = new HashSet<>();
 		
 		for (StopTime stopTime : this.datiStatici.getStopTimesForStop(fermata)) {
-			if (!viaggi.contains(stopTime.getTrip())) {
-				viaggi.add(stopTime.getTrip());
-			}
+			viaggi.add(stopTime.getTrip());
 		}
 		
 		for (Trip viaggio : viaggi) {
-			if (!lineePassanti.contains(viaggio.getRoute())) {
-				lineePassanti.add(viaggio.getRoute());
-			}
+			lineePassanti.add(viaggio.getRoute());
 		}
 		
 		return lineePassanti;
@@ -354,6 +320,7 @@ public class DatiGTFS {
 
 	// Metodo che restituisce tutti i viaggi relativi alla linea attuale
 	public List<Trip> getViaggiDaVisualizzare(Route linea) {
+
 		if (linea == null) return null;
 
 		List<Trip> listaViaggi = this.getDatiStatici().getTripsForRoute(linea);
@@ -388,14 +355,14 @@ public class DatiGTFS {
 
 
 	// Metodo che restituisce tutti i mezzi che stanno percorrendo attualmente una linea
-	public List<VehiclePosition> getVeicoliPerLinea(Route linea) {
+	public Set<VehiclePosition> getVeicoliPerLinea(Route linea) {
 
 		FeedMessage veicoli;
 
 		if (this.vehiclePositions != null) veicoli = getVehiclePositions();
 		else return null;
 
-		List<VehiclePosition> veicoliDellaLinea = new ArrayList<>();
+		Set<VehiclePosition> veicoliDellaLinea = new HashSet<>();
 
 		for (FeedEntity vp : veicoli.getEntityList()) {
 

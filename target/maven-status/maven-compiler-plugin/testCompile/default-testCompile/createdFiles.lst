@@ -1,6 +1,12 @@
+damose\DatiGTFSTest.class
+damose\RegistrazioneTest$CheckUsernameTests.class
+damose\DatiGTFSTest$ViaggiFermateTests.class
+damose\RegistrazioneTest$CheckConfermaPasswordTests.class
+damose\RegistrazioneTest$CheckPasswordTests.class
 damose\DatiGTFSTest$CollectionTests.class
 damose\DatiGTFSTest$NullCasesTests.class
 damose\DatiGTFSTest$RicercaFermateTests.class
-damose\DatiGTFSTest.class
-damose\DatiGTFSTest$ViaggiFermateTests.class
+damose\RegistrazioneTest$CheckCognomeTests.class
+damose\RegistrazioneTest$CheckNomeTests.class
 damose\DatiGTFSTest$RicercaLineeTests.class
+damose\RegistrazioneTest.class

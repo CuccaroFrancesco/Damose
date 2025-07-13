@@ -3,6 +3,7 @@ package damose;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.List;
+import java.util.Set;
 
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.painter.*;
@@ -12,11 +13,11 @@ import org.jxmapviewer.viewer.GeoPosition;
 
 public class VeicoliPainter implements Painter<JXMapViewer> {
 
-    private List<VeicoliWaypoint> veicoliDaDisegnare;
+    private Set<VeicoliWaypoint> veicoliDaDisegnare;
 
 
     // Costruttore del veicoliPainter
-    public VeicoliPainter(List<VeicoliWaypoint> veicoli) {
+    public VeicoliPainter(Set<VeicoliWaypoint> veicoli) {
         this.veicoliDaDisegnare = veicoli;
     }
 
@@ -57,7 +58,7 @@ public class VeicoliPainter implements Painter<JXMapViewer> {
 
 
     // Metodo set per impostare i veicoli da disegnare
-    public void setVeicoliDaDisegnare(List<VeicoliWaypoint> veicoli) {
+    public void setVeicoliDaDisegnare(Set<VeicoliWaypoint> veicoli) {
         this.veicoliDaDisegnare = veicoli;
     }
 }

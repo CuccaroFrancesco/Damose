@@ -14,11 +14,8 @@ import java.awt.event.ActionListener;
 import java.net.URISyntaxException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.awt.event.ActionEvent;
-import java.util.Map;
 
 import com.google.transit.realtime.GtfsRealtime.FeedEntity;
 import com.google.transit.realtime.GtfsRealtime.TripUpdate;
@@ -364,17 +361,19 @@ public class StopPanel extends JPanel {
 
 
 		// Visualizzazione delle linee passanti per la fermata, con pulsanti interattivi per le varie linee
-		List<Route> lineePassanti = frame.getDati().getLineePassantiPerFermata(fermata);
+		Set<Route> lineePassanti = frame.getDati().getLineePassantiPerFermata(fermata);
 		
 		lineePassantiPanel = new JPanel();
 		lineePassantiPanel.setLayout(null);
 		lineePassantiPanel.setBackground(new Color(130, 36, 51));
 		lineePassantiPanel.setPreferredSize(new Dimension(350, Math.max(100, lineePassanti.size() * 50)));
-		
-		for (int i = 0; i < lineePassanti.size(); i++) {
+
+		int i = 0;
+
+		for (Route linea : lineePassanti) {
 			
-			Route linea = lineePassanti.get(i);
 			int y = i * 50;
+			i++;
 			
 			JButton btnInfoLinea = new JButton();
 			
