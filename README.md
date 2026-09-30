@@ -1,32 +1,26 @@
 # Damose
-*Damose* è un'applicazione per desktop che permette a chi la utilizza di visualizzare le varie linee su cui transitano gli autobus di Roma, navigare tra linee e fermate diverse, e individuare in tempo reale determinati mezzi, conoscendone posizione e orari di arrivo.
+Damose è un'applicazione per il tracciamento e la consultazione della rete di trasporto pubblico della città di Roma. È progettata per garantire l'accesso alle informazioni di viaggio mantenendo la continuità d'uso sia in presenza di una connessione internet che in completa assenza di rete.
 
-L'applicazione è interamente sviluppata in *Java*, sfruttando IntelliJ IDEA come IDE. 
+## Funzionalità Principali
+**Consultazione Offline Avanzata:** Navigazione dell'intero catalogo delle linee (autobus, tram, metropolitana), visualizzazione della sequenza delle fermate per ogni percorso e accesso agli orari programmati (feriali e festivi) senza alcuna necessità di connessione internet.
 
-___
+**Tracciamento Live e Previsioni:** In modalità online, l'app sfrutta i flussi GTFS Real-time per mostrare la posizione dei veicoli in transito, stimare i tempi di attesa effettivi alle fermate e segnalare i ritardi rispetto alla tabella di marcia ufficiale.
 
-## Cose da fare:
+**Ricerca Intelligente e Veloce:** Motore di ricerca rapido per individuare istantaneamente fermate specifiche (tramite nome o codice identificativo) e per filtrare le linee di trasporto di interesse.
 
-### 🎨 Estetica:
-- Personalizzare l'aspetto dei waypoint (fermate di agenzie diverse, mezzi, ecc. ecc.)
+**Avvisi di Servizio (Service Alerts):** Ricezione e visualizzazione delle allerte relative a scioperi, deviazioni di percorso, fermate soppresse o interruzioni temporanee della rete gestita da Roma Mobilità.
 
-### 📊 Statistiche:
-- Percentuale di corse in ritardo per linea
-- Percentuale di corse puntuali per linea
-- Percentuale di corse cancellate per linea
-- Numero di mezzi attualmente in transito per linea
+**Gestione Ibrida dei Dati:** Sincronizzazione fluida tra il grande volume di dati statici locali e i pacchetti leggeri in tempo reale, ottimizzando il consumo di rete e massimizzando la reattività dell'interfaccia.
 
-### 🚏 StopPanel:
-Da implementare:
-- ritardo tipico dei mezzi per tale fermata
+**Focus su Roma:** Struttura delle classi e algoritmi di parsing calibrati specificamente per gestire le dimensioni, le metriche e le peculiarità strutturali del complesso dataset del trasporto pubblico romano.
 
-### 🧑‍💼 Utente:
-- Impostazioni per l'utente:
-  - Cambiare tema
-  - Liberare la cache
-  - Visualizzare solo fermate e linee preferite
-___
+## Tecnologie e Architettura
+**Linguaggio:** Java
 
-## 🧪 TESTING UNITARIO
-...
-___
+**Gestione Dati:** Parsing e strutturazione avanzata dei feed GTFS (Static e Real-time) per mappare fermate, corse e variazioni di orario.
+
+## Requisiti e Installazione
+Assicurati di avere installato un ambiente Java (JDK 25 o superiore) sul tuo sistema.
+
+## Gestione dei Dataset GTFS
+Per funzionare correttamente in modalità offline, l'applicazione include il caricamento preventivo dei file GTFS statici (es. routes.txt, stops.txt, trips.txt, stop_times.txt). I file testuali del dataset situati all'interno della directory dedicata possono essere aggiornati con i dati ufficiali scaricabili al link [RomaMobilita](https://romamobilita.it/sistemi-e-tecnologie/open-data/#gtfs-general-transit-feed-specification).
